@@ -41,7 +41,7 @@ module Spider; module Auth
                 unauthorized_exception = nil
                 requested_class = nil
                 users = {} 
-		klasses.uniq.each do |klass|
+                klasses.uniq.each do |klass|
                     user = klass.restore(@request)
                     @request.security[:users] << user if user
                     users[klass] = user
