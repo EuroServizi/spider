@@ -16,7 +16,7 @@
         </thead>
         <tbody>
             <tr sp:each="@rows |row|">
-                <td sp:each="row |col|" class="{ col[:classes] }">
+                <td sp:each="row |col|" class="{ col[:classes].join(' ') }">
                     { col[:day] }
                 </td>
             </tr>
