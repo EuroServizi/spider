@@ -274,12 +274,9 @@ module Spider; module Model
                 if (attributes[:through])
                     assoc_type = attributes[:through]
                     create_junction = false
-                elsif (first_model.const_defined?(assoc_type_name) )
+                elsif (first_model.constant_defined?(assoc_type_name) )
                     assoc_type = first_model.const_get(assoc_type_name)
-                    # under ruby 1.9, const_defined? returns true even if the constant is only on the superclass, so we need to check here
-                    if assoc_type.attributes[:sub_model] && assoc_type.attributes[:sub_model] != first_model
-                        create_junction = true
-                    elsif (!assoc_type.attributes[:sub_model]) # other kind of inline model
+                    if (!assoc_type.attributes[:sub_model]) # other kind of inline model
                         assoc_type_name += 'Junction'
                         create_junction = false if (first_model.const_defined?(assoc_type_name))
                     else

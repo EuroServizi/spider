@@ -26,5 +26,17 @@ class Module #:nodoc:
         end
         mod.const_set(parts[-1].to_sym, val)
     end
+
+    # const_defined? in Ruby 1.9 behaves differently in terms
+    # of which class hierarchy it polls for nested namespaces
+    #
+    # See http://redmine.ruby-lang.org/issues/show/1915
+    def constant_defined?(const)
+      if ::RUBY_VERSION =~ /1.9/
+        const_defined?(const, false)
+      else
+        const_defined?(const)
+      end
+    end
     
 end
