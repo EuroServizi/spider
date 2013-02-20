@@ -108,8 +108,10 @@ module Spider
                             
                     end
                 ensure
-                    File.open(lock_file, 'r'){ |f| f.flock File::LOCK_UN }
-                    File.unlink(lock_file)
+                    if FIle.exists?(lock_file)
+                        File.open(lock_file, 'r'){ |f| f.flock File::LOCK_UN }
+                        File.unlink(lock_file)
+                    end
                 end
             end
         end
