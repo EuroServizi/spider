@@ -35,7 +35,7 @@ module Spider::Messenger
                   case response
                   when Net::HTTPSuccess
                       if response.body !~ /^OK/
-                          raise response.body
+                          raise response.body.to_s
                       else
                           return true 
                       end
