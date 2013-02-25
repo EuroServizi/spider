@@ -14,6 +14,9 @@ Spider.defineWidget('Spider.Forms.DateTime', {
                 var range = cl.substr(11).split('-');
                 conf.yearRange = range[0].replace("m", "-")+":"+range[1].replace('p', '+');
             }
+            if (cl.substr(0, 10) == 'past-dates'){
+                conf.maxDate = "0"
+            }
         }
 		if (this.input.is('.date')) this.input.datepicker(conf);
 		else if (this.input.is('.date_time')){

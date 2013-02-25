@@ -8,9 +8,11 @@ module Spider; module Forms
         i_attr_accessor :lformat, :type => Symbol, :default => :short
         attribute :"change-month", :type => Spider::Bool, :default => false
         attribute :"change-year", :type => Spider::Bool, :default => false
+        attribute :"past-dates", :type => Spider::Bool, :default => false
         attribute :"year-range", :type => String, :default => "m150:p10"
         
         def prepare_value(val)
+            
             return val if val.respond_to?(:strftime)
             return nil unless val.is_a?(String) && !val.empty?
             klass = case @mode
@@ -23,6 +25,7 @@ module Spider; module Forms
                 return klass.lparse(val, :short)
             rescue => exc
                 add_error(_("%s is not a valid date") % val)
+                return val
             end
         end
         
@@ -37,6 +40,7 @@ module Spider; module Forms
             @additional_classes = []
             @additional_classes << 'change-month' if @attributes[:"change-month"]
             @additional_classes << 'change-year' if @attributes[:"change-year"]
+            @additional_classes << 'past-dates' if @attributes[:"past-dates"]
             yr = @attributes[:"year-range"].sub('-', 'm').sub('+', 'p').sub(':', '-') if @attributes[:"change-year"]
             @additional_classes << "year-range-#{yr}" if yr 
             @scene.additional_classes = @additional_classes
@@ -44,6 +48,7 @@ module Spider; module Forms
         end
         
         def format_value
+
             return '' unless @value
             if (@lformat && @value.respond_to?(:lformat))
                 return @value.lformat(@lformat)
