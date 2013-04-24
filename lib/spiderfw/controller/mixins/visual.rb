@@ -29,9 +29,10 @@ module Spider; module ControllerMixins
                 obj = n_route.obj if n_route
                 if obj.is_a?(Visual) && !(obj.respond_to?(:serving_static?) && obj.serving_static?)
                     set_layout = @layout
+                    layout_params = self.class.layout_params[@layout]
                     if set_layout
                         set_layout = [set_layout] unless set_layout.is_a?(Array)
-                        set_layout.map{ |l| self.class.load_layout(l) }
+                        set_layout.map{ |l| self.class.load_layout(l, layout_params) }
                         obj.dispatcher_layout = set_layout
                     end
                 end
@@ -587,11 +588,11 @@ module Spider; module ControllerMixins
                 return false
             end
             
-            def load_layout(path)
+            def load_layout(path, params={})
                 unless respond_to?(:layout_path)
                     raise NotImplementedError, "The layout_path class method must be implemented by object using the Visual mixin, but #{self} does not"
                 end
-                params = self.layout_params[path] || {}
+                params ||= self.layout_params[path] || {}
                 if (path.is_a?(Symbol))
                     path = Spider::Layout.named_layouts[path]
                 end
@@ -604,8 +605,7 @@ module Spider; module ControllerMixins
                 layout.only_asset_profiles(params[:only_asset_profiles]) if params[:only_asset_profiles]
                 layout
             end
-            
-            
+
             def current_default_template
                 Spider::Inflector.underscore(self.to_s.split('::')[-1])
             end
