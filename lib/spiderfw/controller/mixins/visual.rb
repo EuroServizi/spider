@@ -207,8 +207,8 @@ module Spider; module ControllerMixins
             return template
         end
                 
-        def init_layout(layout)
-            l = layout.is_a?(Layout) ? layout : self.class.load_layout(layout)
+        def init_layout(layout, params={})
+            l = layout.is_a?(Layout) ? layout : self.class.load_layout(layout, params)
             prepare_template(l)
             return l
         end
@@ -227,12 +227,14 @@ module Spider; module ControllerMixins
             layout = nil
             unless options.key?(:layout) && !options[:layout]
                 chosen_layouts = options[:layout] || @layout
+                layout_params = self.class.layout_params[chosen_layouts]
                 chosen_layouts = [chosen_layouts] if chosen_layouts && !chosen_layouts.is_a?(Array)
                 if (chosen_layouts)
                     t = template
                     layout = nil
                     (chosen_layouts.length-1).downto(0) do |i|
-                        layout = init_layout(chosen_layouts[i])
+                        l_params = layout_params if layout_params && i == 0
+                        layout = init_layout(chosen_layouts[i], layout_params)
                         layout.template = t
                         t = layout
                     end
