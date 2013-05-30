@@ -119,9 +119,9 @@ module Spider; module Model
                        QuerySet.autoloading(self).send("#{name}_leafs")
                       
                    end
-                   #TODO:la condizione non viene gestita
-                   define_method("#{name}_all") do |condition|
-		       qs = QuerySet.static(self)
+                   #TODO:la condizione non viene gestita, tolta per problemi in ruby 1.9.3 nel rebuild_menu
+                   define_method("#{name}_all") #do |condition|
+		                  qs = QuerySet.static(self)
                        self.send("#{name}_roots").each do |root|
                            ta = root.tree_all(name)
                            qs += ta if ta
