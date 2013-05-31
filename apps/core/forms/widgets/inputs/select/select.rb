@@ -58,7 +58,9 @@ module Spider; module Forms
                     tree_el = @model.elements_array.select{ |el| el.association == :tree }.first
                 end
                 if tree_el
-                    @scene.data = @scene.data.model.send("#{tree_el.name}_all", @scene.data.condition)
+                    #chiamata al metodo modificata dopo modifica in tree.rb nel define_method senza la condizione
+                    #@scene.data = @scene.data.model.send("#{tree_el.name}_all", @scene.data.condition)
+                    @scene.data = @scene.data.model.send("#{tree_el.name}_all")
                     @scene.data.reject!{ |obj| obj == @form.obj } if @form && @form.obj
                     @scene.tree_depth = tree_el.attributes[:tree_depth]
                 end
