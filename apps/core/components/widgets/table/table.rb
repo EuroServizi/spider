@@ -185,7 +185,7 @@ module Spider; module Components
                     list += "</ul>"
                     return list
                 end
-            elsif element.model?
+            elsif element.model? && !rest.blank?
                 #richiamo prepare_value
                 prepare_value(rest, row[el], element.model)
             else    
