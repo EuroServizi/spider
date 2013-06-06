@@ -166,9 +166,12 @@ module Spider; module Components
                 current_model = @model
             end
             element = current_model.elements[el.to_sym]
-            if !row[el] && [String, Spider::DataTypes::Text].include?(element.type)
+            if row[el].blank?
                 return ''
             end
+            # if !row[el] && [String, Spider::DataTypes::Text].include?(element.type)
+            #     return ''
+            # end
             if element.multiple?
                 list = "<ul>"
                 if row[el]
