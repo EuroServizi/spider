@@ -1015,7 +1015,8 @@ module Spider; module Model; module Mappers
                                     set = obj.send("#{element.name}_junction")
                                 end
                                 delete_ass = nil
-                                if set.modified # queryset modified
+                                #if set.modified # queryset modified
+                                if set.modified && obj.primary_keys_set? # queryset modified
                                     delete_ass = MapperTask.new(obj, :delete_associations, :element => element.name)
                                     deps << [task, delete_ass]
                                 end
@@ -1047,7 +1048,8 @@ module Spider; module Model; module Mappers
                                 end
                             else
                                 el_val.set_modified(element.reverse)
-                                deps << [task, MapperTask.new(el_val, :save)]
+                                #deps << [task, MapperTask.new(el_val, :save)]
+                                deps << [MapperTask.new(el_val, :save), task]
                             end
                         end
                     end
