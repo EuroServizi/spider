@@ -280,7 +280,6 @@ module Spider; module Model
             obj.save_mode
             storage.in_transaction
             begin
-                before
                 save_mode = determine_save_mode(obj)
                 before_save(obj, save_mode)
                 if save_mode == :update
@@ -520,7 +519,7 @@ module Spider; module Model
         #                         Useful when an object will be re-inserted with the same keys.
         # @return [void]
         def delete(obj_or_condition, force=false, options={})
-            
+        
             def prepare_delete_condition(obj)
                 condition = Condition.and
                 @model.primary_keys.each do |key|
