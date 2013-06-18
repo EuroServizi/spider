@@ -279,15 +279,21 @@ module Spider; module Model
             prev_autoload = obj.autoload?
             obj.save_mode
             storage.in_transaction
-            save_mode = determine_save_mode(obj)
-            before_save(obj, save_mode)
-            if save_mode == :update
-                do_update(obj)
-            else
-                do_insert(obj)
+            begin
+                before
+                save_mode = determine_save_mode(obj)
+                before_save(obj, save_mode)
+                if save_mode == :update
+                    do_update(obj)
+                else
+                    do_insert(obj)
+                end
+                after_save(obj, save_mode)
+                storage.commit_or_continue
+            rescue
+                storage.rollback_or_continue
+                raise
             end
-            after_save(obj, save_mode)
-            storage.commit_or_continue
             obj.autoload = prev_autoload
             unless @doing_save_done
                 @doing_save_done = true
@@ -466,10 +472,15 @@ module Spider; module Model
         def insert(obj)
             prev_autoload = obj.save_mode()
             storage.in_transaction
-            before_save(obj, :insert)
-            do_insert(obj)
-            after_save(obj, :insert)
-            storage.commit_or_continue
+            begin
+                before_save(obj, :insert)
+                do_insert(obj)
+                after_save(obj, :insert)
+                storage.commit_or_continue
+            rescue
+                storage.rollback_or_continue
+                raise
+            end
             obj.autoload = prev_autoload
         end
         
@@ -479,10 +490,15 @@ module Spider; module Model
         def update(obj)
             prev_autoload = obj.save_mode()
             storage.in_transaction
-            before_save(obj, :update)
-            do_update(obj)
-            after_save(obj, :update)
-            storage.commit_or_continue
+            begin
+                before_save(obj, :update)
+                do_update(obj)
+                after_save(obj, :update)
+                storage.commit_or_continue
+            rescue
+                storage.rollback_or_continue
+                raise
+            end
             obj.autoload = prev_autoload
         end
         
@@ -536,36 +552,41 @@ module Spider; module Model
             before_delete(curr)
             vals = []
             started_transaction = false
-            unless cascade.empty? && assocs.empty?
-                storage.in_transaction
-                started_transaction = true
-                curr.each do |curr_obj|
-                    obj_vals = {}
-                    cascade.each do |el|
-                        obj_vals[el] = curr_obj.get(el)
+            begin
+                unless cascade.empty? && assocs.empty?
+                    storage.in_transaction
+                    started_transaction = true
+                    curr.each do |curr_obj|
+                        obj_vals = {}
+                        cascade.each do |el|
+                            obj_vals[el] = curr_obj.get(el)
+                        end
+                        vals << obj_vals
+                        assocs.each do |el|
+                            next if el.has_single_reverse? && options[:keep_single_reverse]
+                            delete_element_associations(curr_obj, el)
+                        end
                     end
-                    vals << obj_vals
-                    assocs.each do |el|
-                        next if el.has_single_reverse? && options[:keep_single_reverse]
-                        delete_element_associations(curr_obj, el)
+                end
+                @model.referenced_by_junctions.each do |junction, element|
+                    curr.each do |curr_obj|
+                        junction_condition = Spider::Model::Condition.new
+                        junction_condition[element] = curr_obj
+                        junction.mapper.delete(junction_condition)
                     end
                 end
-            end
-            @model.referenced_by_junctions.each do |junction, element|
-                curr.each do |curr_obj|
-                    junction_condition = Spider::Model::Condition.new
-                    junction_condition[element] = curr_obj
-                    junction.mapper.delete(junction_condition)
+                do_delete(condition, force)
+                vals.each do |obj_vals|
+                    obj_vals.each do |el, val|
+                        el.model.mapper.delete(val)
+                    end
                 end
+                after_delete(curr)
+                storage.commit_or_continue if started_transaction
+            rescue
+                storage.rollback_or_continue if started_transaction
+                raise
             end
-            do_delete(condition, force)
-            vals.each do |obj_vals|
-                obj_vals.each do |el, val|
-                    el.model.mapper.delete(val)
-                end
-            end
-            after_delete(curr)
-            storage.commit_or_continue if started_transaction
         end
         
         # Deletes all objects from the storage.
