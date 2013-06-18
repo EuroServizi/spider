@@ -92,12 +92,12 @@ module Spider; module Model; module Storage; module Db
         def release
             begin
                 #Spider::Logger.debug("MYSQL #{self.object_id} in thread #{Thread.current} releasing connection #{@conn}")
-                @conn.autocommit(true) if @conn && !Spider.conf.get('storage.db.shared_connection')
+                curr[:conn].autocommit(true) if curr[:conn] && !Spider.conf.get('storage.db.shared_connection')
                 super
             rescue => exc
-                Spider::Logger.error("MYSQL #{self.object_id} in thread #{Thread.current} exception #{exc.message} while trying to release connection #{@conn}")
-                self.class.remove_connection(@conn, @connection_params)
-                @conn = nil
+                Spider::Logger.error("MYSQL #{self.object_id} in thread #{Thread.current} exception #{exc.message} while trying to release connection #{curr[:conn]}")
+                self.class.remove_connection(curr[:conn], @connection_params)
+                curr[:conn] = nil
             end
         end
         
