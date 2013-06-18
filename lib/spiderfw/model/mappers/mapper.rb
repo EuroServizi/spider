@@ -280,7 +280,6 @@ module Spider; module Model
             obj.save_mode
             storage.in_transaction
             begin
-                before
                 save_mode = determine_save_mode(obj)
                 before_save(obj, save_mode)
                 if save_mode == :update
