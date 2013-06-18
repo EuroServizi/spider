@@ -1,3 +1,7 @@
+== 0.6.28
+* Visualizzazione in core:table dei dati collegati, eliminazione dipendenze circolari in uow
+* Bugfixes
+
 == 0.6.27
 * Clear caches when tmp/clear.txt touched
 * Bugfixes
