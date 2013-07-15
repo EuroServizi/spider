@@ -1174,7 +1174,7 @@ module Spider; module Model; module Mappers
                     column.primary_key = true if element.primary_key?
                     schema.set_column(element.name, column)
                 elsif (true) # FIXME: must have condition element.storage == @storage in some of the subcases
-                    if (!element.multiple? && !element.attributes[:junction] && !element.attributes[:condition]) # 1/n <-> 1
+                    if (!element.multiple? && !element.attributes[:junction]) # 1/n <-> 1
                         current_schema = schema.foreign_keys[element.name] || {}
                         foreign_key_constraints = {}
                         el_mapper = element.type.mapper
