@@ -262,6 +262,7 @@ module Spider; module Model
 
             orig_type = type
             assoc_type = nil
+            attributes[:reverse] ||= attributes[:reverse_of]
             if (proc || attributes[:junction] || (attributes[:multiple] && (!attributes[:add_reverse]) && (!attributes[:has_single_reverse]) && \
                 # FIXME! the first check is needed when the referenced class has not been parsed yet 
                 # but now it assumes that the reverse is not multiple if it is not defined
