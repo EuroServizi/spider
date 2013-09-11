@@ -4,7 +4,7 @@ module Spider; module Messenger
         layout ['/core/admin/admin', 'admin/_admin'], :assets => 'messenger'
 
         Messenger.queues.keys.each do |queue|
-            route queue.to_s, :queue, :do => lambda{ |action| @queue = action.to_sym }
+            route queue.to_s, :queue, :do => Proc.new{ |action| @queue = action.to_sym }
         end
 
         def before(action='', *params)

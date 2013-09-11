@@ -108,8 +108,10 @@ module Spider
                             
                     end
                 ensure
-                    File.open(lock_file, 'r'){ |f| f.flock File::LOCK_UN }
-                    File.unlink(lock_file)
+                    if File.exists?(lock_file)
+                        File.open(lock_file, 'r'){ |f| f.flock File::LOCK_UN }
+                        File.unlink(lock_file)
+                    end
                 end
             end
         end
@@ -130,9 +132,9 @@ module Spider
             return msg
         end
         
-        def self.sms(to, text, params={})
+        def self.sms(to, text, sender_name=nil, params={})
             msg = SMS.new(
-                :to => to, :text => text
+                :to => to, :text => text, :sender_name => sender_name
             )
             msg.next_try = params[:send_from] || DateTime.now
             msg.save

@@ -364,6 +364,14 @@ module Spider; module Model; module Storage
             curr[:savepoints] = []
             release
         end
+
+        def rollback_or_continue
+            if curr[:transaction_nesting] == 1
+                rollback
+            else
+                curr[:transaction_nesting] -= 1 if curr[:transaction_nesting] > 1
+            end
+        end
         
         # @abstract
         # Implemented by subclasses to interact with the backend

@@ -6,7 +6,7 @@ module Spider; module Messenger
         layout [:spider_admin, 'messenger.layout']
         
         Messenger.queues.keys.each do |queue|
-            route queue.to_s, self, :do => lambda{ |action| @queue = @dispatch_action }
+            route queue.to_s, self, :do => Proc.new{ |action| @queue = @dispatch_action }
         end
 
         def before(action='', *params)

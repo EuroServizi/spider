@@ -26,7 +26,7 @@ module Spider; module Forms
             return nil if !val || val.empty?
             if val['file'] && !val['file'].is_a?(String)
                 dest_path = @save_path+'/'+val['file'].filename
-                File.copy(val['file'].path, dest_path)
+                FileUtils.copy(val['file'].path, dest_path)
                 return dest_path
             elsif val['clear']
                 self.value = nil

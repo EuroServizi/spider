@@ -67,6 +67,7 @@ module Spider; module Components
             end
             @sort_el = [@sort_el] if @sort_el && !@sort_el.is_a?(Array)
             @scene.link_el = @attributes[:link_el]
+            @scene.current_page = @page
             @scene.link = @attributes[:link]
             @scene.link_id = @attributes[:link_id] || @attributes[:link_el]
             super
@@ -104,7 +105,8 @@ module Spider; module Components
                 end
                 raise "No element #{el} in #{@model} for table #{@id}" unless @model.elements[el]
                 @scene.labels[full] = attr_labels[i].blank? ? @model.elements[el].label : attr_labels[i]
-                @scene.sortable[full] = sortable?(full)
+                @scene.sortable[full] = sortable?(el)
+                #@scene.sortable[full] = sortable?(full)
             end
             @rows = prepare_queryset(@queryset ? @queryset : @model.list)
             @rows.condition.and(self.condition) if self.condition && !self.condition.empty?
@@ -152,16 +154,25 @@ module Spider; module Components
             return res
         end
 
-        def prepare_value(el, row)
+        def prepare_value(el, row, rec_model=nil)
             full = el; rest = nil
             if el.is_a?(String)
                 first, rest = el.split('.', 2)
                 el = first
             end
-            element = @model.elements[el.to_sym]
-            if !row[el] && [String, Spider::DataTypes::Text].include?(element.type)
+            current_model = nil
+            unless rec_model.blank?
+                current_model = rec_model
+            else
+                current_model = @model
+            end
+            element = current_model.elements[el.to_sym]
+            if row[el].blank?
                 return ''
             end
+            # if !row[el] && [String, Spider::DataTypes::Text].include?(element.type)
+            #     return ''
+            # end
             if element.multiple?
                 list = "<ul>"
                 if row[el]
@@ -178,7 +189,10 @@ module Spider; module Components
                     list += "</ul>"
                     return list
                 end
-            else
+            elsif element.model? && !rest.blank?
+                #richiamo prepare_value
+                prepare_value(rest, row[el], element.model)
+            else    
                 format_value(element.type, row[el], element.attributes)
             end
         end

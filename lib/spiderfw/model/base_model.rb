@@ -262,6 +262,7 @@ module Spider; module Model
 
             orig_type = type
             assoc_type = nil
+            attributes[:reverse] ||= attributes[:reverse_of]
             if (proc || attributes[:junction] || (attributes[:multiple] && (!attributes[:add_reverse]) && (!attributes[:has_single_reverse]) && \
                 # FIXME! the first check is needed when the referenced class has not been parsed yet 
                 # but now it assumes that the reverse is not multiple if it is not defined
@@ -274,12 +275,9 @@ module Spider; module Model
                 if (attributes[:through])
                     assoc_type = attributes[:through]
                     create_junction = false
-                elsif (first_model.const_defined?(assoc_type_name) )
+                elsif (first_model.constant_defined?(assoc_type_name) )
                     assoc_type = first_model.const_get(assoc_type_name)
-                    # under ruby 1.9, const_defined? returns true even if the constant is only on the superclass, so we need to check here
-                    if assoc_type.attributes[:sub_model] && assoc_type.attributes[:sub_model] != first_model
-                        create_junction = true
-                    elsif (!assoc_type.attributes[:sub_model]) # other kind of inline model
+                    if (!assoc_type.attributes[:sub_model]) # other kind of inline model
                         assoc_type_name += 'Junction'
                         create_junction = false if (first_model.const_defined?(assoc_type_name))
                     else

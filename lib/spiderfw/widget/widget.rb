@@ -290,11 +290,10 @@ module Spider
         def widget_target=(target)
             @widget_target = target
         end
-        
+
         def widget_request_path
             p = @request.path
-            i = p.index(@_action) if @_action && !@_action.empty?
-            p = p[0..i-2] if i
+            p = p.sub(/\/#{Regexp.escape(@_action)}$/, '') unless @_action.blank?
             p = p.sub(/\/+$/, '')
             return p
         end

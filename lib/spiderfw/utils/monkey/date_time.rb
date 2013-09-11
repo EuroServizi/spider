@@ -9,8 +9,8 @@ class Date
     end
 
     # Converts to a Time object in the local timezone.
-    def to_local_time
-        conv_to_time(new_offset(DateTime.now.offset), :local)
+    def to_local_time   
+	conv_to_time(new_offset(DateTime.now.offset), :local)
     end
     
     def to_date
@@ -40,8 +40,10 @@ class Date
     private
     def conv_to_time(dest, method)
         #Convert a fraction of a day to a number of microseconds
-        usec = (dest.send(:sec_fraction) * 60 * 60 * 24 * (10**6)).to_i
-        if dest.respond_to?(:hour)
+	#usec calcolato così da problemi in ruby 1.9
+	#usec = (dest.send(:sec_fraction) * 60 * 60 * 24 * (10**6)).to_i
+        usec = (dest.send(:sec_fraction) * 1000).to_i
+	if dest.respond_to?(:hour)
             Time.send(method, dest.year, dest.month, dest.day, dest.hour, dest.min, dest.sec, usec)
         else
             Time.send(method, dest.year, dest.month, dest.day)

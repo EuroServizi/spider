@@ -71,7 +71,6 @@ module Spider; module Components
                     @widgets[:ask_delete].scene.rows_to_del = rows
                 end
             elsif @action == :form
-           #     debugger
                 if @widgets[:form].saved?
                     flash[:saved] = true
                     if @widgets[:form].saved_and_new?
