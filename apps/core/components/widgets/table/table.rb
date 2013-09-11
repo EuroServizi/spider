@@ -67,6 +67,7 @@ module Spider; module Components
             end
             @sort_el = [@sort_el] if @sort_el && !@sort_el.is_a?(Array)
             @scene.link_el = @attributes[:link_el]
+            @scene.current_page = @page
             @scene.link = @attributes[:link]
             @scene.link_id = @attributes[:link_id] || @attributes[:link_el]
             super
