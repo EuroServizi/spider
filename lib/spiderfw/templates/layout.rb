@@ -488,7 +488,7 @@ module Spider
                     ass = {:src => ass} if ass.is_a?(String)
                     src = ass[:src]
                     src = "#{options[:prefix]}#{ass[:src]}" if options[:prefix] && !src =~ /^http/
-                    $out << "<script type=\"text/javascript\" src=\"#{src}\" defer=\"defer\"></script>\n"
+                    $out << "<script type=\"text/javascript\" src=\"#{src}\"></script>\n"
                 end
                 unless @not_first_js
                     $out << "<script type=\"text/javascript\">"
