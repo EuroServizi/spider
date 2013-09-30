@@ -27,7 +27,7 @@ module Spider; module Messenger
         end
 
         def send_sms(to, text, params={})
-            to = "+39"+to if !to.include?("+39")
+            to = "+39"+to if !to.include?("+")
             msg = Spider::Messenger.sms(to, text, params)
             sent_sms(msg.ticket)
             msg
