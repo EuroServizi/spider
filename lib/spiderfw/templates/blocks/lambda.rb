@@ -8,7 +8,7 @@ module Spider; module TemplateBlocks
             init = ""
             lambda_name = @el.attributes['sp:lambda']
             @el.remove_attribute('sp:lambda')
-            c = "#{lambda_name} = lambda do\n"            
+            c = "#{lambda_name} = Proc.new do\n"            
             content = Spider::TemplateBlocks.parse_element(@el, @allowed_blocks, @template).compile(options)
             content.run_code.each_line do |line|
                 c += '  '+line
