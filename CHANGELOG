@@ -1,3 +1,9 @@
+== 0.6.29
+* Sostituito metodo lambda per problemi con ruby 1.9.3 in site_map del cms
+* Cambiata gestione invio sms con sender_name e prefisso internazionele, mail (smpt -> smtp )
+* Modifiche alla widget table per paginazione per gestione pagina di dettaglio e ritorno a pagina corrente in elenco
+* Corretto db_mapper per condition sugli elementi di un modello
+
 == 0.6.28
 * Visualizzazione in core:table dei dati collegati, eliminazione dipendenze circolari in uow
 * Bugfixes
