@@ -95,6 +95,11 @@ module Spider; module CASServer
             return true
         end
 
+        def extra_auth(service, resp_code)
+            #deve fare il return redirect
+            return true
+        end
+
         def authenticate(params={})
             return super if params[:ignore_cas]
             if error = validate_login_ticket(@request.params['lt'])
@@ -139,6 +144,7 @@ module Spider; module CASServer
 
                     $LOG.info("Redirecting authenticated user '#{user.identifier}' at '#{@st.client_hostname}' to service '#{@service}'")
                     resp_code = Spider.conf.get('cas.saml1_1_compatible') ? 302 : 303
+                    extra_auth(service_with_ticket, resp_code)
                     return redirect(service_with_ticket, resp_code) # response code 303 means "See Other" (see Appendix B in CAS Protocol spec)
                 rescue URI::InvalidURIError
                     $LOG.error("The service '#{@service}' is not a valid URI!")
