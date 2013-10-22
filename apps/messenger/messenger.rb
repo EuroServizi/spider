@@ -129,7 +129,7 @@ module Spider
             msg = Email.new(
                 :from => from, :to => to, :headers => headers, :body => body
             )
-            msg.next_try = params[:send_from] || DateTime.now
+            msg.next_try = params[:send_from] || (DateTime.now+((1.0/24)/60))
             msg.save
             return msg
         end
@@ -138,7 +138,7 @@ module Spider
             msg = SMS.new(
                 :to => to, :text => text, :sender_name => sender_name
             )
-            msg.next_try = params[:send_from] || DateTime.now
+            msg.next_try = params[:send_from] || (DateTime.now+((1.0/24)/60))
             msg.save
             return msg
         end
