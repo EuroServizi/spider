@@ -59,7 +59,9 @@ module Spider
             return false if mutex.locked?
             model = Spider::Messenger.const_get(self.queues[queue][:model])
             lock_file = "#{self.lock_file}_#{queue}"
-            now = DateTime.now
+            #now = DateTime.now
+            #aggiungo un minuto al now per mandare message tra un minuto e non andare nel passato se sta finendo il minuto
+            now =(DateTime.now+((1.0/24)/60))
             mutex.synchronize do
                 FileUtils.touch(lock_file)
                 File.open(lock_file, 'r'){ |f| return false unless f.flock File::LOCK_EX | File::LOCK_NB }
