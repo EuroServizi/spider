@@ -167,7 +167,8 @@ $sidebar_color: #DFDFDF;
     padding-right: 20px;
     border-bottom: 1px solid #CCCCCC;
     min-height: 500px;
-    @include clearfix();
+    /* tolto il clearfix di compass perchè non fa comparire la barra orizzontale quando ridimensiono la pag di admin */ 
+    /* @include clearfix(); */
 
     #sidebar, > .spider-admin-sidebar {
         position: absolute;
