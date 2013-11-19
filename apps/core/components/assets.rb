@@ -31,7 +31,7 @@ end
 
 Spider::Template.define_named_asset 'jquery-ui', [
 ], :depends => ['jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-resizable', 
-    'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-autocomplete', 
+    'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-menu', 'jquery-ui-autocomplete', 
     'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-slider', 'jquery-ui-tabs', 'jquery-ui-datepicker', 
     'jquery-ui-progressbar', 'jquery-effects']
 
@@ -72,7 +72,7 @@ Spider::Template.define_named_asset 'jquery-ui-accordion', [
 
 Spider::Template.define_named_asset 'jquery-ui-autocomplete', [
     [:js, 'js/jquery/jquery-ui-1.9.2/ui/jquery.ui.autocomplete.js', Spider::Components]
-], :depends => ['jquery-ui-core']
+], :depends => ['jquery-ui-core', 'jquery-ui-menu']
 
 Spider::Template.define_named_asset 'jquery-ui-button', [
     [:js, 'js/jquery/jquery-ui-1.9.2/ui/jquery.ui.button.js', Spider::Components]
