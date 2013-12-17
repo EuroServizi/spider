@@ -45,4 +45,10 @@ module Spider
         :type => String
     config_option 'messenger.mobyt.from', _("From parameter for the Mobyt service"), 
         :type => String
+    config_option 'messenger.skebby.username', _("Username for the Skebby service"), 
+        :type => String    
+    config_option 'messenger.skebby.password', _("Password for the Skebby service"), 
+        :type => String
+    config_option 'messenger.skebby.from', _("From parameter for the Skebby service"), 
+        :type => String
 end
