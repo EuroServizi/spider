@@ -5,8 +5,8 @@ module Spider; module Components
         is_attr_accessor :actions
         is_attribute :cancel_param
         is_attribute :ok_param
-        is_attribute :cancel_text, :default => lambda{ _('Cancel') }
-        is_attribute :ok_text, :default => lambda{ _('Ok') }
+        is_attribute :cancel_text, :default => Proc.new{ _('Cancel') }
+        is_attribute :ok_text, :default => Proc.new{ _('Ok') }
 
         
         def prepare
