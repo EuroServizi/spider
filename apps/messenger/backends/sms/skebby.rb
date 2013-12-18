@@ -45,7 +45,7 @@ module Spider; module Messenger; module Backends; module SMS
                     raise "Errore nell'invio degli sms."
                 end  
             else
-                raise "Il credito è insufficiente per mandare sms."
+                raise "Il credito e insufficiente per mandare sms."
             end
                          
             
