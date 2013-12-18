@@ -3,7 +3,6 @@ require 'apps/messenger/lib/backends/skebby'
 require 'net/http'
 require 'uri'
 require 'cgi'
-require 'ruby-debug'
 
 
 module Spider; module Messenger; module Backends; module SMS
