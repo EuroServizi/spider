@@ -363,6 +363,10 @@ module Spider; module Model; module Storage; module Db
                 comp = 'like'
                 key = "UPPER(#{key})"
             end
+            if (comp.to_s.downcase == 'nlike')
+                comp = 'not like'
+                key = "UPPER(#{key})"
+            end
             if (value.nil?)
                 comp = comp == '=' ? "IS" : "IS NOT"
                 sql = "#{key} #{comp} NULL"

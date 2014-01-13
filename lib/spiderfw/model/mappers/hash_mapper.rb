@@ -64,7 +64,7 @@ module Spider; module Model; module Mappers
                     row[key] < value
                 when '<>'
                     row[key] != value
-                when 'like', 'ilike'
+                when 'like', 'ilike', 'nlike'
                     check_value = row[key]
                     if (comp == 'ilike')
                         value.upcase!

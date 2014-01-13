@@ -48,7 +48,7 @@ module Spider; module Model
             return c
         end
         
-        @comparison_operators = %w{= > < >= <= <> like}
+        @comparison_operators = %w{= > < >= <= <> like ilike nlike}
         @comparison_operators_regexp = @comparison_operators.inject('') do |str, op|
             str += '|' unless str.empty? 
             str += Regexp.quote(op)
@@ -540,11 +540,12 @@ module Spider; module Model
                 @condition_context = condition_context
             end
             
-            [:==, :<, :>, :<=, :>=, :like, :ilike, :not].each do |op|
+            [:==, :<, :>, :<=, :>=, :like, :ilike, :nlike, :not].each do |op|
                 define_method(op) do |val|
                     replace = {
                         :== => '=',
-                        :not => '<>'
+                        :not => '<>',
+                        :nlike => 'not like'
                     }
                     if replace[op]
                         op = replace[op]
