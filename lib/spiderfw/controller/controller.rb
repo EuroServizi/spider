@@ -251,7 +251,11 @@ module Spider
             @is_target
         end
         
-        
+        # If the site supports SSL, returns the #https_url; otherwise, the #http_url
+        def self.http_s_url(action=nil)
+            Spider.site.http_s_url + route_path(action)
+        end
+
         # The main controller's execution method. The Controller will dispatch
         # to another controller if a route is set; otherwise, it will call the 
         # method that should be executed according to action.

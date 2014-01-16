@@ -230,7 +230,6 @@ module Spider; module Model
             unless field.is_a?(Spider::QueryFuncs::Function)
                 field = field.to_s
                 parts = field.split('.', 2)
-                debugger if parts[0].blank?
                 parts[0] = parts[0].to_sym
                 field = field.to_sym unless parts[1]
             end

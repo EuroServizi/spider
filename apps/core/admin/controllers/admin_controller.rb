@@ -57,7 +57,7 @@ module Spider; module Admin
                 url = self.class.http_url(short_name)
                 @scene.apps << {
                     :icon => app[:options][:icon] ? app[:module].pub_url+'/'+app[:options][:icon] : nil,
-                    :url => self.class.http_url(short_name),
+                    :url => self.class.http_s_url(short_name),
                     :name => app[:module].full_name,
                     :description => app[:module].description,
                     :module => app[:module],
