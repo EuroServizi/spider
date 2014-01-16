@@ -54,9 +54,9 @@ module Spider; module ControllerMixins
             return request_path unless @request.env['HTTP_HOST']
             #'http://'+@request.env['HTTP_HOST']+request_path  vecchia versione con problemi con https
             if @request.env["HTTPS"] == "on"
-                u = "https://#{@request.env['HTTP_HOST']}/#{request_path}"
+                u = "https://#{@request.env['HTTP_HOST']}#{request_path}"
             else
-                u = "http://#{@request.env['HTTP_HOST']}/#{request_path}"
+                u = "http://#{@request.env['HTTP_HOST']}#{request_path}"
             end
         end
         
