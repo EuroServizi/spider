@@ -48,7 +48,7 @@ module Spider; module Model
             return c
         end
         
-        @comparison_operators = %w{= > < >= <= <> like}
+        @comparison_operators = %w{= > < >= <= <> like ilike nlike}
         @comparison_operators_regexp = @comparison_operators.inject('') do |str, op|
             str += '|' unless str.empty? 
             str += Regexp.quote(op)
@@ -230,7 +230,6 @@ module Spider; module Model
             unless field.is_a?(Spider::QueryFuncs::Function)
                 field = field.to_s
                 parts = field.split('.', 2)
-                debugger if parts[0].blank?
                 parts[0] = parts[0].to_sym
                 field = field.to_sym unless parts[1]
             end
@@ -540,11 +539,12 @@ module Spider; module Model
                 @condition_context = condition_context
             end
             
-            [:==, :<, :>, :<=, :>=, :like, :ilike, :not].each do |op|
+            [:==, :<, :>, :<=, :>=, :like, :ilike, :nlike, :not].each do |op|
                 define_method(op) do |val|
                     replace = {
                         :== => '=',
-                        :not => '<>'
+                        :not => '<>',
+                        :nlike => 'not like'
                     }
                     if replace[op]
                         op = replace[op]

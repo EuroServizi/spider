@@ -50,6 +50,11 @@ module Spider
             s
         end
         
+        def http_s_url
+            ssl? ? ssl_to_s : to_s
+        end
+
+
     end 
 
 end

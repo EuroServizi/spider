@@ -21,7 +21,7 @@
                 </div>
                 <div id="admin_controls">
                     <span class="welcome">_(Welcome, %s.) % @username</span> - 
-                    <a class="logout_link" href="{ Spider::Admin::AdminController.http_url('login/logout') }" sp:if="!@guest">Logout</a>
+                    <a class="logout_link" href="{ Spider::Admin::AdminController.http_s_url('login/logout') }" sp:if="!@guest">Logout</a>
                 </div>
             </div>
             <div id="app_buttons" sp:if="@apps.length > 1">

@@ -17,8 +17,8 @@ module Spider; module Components
     class Admin < Spider::Widget
         tag 'admin'
         
-        i_attribute :models, :process => lambda{ |models| models.split(/,[\s\n]*/).map{|m| const_get_full(m) } }
-        is_attr_accessor :title, :default => lambda{ _("Administration") }
+        i_attribute :models, :process => Proc.new{ |models| models.split(/,[\s\n]*/).map{|m| const_get_full(m) } }
+        is_attr_accessor :title, :default => Proc.new{ _("Administration") }
         is_attr_accessor :logout_url, :default => Spider::Auth.request_url+'/login/logout'
         is_attr_accessor :"full-page", :type => Spider::Bool, :default => false
         attr_accessor :custom_widgets

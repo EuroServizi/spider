@@ -52,7 +52,12 @@ module Spider; module ControllerMixins
         # @return [String] the request_path prefixed with http:// and the current host.
         def request_url
             return request_path unless @request.env['HTTP_HOST']
-            'http://'+@request.env['HTTP_HOST']+request_path
+            #'http://'+@request.env['HTTP_HOST']+request_path  vecchia versione con problemi con https
+            if @request.env["HTTPS"] == "on"
+                u = "https://#{@request.env['HTTP_HOST']}#{request_path}"
+            else
+                u = "http://#{@request.env['HTTP_HOST']}#{request_path}"
+            end
         end
         
         # @return [String] the request_url with query params, if any

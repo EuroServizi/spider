@@ -80,7 +80,7 @@ module Spider; module Auth
         def try_rescue(exc)
             if (exc.is_a?(Unauthorized))
                 base = (@current_require && @current_require[:redirect]) ? @current_require[:redirect] : Spider::Auth.request_url+'/login/'
-                base = self.class.url+'/'+base unless base[0].chr == '/'
+                base = self.class.http_s_url+'/'+base unless base[0].chr == '/'
                 base += (base.include?("?") ? "&" : "?")
                 get_params = @request.params.map{|k,v| "#{k}=#{v}"}.join('&')+"&" || ""
                 redir_url = base + get_params +'redirect='+URI.escape(@request.path)
