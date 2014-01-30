@@ -1,6 +1,9 @@
 Spider::Template.define_named_asset 'jquery', [
 #   [:js, 'js/jquery/jquery-1.5.2.js', Spider::Components, {:cdn => 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js'}]
-    [:js, 'js/jquery/jquery-1.8.3.js', Spider::Components, {:cdn => 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'}]
+    #[:js, 'js/jquery/jquery-1.8.3.js', Spider::Components, {:cdn => 'https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'}]
+    #uso il jquery in locale che ha le modifiche per riconoscere il browser IE11
+    [:js, 'js/jquery/jquery-1.8.3.js', Spider::Components]
+ 
  ]
 
 Spider::Template.define_named_asset 'spider', [
