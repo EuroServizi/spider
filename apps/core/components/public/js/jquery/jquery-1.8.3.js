@@ -6511,6 +6511,12 @@ if ( browser.chrome ) {
 	browser.safari = true;
 }
 
+if (!!navigator.userAgent.match(/Trident\/7\./)){
+	browser.msie = true;
+	browser.version = matched.version;
+}
+
+
 jQuery.browser = browser;
 
 jQuery.sub = function() {
