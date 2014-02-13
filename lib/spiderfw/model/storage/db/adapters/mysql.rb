@@ -495,7 +495,9 @@ module Spider; module Model; module Storage; module Db
              when 'String'
                  'VARCHAR'
              when 'Spider::DataTypes::Text'
-                 'TEXT'
+                 return 'TEXT' if (attributes[:length].blank? || (!attributes[:length].blank? && attributes[:length] < 65536)) 
+                 return 'MEDIUMTEXT' if !attributes[:length].blank? && attributes[:length] >= 65536 && attributes[:length] < 16777216
+                 return 'LONGTEXT' if !attributes[:length].blank? && attributes[:length] >= 16777216
              when 'Fixnum'
                  'INT'
              when 'Float'
@@ -522,6 +524,8 @@ module Spider; module Model; module Storage; module Db
                  db_attributes[:length] = attributes[:length] || 255
              when 'Fixnum'
                  db_attributes[:length] = 11
+             when 'Spider::DataTypes::Text'
+                 db_attributes[:length] = nil
              end
              db_attributes[:autoincrement] = false if attributes[:autoincrement] && !attributes[:primary_key]
              return db_attributes
@@ -554,8 +558,8 @@ module Spider; module Model; module Storage; module Db
          end
          
          def schema_field_varchar_equal?(current, field)
-             # FIXME
-             return true
+             # modifica fatta per introduzione LONGTEXT
+             current[:type] == field[:type] && current[:length] == field[:attributes][:length]
          end
          
          
