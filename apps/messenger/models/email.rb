@@ -8,7 +8,7 @@ module Spider; module Messenger
         element :to, String, :label => _("To")
         element :headers, Text, :label => _("Headers")
         element :subject, String, :label => _("Subject"), :computed_from => [:headers]
-        element :body, Text, :label => _("Body")
+        element :body, Text, :label => _("Body"), :length => 100000000 #mette un campo longtext 
         
         queue :email
         
