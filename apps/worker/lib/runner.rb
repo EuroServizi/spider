@@ -6,7 +6,11 @@ module Spider; module Worker
     class Runner
         
         def initialize
-            @scheduler = Rufus::Scheduler.start_new
+            if Gem.loaded_specs['rufus-scheduler'].version.to_s < "3.0.0"
+                @scheduler = Rufus::Scheduler.start_new
+            else
+                @scheduler = Rufus::Scheduler.new
+            end
         end
         
         def stop
