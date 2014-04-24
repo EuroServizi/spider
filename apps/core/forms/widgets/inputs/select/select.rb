@@ -50,7 +50,7 @@ module Spider; module Forms
             end
             @scene.values = {}
             @scene.selected = {}
-            if @model || (@scene.data.is_a?(QuerySet) && @scene.data.autoload?)
+            if @model || (@scene.data.is_a?(Spider::Model::QuerySet) && @scene.data.autoload?)
                 tree_el = nil
                 if attributes[:tree_element]
                     tree_el = @model.elements[attributes[:tree_element]]
@@ -65,12 +65,22 @@ module Spider; module Forms
                     @scene.tree_depth = tree_el.attributes[:tree_depth]
                 end
             end
+
             if @value
-                val = @multiple ? @value : [@value]
+                if @multiple && @value.model.junction? && @value.model != @model 
+                    our_element = @value.model.elements_array.find{ |el| el.type == @model }
+                    val = @value.map{ |obj| obj.get(our_element) }.uniq
+                else
+                    val = @multiple ? @value : [@value]
+                end
+                
                 val.each do |v|
                     @scene.selected[obj_to_key_str(v)] = true
                 end
             end
+
+
+            
             @scene.data.each_index do |i|
                 @scene.values[i] = obj_to_key_str(@scene.data[i])
             end
@@ -79,6 +89,7 @@ module Spider; module Forms
 
         
         def value=(val)
+            
             if val.blank?
                 @value = nil
                 return
