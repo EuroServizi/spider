@@ -177,8 +177,10 @@ module Spider; module Components
                 list = "<ul>"
                 if row[el]
                     row[el][0..2].each{ |sub|
-                        if sub && element.junction? && element.model.attributes[:sub_model] != @model
-                            sub = sub.get(element.attributes[:junction_their_element]) 
+                        #corretto errore, il controllo guardava solo se il sub_model (il modello collegato via junction) era uguale al modello corrente
+                        # <= controlla se è uguale o una sottoclasse
+                        if sub && element.junction? && !(@model <= element.model.attributes[:sub_model])
+                            sub = sub.get(element.attributes[:junction_their_element])
                         end
                         sub_desc = sub.nil? ? '' : sub.to_s
                         sub_desc ||= ''

@@ -59,6 +59,9 @@ module Spider; module Auth
                     $out << "Loggato"
                 end
             else
+                #forzo la cancellazione della sessione per problemi con diversi login 
+                # per amministratori servizi
+                @request.session[:auth] = nil
                 @scene.failed_login = true
                 @response.status = 401
                 @scene.login = @request.params['login']
