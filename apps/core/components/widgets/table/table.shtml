@@ -29,7 +29,7 @@
             </tpl:pass>
         </tbody>
     </table>
-    <div sp:if="@pages > 1" class="pagination">
+    <div sp:if="!@pages.blank? && @pages > 1" class="pagination">
         <ul>
             <li sp:if="@page > 1">
                 <a class="prev" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page-1 }">&larr; _(Previous)</a>
