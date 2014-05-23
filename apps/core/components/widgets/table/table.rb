@@ -116,6 +116,8 @@ module Spider; module Components
                 @scene.page = @page
                 @scene.paginate_first = [@page-5, 1].max
                 @scene.paginate = true
+            else
+                @rows.limit = @attributes[:row_limit]
             end
             if @sort_el
                 @sort_el.each do |el|
