@@ -1,3 +1,5 @@
+# -*- encoding : utf-8 -*-
+
 require 'spiderfw/controller/spider_controller'
 require 'spiderfw/controller/session/memory_session'
 require 'spiderfw/controller/session/file_session'
@@ -11,7 +13,8 @@ module Spider
         def initialize(request, response, scene=nil)
             response.status = Spider::HTTP::OK
             response.headers = {
-                'Content-Type' => 'text/plain'
+                'Content-Type' => 'text/plain',
+                'Accept-Charset' => 'utf-8'
             }
             @previous_stdout = $stdout
             Thread.current[:stdout] = response.server_output

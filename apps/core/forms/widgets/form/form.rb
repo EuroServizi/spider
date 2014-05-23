@@ -363,7 +363,7 @@ module Spider; module Forms
                 next unless input.modified?
                 begin
                     if (input.done?)
-                        obj.set(element_name, input.value)
+                        obj.set(element_name, (input.value.respond_to?(:force_encoding) ? input.value.force_encoding('UTF-8') : input.value ) ) 
                     else
                         inputs_done = false
                     end
