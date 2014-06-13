@@ -196,10 +196,68 @@ Spider::Template.define_named_asset 'bootstrap-scrollspy', [
     [:js, 'bootstrap/js/bootstrap-scrollspy.js', Spider::Components]
 ]
 
-Spider::Template.define_named_asset 'bootstrap-tabs', [
-    [:js, 'bootstrap/js/bootstrap-tabs.js', Spider::Components]
+Spider::Template.define_named_asset 'bootstrap-tab', [
+    [:js, 'bootstrap/js/bootstrap-tab.js', Spider::Components]
 ]
 
 Spider::Template.define_named_asset 'bootstrap-twipsy', [
     [:js, 'bootstrap/js/bootstrap-twipsy.js', Spider::Components]
 ]
+
+#
+# NUOVI ASSETS PER BOOTSTRAP 3
+#
+
+Spider::Template.define_named_asset 'bootstrap-3-sass', [
+    [:css, 'bootstrap_3/scss/bootstrap.scss', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-affix', [
+    [:js, 'bootstrap_3/js/affix.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-alerts', [
+    [:js, 'bootstrap_3/js/alert.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-buttons', [
+    [:js, 'bootstrap_3/js/button.js', Spider::Components]
+]
+
+
+Spider::Template.define_named_asset 'bootstrap-3-carousel', [
+    [:js, 'bootstrap_3/js/carousel.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-collapse', [
+    [:js, 'bootstrap_3/js/collapse.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-dropdown', [
+    [:js, 'bootstrap_3/js/dropdown.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-modal', [
+    [:js, 'bootstrap_3/js/modal.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-popover', [
+    [:js, 'bootstrap_3/js/popover.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-scrollspy', [
+    [:js, 'bootstrap_3/js/scrollspy.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-tabs', [
+    [:js, 'bootstrap_3/js/tab.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-tooltip', [
+    [:js, 'bootstrap_3/js/tooltip.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-transition', [
+    [:js, 'bootstrap_3/js/transition.js', Spider::Components]
+]
+
