@@ -14,7 +14,7 @@ module Spider
         
         def save_cache
             File.open(self.class.cache_file, 'w') do |f|
-                f.puts(Marshal.dump(self))
+                f.puts(Marshal.dump(self.to_s))
             end
         end
         

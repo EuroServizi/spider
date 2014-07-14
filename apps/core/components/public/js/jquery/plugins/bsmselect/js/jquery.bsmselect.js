@@ -184,7 +184,7 @@
      */
     selectFirstItem: function() {
       setTimeout(function(){
-        $('option:eq(0)', this.$select[multiple]).attr('selected', 'selected');
+        $('option:eq(0)', this.$select).attr('selected', 'selected');
       }, 1000);
     },
 

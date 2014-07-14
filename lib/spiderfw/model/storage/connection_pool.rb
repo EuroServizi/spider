@@ -100,12 +100,16 @@ module Spider; module Model; module Storage
                     if @connections.length < @max_size
                         create_new_connection
                     else
-                        Spider.logger.debug "#{Thread.current} WAITING FOR CONNECTION, #{@queue.count_waiters} IN QUEUE"
+                        # metodo count_waiters non definito in ruby > 1.9.1
+                        #Spider.logger.debug "#{Thread.current} WAITING FOR CONNECTION, #{@queue.count_waiters} IN QUEUE"
+                        Spider.logger.debug "#{Thread.current} WAITING FOR CONNECTION"
                         unless @queue.wait(@timeout)
                             clear_stale_connections
                             create_new_connection if @free_connections.empty? && @connections.length < @max_size
                             if @free_connections.empty?
-                                Spider.logger.error "#{Thread.current} GOT TIRED WAITING, #{@queue.count_waiters} IN QUEUE"
+                                # metodo count_waiters non definito in ruby > 1.9.1
+                                #Spider.logger.error "#{Thread.current} GOT TIRED WAITING, #{@queue.count_waiters} IN QUEUE"
+                                Spider.logger.error "#{Thread.current} GOT TIRED WAITING"
                                 raise StorageException, "Unable to get a #{storage_type} connection in #{@timeout} seconds" if @timeout
                             end
                         end
