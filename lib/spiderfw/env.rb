@@ -1,10 +1,5 @@
 RUBY_VERSION_PARTS = RUBY_VERSION.split('.')
 ENV['LC_CTYPE'] = 'en_US.UTF-8'
-if RUBY_VERSION =~ /1.9/
-	Encoding.default_external = Encoding::UTF_8
-	Encoding.default_internal = Encoding::UTF_8
-end
-
 $SPIDER_PATH ||= File.expand_path(File.dirname(__FILE__)+'/../..')
 $SPIDER_PATHS ||= {}
 $SPIDER_PATHS[:core_apps] ||= File.join($SPIDER_PATH, 'apps')

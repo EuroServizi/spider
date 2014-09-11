@@ -1,6 +1,6 @@
 require 'digest/md5'
 require 'net/http'
-require 'iconv'
+require 'iconv' if RUBY_VERSION =~ /1.8/
 
 module Spider::Messenger
 

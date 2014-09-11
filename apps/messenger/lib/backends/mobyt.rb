@@ -1,6 +1,6 @@
 require 'digest/md5'
 require 'net/http'
-require 'iconv'
+require 'iconv' if RUBY_VERSION =~ /1.8/
 
 module Spider::Messenger
 
@@ -8,7 +8,11 @@ module Spider::Messenger
 
             def self.parametri(username,password,to,from,testo,operation="TEXT",udh="")
                   #cambio la codifica per gli accenti e caratteri particolari
-                  testo_codificato = Iconv.conv('ISO-8859-15', 'UTF-8', testo)
+                  if RUBY_VERSION =~ /1.8/
+                    testo_codificato = Iconv.conv('ISO-8859-15', 'UTF-8', testo)
+                  else
+                    testo_codificato = testo.encode('ISO-8859-15', 'UTF-8')
+                  end
                   string_digest = [username, operation, to, from, testo_codificato, password].map{ |val|
                       val.to_s 
                   }.join("")

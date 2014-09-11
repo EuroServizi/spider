@@ -1,6 +1,6 @@
 require 'rexml/document'
 require 'webrick/httputils'
-require 'iconv'
+require 'iconv' if RUBY_VERSION =~ /1.8/
 
 module Spider; module WebDAV
     
@@ -806,12 +806,21 @@ module Spider; module WebDAV
         def codeconv_str_fscode2utf(str)
     		return str if @options[:FileSystemCoding] == "UTF-8"
             debug "codeconv str fscode2utf: orig='#{str}'"
-    		begin
-    			ret = Iconv.iconv("UTF-8", @options[:FileSystemCoding], str).first
-    		rescue Iconv::IllegalSequence
-    			warn "code conversion fail! #{@options[:FileSystemCoding]}->UTF-8 str=#{str.dump}"
-    			ret = str
-    		end
+            if RUBY_VERSION =~ /1.8/
+        		begin
+        			ret = Iconv.iconv("UTF-8", @options[:FileSystemCoding], str).first
+        		rescue Iconv::IllegalSequence
+        			warn "code conversion fail! #{@options[:FileSystemCoding]}->UTF-8 str=#{str.dump}"
+        			ret = str
+        		end
+            else
+                begin
+                    ret = str.encode("UTF-8", @options[:FileSystemCoding]).first
+                rescue rescue EncodingError
+                    warn "code conversion fail! #{@options[:FileSystemCoding]}->UTF-8 str=#{str.dump}"
+                    ret = str
+                end
+            end
     		debug "codeconv str fscode2utf: ret='#{ret}'"
     		ret
     	end

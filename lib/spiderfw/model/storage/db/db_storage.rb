@@ -1,6 +1,6 @@
 require 'spiderfw/model/storage/base_storage'
 require 'spiderfw/model/mappers/db_mapper'
-require 'iconv'
+require 'iconv' if RUBY_VERSION =~ /1.8/
 
 module Spider; module Model; module Storage; module Db
     
@@ -206,10 +206,18 @@ module Spider; module Model; module Storage; module Db
             if (type.name == 'String' || type.name == 'Spider::DataTypes::Text')
                 enc = @configuration['encoding']
                 if (enc && enc.downcase != 'utf-8')
-                    begin
-                        value = Iconv.conv('utf-8//IGNORE', enc, value.to_s+' ')[0..-2] if value
-                    rescue Iconv::InvalidCharacter
-                        value = ''
+                    if RUBY_VERSION =~ /1.8/
+                        begin
+                            value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] if value
+                        rescue Iconv::InvalidCharacter
+                            value = ''
+                        end
+                    else
+                        begin
+                            value = (value.to_s).encode('UTF-8', enc, :invalid => :replace, :undef => :replace) if value  
+                        rescue EncodingError
+                            value = ''
+                        end
                     end
                 end
             end
@@ -222,10 +230,18 @@ module Spider; module Model; module Storage; module Db
             when 'String', 'Spider::DataTypes::Text'
                 enc = @configuration['encoding']
                 if (enc && enc.downcase != 'utf-8')
-                    begin
-                        value = Iconv.conv(enc+'//IGNORE', 'utf-8', value.to_s+' ')[0..-2]
-                    rescue Iconv::InvalidCharacter
-                        value = ''
+                    if RUBY_VERSION =~ /1.8/
+                        begin
+                            value = Iconv.conv(enc+'//IGNORE//TRANSLIT', 'utf-8', value.to_s+' ')[0..-2]
+                        rescue Iconv::InvalidCharacter
+                            value = ''
+                        end
+                    else
+                        begin
+                            value = (value.to_s).encode(enc, 'UTF-8', :invalid => :replace, :undef => :replace) if value  
+                        rescue EncodingError
+                            value = ''
+                        end
                     end
                 end
             when 'BigDecimal'
