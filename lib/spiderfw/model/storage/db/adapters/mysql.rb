@@ -151,12 +151,12 @@ module Spider; module Model; module Storage; module Db
         
 
         def do_commit
-            curr[:conn].commit if curr[:conn]
+            curr[:conn].commit unless curr[:conn].blank?
             curr[:in_transaction] = false
         end
         
         def do_rollback
-            curr[:conn].rollback if curr[:conn]
+            curr[:conn].rollback unless curr[:conn].blank?
             curr[:in_transaction] = false
         end
         
@@ -212,7 +212,7 @@ module Spider; module Model; module Storage; module Db
                     return res
                 end
             rescue => exc
-                release
+                release if !in_transaction?
                 if (exc.message =~ /Duplicate entry/)
                     raise Spider::Model::Storage::DuplicateKey
                 else
@@ -220,7 +220,7 @@ module Spider; module Model; module Storage; module Db
                 end
             ensure
                 query_finished
-                release if curr[:conn] && !in_transaction?
+                release if !curr[:conn].blank? && !in_transaction?
             end
         end
          

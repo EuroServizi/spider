@@ -10,6 +10,15 @@ module Spider; module Model
         def list_mixin_modified_elements
             @list_mixin_modified_elements ||= {}
         end
+
+
+        def _ignore_list!
+            @list_mixin_ignore = true
+        end
+
+        def _ignore_list?
+            @list_mixin_ignore
+        end
         
         module MapperMethods
             
