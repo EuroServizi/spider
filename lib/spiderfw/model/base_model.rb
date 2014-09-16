@@ -2,7 +2,7 @@ require 'spiderfw/model/mixins/state_machine'
 require 'spiderfw/model/element'
 require 'spiderfw/model/integrated_element'
 require 'spiderfw/model/junction'
-require 'iconv'
+require 'iconv' if RUBY_VERSION =~ /1.8/
 
 module Spider; module Model
     
@@ -2396,7 +2396,7 @@ module Spider; module Model
         # For more fine-grained control of the output, it is better to use the #cut method and call to_json on it.
         def to_json(state=nil, &proc)
             require 'json'
-            ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+            ic = Iconv.new('UTF-8//IGNORE', 'UTF-8') if RUBY_VERSION =~ /1.8/
             if (@tmp_json_seen && !block_given?)
                 pks = self.class.primary_keys.map{ |k| get(k).to_json }
                 pks = pks[0] if pks.length == 1
@@ -2428,7 +2428,11 @@ module Spider; module Model
                 else
                     val = get(name)
                     if (el.type == String || el.type == Text)
-                        val = ic.iconv(val + ' ')[0..-2]
+                        if RUBY_VERSION =~ /1.8/
+                            val = ic.iconv(val + ' ')[0..-2]
+                        else
+                            val = (val + ' ').encode('UTF-8')[0..-2]
+                        end
                     end
                     val = val.to_json
                     "#{name.to_json}: #{val}"
