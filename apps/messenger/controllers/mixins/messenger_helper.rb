@@ -47,11 +47,11 @@ module Spider; module Messenger
                 text = ERB.new(IO.read(path)).result(scene_binding)
             end
             mail = Mail.new
-            mail[:to] = to
-            mail[:from] = from
+            mail[:to] = (to.respond_to?(:force_encoding) ? to.force_encoding('UTF-8') : to)
+            mail[:from] = (from.respond_to?(:force_encoding) ? from.force_encoding('UTF-8') : from)
             mail.charset = "UTF-8"
             headers.each do |key, value|
-                mail[key] = value
+                mail[key] = (value.respond_to?(:force_encoding) ? value.force_encoding('UTF-8') : value)
             end
 
             if html
