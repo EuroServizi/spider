@@ -525,7 +525,10 @@ Spider.Controller = Class.extend({
 		    params = null;
 		}
 		if (!callback) callback = function(){};
-		var url = this.url+'/'+method+'.json';
+		var url = this.url+'/'+method;
+		if( options == null || options['dataType'] == null || options['dataType'] == 'json'){
+			url = url+'.json';
+		}
 		var defaults = {
 			url: url,
 			type: 'POST',

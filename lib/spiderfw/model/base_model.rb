@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'spiderfw/model/mixins/state_machine'
 require 'spiderfw/model/element'
 require 'spiderfw/model/integrated_element'
@@ -2427,11 +2428,18 @@ module Spider; module Model
                     val ? "#{name.to_json}: #{val.to_json}" : nil
                 else
                     val = get(name)
+                    enc = Spider.conf.get('storages')['default']['encoding']
+                    enc ||= 'UTF-8'
+
                     if (el.type == String || el.type == Text)
                         if RUBY_VERSION =~ /1.8/
                             val = ic.iconv(val + ' ')[0..-2]
                         else
-                            val = (val + ' ').encode('UTF-8')[0..-2]
+                            begin
+                                val = ((val+' ').encode('UTF-8', enc, :invalid => :replace, :undef => :replace))[0..-2] if val
+                            rescue EncodingError  
+                                val = ''  
+                            end 
                         end
                     end
                     val = val.to_json

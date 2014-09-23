@@ -32,7 +32,7 @@ module Spider; module HTTP
         def write(msg)
             send_headers unless @headers_sent
             #workaround per ruby 1.9.3, problemi su parte di admin, faccio force encoding a utf8
-	    msg_dup = msg.to_s.dup
+	        msg_dup = msg.to_s.dup
             @w.write(msg_dup.respond_to?(:force_encoding) ? msg_dup.force_encoding('UTF-8') : msg_dup)
         end
 
