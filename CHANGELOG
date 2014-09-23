@@ -1,3 +1,19 @@
+== 0.6.32
+* Correzioni per gestione transazioni e metodi per lista per mod cms
+* Aggiunto il force_encoding sui campi della mail per problemi con accenti
+* Correzione al env.rb per problemi di encoding
+
+== 0.6.31
+* Forzato il logout se password sbagliata per problemi con amministratori servizi
+* Corretto in table.rb il controllo sugli elementi multipli per problema
+* Modifica per avere le tabelle del calendario eventi accessibile
+* Corretto problema nella widget select, come nei gruppi utenti
+* Aggiunto controllo per avere una core:table non paginata
+* Modifiche per widget form che se riceve stringhe non utf8 le converte in utf8 e accept-charset
+* Aggiunto bootstrap3 negli assets e come cartella
+* Modifiche per wait_counters che da errore in 1.9.3, mod per bsmselect, mod in encoding per 1.9.3
+* Aggiunto controllo su gemma iconv che ora è deprecata dalla versione 1.9, cambiato repo di default in options
+
 == 0.6.30
 * Aggiunto datatype LONGTEXT per mysql
 * Aggiunto controllo per rufus-scheduler > della versione 3.0
