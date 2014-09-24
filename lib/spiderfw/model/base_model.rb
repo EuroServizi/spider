@@ -2383,9 +2383,24 @@ module Spider; module Model
         # A compact representation of the object.
         # Note: inspect will not autoload the object.
         def inspect
+            ic = Iconv.new('UTF-8//IGNORE', 'UTF-8') if RUBY_VERSION =~ /1.8/
+            enc = Spider.conf.get('storages')['default']['encoding']
+            enc ||= 'UTF-8'
+            
             self.class.name+': {' +
             self.class.elements_array.select{ |el| (element_loaded?(el) || element_has_value?(el)) && !el.hidden? } \
-                .map{ |el| ":#{el.name} => #{get(el.name).to_s}"}.join(',') + '}'
+                .map{ |el|
+                    val = get(el.name).to_s
+                    if RUBY_VERSION =~ /1.8/
+                        val = ic.iconv(val + ' ')[0..-2]
+                    else
+                        begin
+                            val = ((val+' ').encode('UTF-8', enc, :invalid => :replace, :undef => :replace))[0..-2] if val
+                        rescue EncodingError  
+                            val = ''  
+                        end 
+                    end
+                 ":#{el.name} => #{val}"}.join(',') + '}'
         end
         
         # Returns a JSON representation of the object.
