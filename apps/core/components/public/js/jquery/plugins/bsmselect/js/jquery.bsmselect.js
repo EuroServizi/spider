@@ -183,9 +183,14 @@
      * Select the first item of the new select
      */
     selectFirstItem: function() {
-      setTimeout(function(){
-        $('option:eq(0)', this.$select).attr('selected', 'selected');
-      }, 1000);
+      $('option:eq(0)', this.$select).attr('selected', 'selected');
+        /* tolto la modifica del commit e3a8027037d4d02601d910f40794f103968088c2 
+        per mettere selected su select dei permessi, rendeva lo stato bianco in modifica utente da admin */
+        /*
+        setTimeout(function(){
+         $('option:eq(0)', this.$select).attr('selected', 'selected');
+        }, 1000);
+        */
     },
 
     /**
