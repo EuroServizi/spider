@@ -1152,6 +1152,30 @@ msgstr "Verifico se il db esiste... "
 msgid "Database %s does not exist."
 msgstr "Il database %s non esiste."
 
+#: lib/spiderfw/setup/spider_setup_wizard.rb:382
+msgid "Oracle gem is not available. Install?"
+msgstr "La gemma oracle non è disponibile. Installarla?"
+
+#: lib/spiderfw/setup/spider_setup_wizard.rb:389
+msgid "Installation of oracle gem failed."
+msgstr "L'installazione della gemma oracle è fallita."
+
+#: lib/spiderfw/setup/spider_setup_wizard.rb:396
+msgid "Can't configure oracle without the ruby-oci8 gem."
+msgstr "Non posso configurare oracle senza la gemma ruby-oci8."
+
+#: lib/spiderfw/setup/spider_setup_wizard.rb:404
+msgid "Do you want to connect via tns or direct connection?"
+msgstr "Vuoi connetterti con tns o connessione diretta"
+
+#: lib/spiderfw/setup/spider_setup_wizard.rb:422
+msgid "Tns seems not responding."
+msgstr "Tns sembra non rispondere."
+
+#: lib/spiderfw/setup/spider_setup_wizard.rb:446
+msgid "Server seems not responding."
+msgstr "Il Server sembra non rispondere."
+
 #: lib/spiderfw/spider.rb:850
 msgid "Unable to start debugger. Ensure ruby-debug is installed (or set debugger.start to false)."
 msgstr "Impossibile avviare il debugger. Assicurati che ruby-debug sia installato (o imposta debugger.start a false)."

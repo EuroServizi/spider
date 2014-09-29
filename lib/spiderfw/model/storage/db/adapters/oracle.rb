@@ -21,8 +21,22 @@ module Spider; module Model; module Storage; module Db
             super << Spider::DataTypes::Binary
         end
         
+        def self.parse_url(url)
+            # db:oracle://<username:password>:connect_role@<database>
+            # where database is
+            # the net8 connect descriptor (TNS) or
+            # for Oracle client 10g or later, hostname_or_ip:port_no/oracle_sid
+            if (url =~ /.+:\/\/(?:(.+):(.+)(?::(.+))?@)?(.+)/)
+                @user = $1
+                @pass = $2
+                @role = $3
+                @dbname = $4
+            else
+                raise ArgumentError, "Oracle url '#{url}' is invalid"
+            end
+            @connection_params = [@user, @pass, @dbname, @role]
+        end
 
-        
         def parse_url(url)
             # db:oracle://<username:password>:connect_role@<database>
             # where database is
@@ -38,8 +52,6 @@ module Spider; module Model; module Storage; module Db
             end
             @connection_params = [@user, @pass, @dbname, @role]
         end
-        
-
         
         def value_for_condition(type, value)
             return value if value.nil?

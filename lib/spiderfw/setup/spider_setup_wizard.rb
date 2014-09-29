@@ -16,7 +16,7 @@ module Spider
         end
         
         def ask_error
-            res = ask?(_("Do you want to change your settings?"), :default => true)
+            res = (ask? _("Do you want to change your settings?"), :default => true)
             !res
         end
         
@@ -69,7 +69,7 @@ module Spider
 
                 print prompt
             
-                res = $stdin.gets.strip.downcase
+                res = $stdin.gets.strip
                 
                 good = true
                 if options[:type] == Spider::Bool
@@ -181,13 +181,14 @@ module Spider
         
     end
     
+
     class SpiderSetupWizard < Wizard
         attr_accessor :first_run
         
         def run
         
             if ask? _("Do you want to configure a database?"), :default => (@first_run ? true : nil)
-                ask _("Which database do you want to configure?"), :db_label, :default => 'default'
+                ask _("Which database do you want to configure?"), :db_label, :choices => ['default', 'civiliaopen', 'tracciatointermedio'], :default => 'default'
                 conf = Spider.conf.get("storages.#{@db_label}")
                 url_db_type = nil
                 if conf && conf["url"]    
@@ -372,6 +373,108 @@ module Spider
     end
     
     class OracleSetupWizard < Wizard
+        def run
+            
+            require 'rubygems'
+            require 'rubygems/command.rb'
+            require 'rubygems/dependency_installer.rb'
+            unless Spider.gem_available?('ruby-oci8')
+                if ask? _("Oracle gem is not available. Install?")
+                    ok = false
+                    while !ok
+                        inst = Gem::DependencyInstaller.new
+                        begin
+                            inst.install 'ruby-oci8'
+                        rescue
+                            error _("Installation of oracle gem failed.")
+                            puts _(
+                            "The oracle gem failed to compile, so the pure-ruby version was installed.
+                            You should install the compiled version manually for better performance.")
+                        end
+                    end
+                else
+                    error _("Can't configure oracle without the ruby-oci8 gem.")
+                    return
+                end
+            end
+            require 'oci8'
+            
+            ok = false
+            while !ok
+                if (ask _("Do you want to connect via tns or direct connection?"), 
+                    :choices => ['tns', 'direct']) == 'tns'
+                    ask! _("Tns:"), :tns, :default => 'ORCL'
+                    ask _("Username"), :user
+                    ask _("Password"), :pass
+                    begin
+                        m = ::OCI8.new(@user, @pass, @tns)
+                        m.ping
+                        m.logoff
+                        connect_ok = true
+                        ok = true
+                        notify_partial("Ok.", true)
+                    rescue => myerr
+                        if myerr.exception.code == 1017
+                            notify_partial("Connection failed.", true)
+                            error _("Username or Password invalid.")
+                        elsif myerr.exception.code == 12154
+                            notify_partial("Connection failed.", true)
+                            error _("Tns seems not responding.")
+                        else
+                            notify_partial("", true)
+                            error _("Connection failed.")
+                        end
+                        ok = ask_error
+                    end
+                else
+                    ask _("Host:"), :host, :default => 'localhost'
+                    ask _("Port:"), :port, :default => 1521
+                    ask _("Tns:"), :tns, :default => 'ORCL'
+                    ask _("Username"), :user
+                    ask _("Password"), :pass
+                    @db_name = "//#{@host}:#{@port}/#{@tns}"
+                    begin
+                        m = ::OCI8.new(@user, @pass, @db_name)
+                        ok = true
+                        m.logoff
+                    rescue => myerr
+                        if myerr.exception.code == 1017
+                            notify_partial("Connection failed.", true)
+                            error _("Username or Password invalid.")
+                        elsif myerr.exception.code == 12154
+                            notify_partial("Connection failed.", true)
+                            error _("Server seems not responding.")
+                        else
+                            notify_partial("", true)
+                            error _("Connection failed.")
+                        end
+                        ok = ask_error
+                    end
+                end
+            end
+        end
+
+        def self.parse_db_name(db_name)
+            if (db_name =~ /(?:(.+):(.+))\/(?:(.+))/)
+                @host =$1
+                @port = $2
+                @tns = $3
+            else
+                @tns = db_name
+            end
+        end
+
+        def get_url
+            return "db:oracle://#{@user}:#{@pass}@#{@host}:#{@port}/#{@tns}" if @user && @pass && @host && @port && @tns
+            return "db:oracle://#{@user}:#{@pass}@#{@tns}" if @user && @pass && @tns
+            return nil
+        end
+        
+        def parse_url(url)
+            @user, @pass, @db_name, @role = Spider::Model::Storage::Db::Oracle.parse_url(url)
+            self.class.parse_db_name(@db_name)
+        end
+
     end
     
 end
