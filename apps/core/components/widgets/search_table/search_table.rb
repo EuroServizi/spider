@@ -16,6 +16,10 @@ module Spider; module Components
             end
             return qs
         end
+
+        def run
+            super
+        end
         
     end
     

@@ -32,20 +32,20 @@
     <div sp:if="!@pages.blank? && @pages > 1" class="pagination">
         <ul>
             <li sp:if="@page > 1">
-                <a class="prev" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page-1 }">&larr; _(Previous)</a>
+                <a class="prev" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page-1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }">&larr; _(Previous)</a>
             </li>
             <li sp:if="@page == 1" class="disabled">
                 <a class="prev disabled">&larr; _(Previous)</a>
             </li>
             <sp:pass sp:if="@paginate_first > 1">
                 <li>
-                    <a href="{ @request[:path] }?_w{ @widget[:param] }[page]=1" class="page">1</a>
+                    <a href="{ @request[:path] }?_w{ @widget[:param] }[page]=1{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">1</a>
                 </li>
                 <li class="disabled"><a>...</a></li>
             </sp:pass>
             <sp:pass sp:each="(@paginate_first..@paginate_last) |i|" >
                 <li sp:if="i != @page">
-                    <a  href="{ @request[:path] }?_w{ @widget[:param] }[page]={ i }" class="page">
+                    <a  href="{ @request[:path] }?_w{ @widget[:param] }[page]={ i }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">
                         { i }
                     </a>
                 </li>
@@ -58,11 +58,11 @@
                     <a>...</a>
                 </li>
                 <li>
-                    <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @pages }" class="page">{ @pages }</a> 
+                    <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @pages }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">{ @pages }</a> 
                 </li>
             </sp:pass>
             <li sp:if="@has_more">
-                <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page+1 }">_(Next) &rarr;</a>
+                <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page+1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }">_(Next) &rarr;</a>
             </li>
             <li sp:if="!@has_more" class="disabled">
                 <a class="next disabled">_(Next) &rarr;</a>
