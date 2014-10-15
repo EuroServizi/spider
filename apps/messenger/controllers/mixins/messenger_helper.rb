@@ -44,7 +44,7 @@ module Spider; module Messenger
                 scene.each_pair{ |key,val| val = iconv.iconv(val) }
             elsif RUBY_VERSION =~ /1.9/
                 #scene.each_pair{ |key,val| val = val.encode('cp1252','utf-8').force_encoding('utf-8') if val.is_a?(String) }
-                scene.each_pair{ |key,val| val.respond_to?(:force_encoding) ? val.force_encoding('UTF-8') : val  }
+                scene.each_pair{ |key,val| val = val.respond_to?(:force_encoding) ? val.force_encoding('UTF-8') : val  }
             end
             scene_binding = scene.instance_eval{ binding }
             if (path_txt || path_html)
