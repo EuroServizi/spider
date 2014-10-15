@@ -38,14 +38,22 @@ module Spider; module Messenger
             path_txt = nil unless path_txt && File.exist?(path_txt)
             path_html = klass.find_resource_path(:email, template+'.html')
             path_html = nil unless path_html && File.exist?(path_html)
+
+            #conversione dei valori all'interno della scene
+            if RUBY_VERSION =~ /1.8/
+                scene.each_pair{ |key,val| val = iconv.iconv(val) }
+            elsif RUBY_VERSION =~ /1.9/
+                scene.each_pair{ |key,val| val = val.encode('cp1252','utf-8').force_encoding('utf-8') if val.is_a?(String) }
+            end
             scene_binding = scene.instance_eval{ binding }
             if (path_txt || path_html)
-                text = ERB.new(IO.read(path_txt)).result(scene_binding) if path_txt
-                html = ERB.new(IO.read(path_html)).result(scene_binding) if path_html
+                text = ERB.new( IO.read(path_txt) ).result(scene_binding) if path_txt
+                html = ERB.new( IO.read(path_html) ).result(scene_binding) if path_html
             else
                 path = klass.find_resource_path(:email, template)
-                text = ERB.new(IO.read(path)).result(scene_binding)
+                text = ERB.new( IO.read(path) ).result(scene_binding)
             end
+
             mail = Mail.new
             mail[:to] = (to.respond_to?(:force_encoding) ? to.force_encoding('UTF-8') : to)
             mail[:from] = (from.respond_to?(:force_encoding) ? from.force_encoding('UTF-8') : from)
