@@ -33,19 +33,18 @@ module Spider; module Messenger
             msg
         end
         
+
+
+
         def self.send_email(klass, template, scene, from, to, headers={}, attachments=[], params={})
             path_txt = klass.find_resource_path(:email, template+'.txt')
             path_txt = nil unless path_txt && File.exist?(path_txt)
             path_html = klass.find_resource_path(:email, template+'.html')
             path_html = nil unless path_html && File.exist?(path_html)
 
-            #conversione dei valori all'interno della scene
-            if RUBY_VERSION =~ /1.8/
-                scene.each_pair{ |key,val| val = iconv.iconv(val) }
-            elsif RUBY_VERSION =~ /1.9/
-                #scene.each_pair{ |key,val| val = val.encode('cp1252','utf-8').force_encoding('utf-8') if val.is_a?(String) }
-                scene.each_pair{ |key,val| val = val.respond_to?(:force_encoding) ? val.force_encoding('UTF-8') : val  }
-            end
+            #converte l'intera scene con ricorsione in utf-8
+            scene.convert_object
+
             scene_binding = scene.instance_eval{ binding }
             if (path_txt || path_html)
                 text = ERB.new( IO.read(path_txt) ).result(scene_binding) if path_txt
@@ -56,11 +55,11 @@ module Spider; module Messenger
             end
 
             mail = Mail.new
-            mail[:to] = (to.respond_to?(:force_encoding) ? to.force_encoding('UTF-8') : to)
-            mail[:from] = (from.respond_to?(:force_encoding) ? from.force_encoding('UTF-8') : from)
+            mail[:to] = to.convert_object 
+            mail[:from] = from.convert_object 
             mail.charset = "UTF-8"
             headers.each do |key, value|
-                mail[key] = (value.respond_to?(:force_encoding) ? value.force_encoding('UTF-8') : value)
+                mail[key] = value.convert_object 
             end
 
             if html
