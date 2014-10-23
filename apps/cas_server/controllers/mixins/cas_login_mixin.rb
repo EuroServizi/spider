@@ -149,6 +149,7 @@ module Spider; module CASServer
 
         __.html
         def login
+            debugger
             @service = clean_service_url(@request.params['service'] || @request.params['destination'])
             if @request.user && !@request.params.key?('renew')
                 if !@service || @service.empty? || cas_service_allowed?(@service, @request.user)
@@ -185,19 +186,6 @@ module Spider; module CASServer
                     $LOG.debug("Deleting #{tgt.class.name} '#{tgt}' for user '#{tgt.username}'")
                     tgt.delete
 
-                    if Spider.conf.get('cas.enable_single_sign_out')
-                        $LOG.debug("Deleting Service/Proxy Tickets for '#{tgt}' for user '#{tgt.username}'")
-                        tgt.service_tickets.each do |st|
-                            send_logout_notification_for_service_ticket(st)
-                            # TODO: Maybe we should do some special handling if send_logout_notification_for_service_ticket fails? 
-                            #       (the above method returns false if the POST results in a non-200 HTTP response).
-                            $LOG.debug "Deleting #{st.class.name} #{st.ticket.inspect}."
-                            st.delete
-                        end
-                    end
-
-                    $LOG.debug("Deleting #{tgt.class.name} '#{tgt}' for user '#{tgt.username}'")
-                    tgt.delete
                 end  
 
                 $LOG.info("User '#{tgt.username}' logged out.")
@@ -213,6 +201,53 @@ module Spider; module CASServer
                 super
             end
         end
+
+        #metodo chiamato dal logout del portale
+        def logout_cas(username) 
+            tgt_qs = TicketGrantingTicket.where(:username => username)
+            if tgt_qs
+                tgt_qs.each{ |tgt| 
+                    #inizio la transazione
+                    TicketGrantingTicket.storage.start_transaction
+                    begin
+                        # cancello i ServiceTicket
+                        service_tickets = tgt.service_tickets
+                        unless service_tickets.blank?
+                            service_tickets.each { |st|
+                                send_logout_notification_for_service_ticket(st)
+                                $LOG.debug "Deleting #{st.class.name} #{st.ticket.inspect}."
+                                st.delete
+                            }
+                        end
+                        $LOG.info("User '#{tgt.username}' logged out.")
+                        TicketGrantingTicket.storage.commit
+                    rescue Exception => exc
+                        TicketGrantingTicket.storage.rollback
+                        Spider.logger.error "** Errore logout cas"
+
+                    end
+
+                }
+                #cancello i TicketGrantingTicket
+                TicketGrantingTicket.storage.start_transaction
+                begin
+                    tgt_qs.each{ |tgt| 
+                        tgt.delete
+                    }
+                TicketGrantingTicket.storage.commit
+                rescue Exception => exc
+                    TicketGrantingTicket.storage.rollback
+                    Spider.logger.error "** Errore logout cas"
+                end
+
+            else
+                $LOG.warn("User tried to log out without a valid ticket-granting ticket")
+            end
+        end
+
+
+        
+
 
         def validate
             @service = clean_service_url(@request.params['service'])
