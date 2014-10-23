@@ -42,7 +42,7 @@ module Spider; module Messenger
             path_html = klass.find_resource_path(:email, template+'.html')
             path_html = nil unless path_html && File.exist?(path_html)
 
-            #converte l'intera scene con ricorsione in utf-8
+            #converte l'intera scene con ricorsione in utf-8 per evitare problemi in invio mail             
             scene.convert_object
 
             scene_binding = scene.instance_eval{ binding }

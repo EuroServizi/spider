@@ -30,21 +30,6 @@ class Object
         respond_to?(:empty?) ? empty? : !self
     end
 
-    #converte il valore stesso in utf-8 
-    def convert_value(encoding='UTF-8')
-        if self.is_a?(String)
-            if RUBY_VERSION =~ /1.8/
-                require 'iconv'
-                return Iconv.iconv("#{encoding}//IGNORE", encoding, self)
-            elsif RUBY_VERSION =~ /1.9/
-                return self.respond_to?(:force_encoding) ? self.force_encoding(encoding) : self     
-            else
-                return self
-            end
-        end
-        self
-    end
-
     #metodo ricorsivo per convertire in utf-8 tutto un oggetto con array o hash all'interno
     def convert_object(encoding='UTF-8')
         if self.respond_to?(:each_pair)
@@ -52,12 +37,26 @@ class Object
                 valore.convert_object
             }
         elsif self.respond_to?(:each) && !self.is_a?(String)
-            self.each{ |valore_array|
-                valore_array.convert_object
-            }
-        else
-            #caso base in cui chiamo il convert_value
-            return self.convert_value
+            #controllo se sto ciclando su un modello
+            if self.class < Spider::Model::BaseModel
+                #ritorna le chiavi degli elementi
+                
+                self.class.elements.each_pair{ |chiave_hash_modello, valore_hash_modello|
+                    self[chiave_hash_modello].convert_object unless self[chiave_hash_modello].respond_to?(:model)
+                }
+            else
+                #converto i singoli valori
+                self.each{ |valore_array|
+                    valore_array.convert_object
+                }
+            end
+        elsif self.is_a?(String)
+            if RUBY_VERSION =~ /1.8/
+                require 'iconv'
+                self.replace(Iconv.iconv(encoding, encoding, self).first)
+            elsif RUBY_VERSION =~ /1.9/
+                self.replace(self.force_encoding(encoding))
+            end
         end
     end
 
