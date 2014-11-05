@@ -109,8 +109,8 @@ module Spider; module HTTP
 
             controller = nil
             controller_done = false
-
-            run_block = lambda do
+            
+            run_block = Proc.new do
                 begin
                     controller = ::Spider::HTTPController.new(controller_request, controller_response)
                     controller.extend(Spider::FirstResponder)

@@ -149,7 +149,6 @@ module Spider; module CASServer
 
         __.html
         def login
-            debugger
             @service = clean_service_url(@request.params['service'] || @request.params['destination'])
             if @request.user && !@request.params.key?('renew')
                 if !@service || @service.empty? || cas_service_allowed?(@service, @request.user)
@@ -239,6 +238,7 @@ module Spider; module CASServer
                     TicketGrantingTicket.storage.rollback
                     Spider.logger.error "** Errore logout cas"
                 end
+                @request.cookies['tgt'] = nil
 
             else
                 $LOG.warn("User tried to log out without a valid ticket-granting ticket")

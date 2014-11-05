@@ -7,7 +7,7 @@ module Spider; module Forms
     
     class FileInput < Input
         tag 'file'
-        is_attr_accessor :save_path, :type => String, :default => lambda{ Spider.paths[:var]+'/data/uploaded_files' }
+        is_attr_accessor :save_path, :type => String, :default => Proc.new{ Spider.paths[:var]+'/data/uploaded_files' }
         
         def needs_multipart?
             true

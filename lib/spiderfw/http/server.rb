@@ -114,14 +114,16 @@ module Spider; module HTTP
                         ssl_server = ssl_rack.server if ssl_rack
                     end
                 end
-                do_shutdown = lambda{
+                do_shutdown = Proc.new{
                     Debugger.post_mortem = false if defined?(Debugger)
                     server.shutdown if server
                     ssl_server.shutdown if ssl_server
+
                     pid_file = File.join(Spider.paths[:var], 'run/server.pid')
                     begin
                         File.unlink(pid_file)
                     rescue Errno::ENOENT
+                        Spider.logger.info "Unlink del pid file non riuscito"
                     end
                 }
                 Spider.on_shutdown(&do_shutdown)
@@ -205,7 +207,7 @@ module Spider; module HTTP
 
                 unless @already_forked
                     Spider.main_process_startup
-                    exit_spawner = lambda{ 
+                    exit_spawner = Proc.new{ 
                         Spider.logger.debug "Spawner exiting" 
                         Process.kill 'KILL', @monitor_thread[:spawner_child_pid]
                     }
