@@ -1,3 +1,15 @@
+== 0.6.33
+* Modifiche per problemi con accenti e chiamate json
+* Encode aggiunto su funzione inspect
+* Corretto problemi in search_table che mantiene il parametro per la ricerca
+* Fatta conversione per invio delle mail con dati nella scene accentati
+* Usato force_encoding per invio della mail su tutti i campi della scene
+* Settato a true il single sign out del Cas
+* Fatto metodo ricorsivo per convertire un oggetto ruby in utf8 e cambiato il messenger helper
+* Aggiunto a livello di classe Object un metodo per convertire ricorsivamente in utf8 le stringhe nell'oggetto passato
+* Implementato metodo logout_cas in cas_login_mixin
+* Modifiche per CAS, cambiato lambda con Proc.new
+
 == 0.6.32
 * Correzioni per gestione transazioni e metodi per lista per mod cms
 * Aggiunto il force_encoding sui campi della mail per problemi con accenti
