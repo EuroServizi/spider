@@ -19,6 +19,9 @@ module Spider; module Components
         attribute :link_id, :type => Symbol
         attribute :link
         attribute :sort
+        #serve per i campi delle tabelle esterne che compaiono per il :reverse nel modello
+        #metterlo a false nella view per nascondere i campi
+        i_attribute :reverse_element, :type => TrueClass, :default => true
         i_attr_accessor :queryset
         i_attr_accessor :model
         attr_accessor :queryset, :condition, :page
@@ -83,6 +86,8 @@ module Spider; module Components
                     next if el.multiple? && el.association != :multiple_choice
                     next if el.type == Spider::DataTypes::Password
                     next if el.hidden?
+                    #serve per mostrare o no i campi delle chiavi esterne
+                    next if el.attributes[:added_reverse] && !@attributes[:reverse_element]
                 end
                 cnt += 1
                 els << el.name
