@@ -18,7 +18,7 @@ module Spider
                 require 'mongrel'
                 'mongrel'
             rescue LoadError
-                'webrick'
+                'thin'
             end
         },
         :type => String, :choices => ['webrick', 'mongrel', 'thin']

@@ -1087,18 +1087,35 @@ module Spider
         def init_ruby_debug
             begin
                 begin
-		   require 'ruby-debug'
-		rescue
-		   require 'debugger'
-		end
-                if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
-                    Debugger.wait_connection = true
-                    Debugger.start_remote
-                else
-                    Debugger.start
+                    case RUBY_VERSION
+                        when /2/
+                            require 'byebug'
+                            raise LoadError
+                        else
+                            require 'ruby-debug'
+                    end
+		        rescue
+                    require 'debugger'
+		        end
+                case RUBY_VERSION
+                    when /2/
+                        if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                            Byebug.wait_connection = true
+                            Byebug.start
+                        else
+                            Byebug.start
+                        end
+                    else
+                        if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                            Debugger.wait_connection = true
+                            Debugger.start_remote
+                        else
+                            Debugger.start
+                        end
                 end
             rescue LoadError, RuntimeError => exc
-                msg = _('Unable to start debugger. Ensure ruby-debug is installed (or set debugger.start to false).')
+                debugger
+                msg = _('Unable to start debugger. Ensure ruby-debug or byebug is installed (or set debugger.start to false).')
                 Spider.output(exc.message)
                 Spider.output(msg)
             end
