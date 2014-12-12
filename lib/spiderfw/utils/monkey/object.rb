@@ -55,7 +55,8 @@ class Object
                 require 'iconv'
                 self.replace(Iconv.iconv(encoding, encoding, self).first)
             elsif RUBY_VERSION =~ /1.9/
-                self.replace(self.force_encoding(encoding))
+                self_dup = self.dup
+                self.replace(self_dup.force_encoding(encoding)) unless self.frozen?
             end
         end
     end
