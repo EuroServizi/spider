@@ -1090,7 +1090,6 @@ module Spider
                     case RUBY_VERSION
                         when /2/
                             require 'byebug'
-                            raise LoadError
                         else
                             require 'ruby-debug'
                     end
@@ -1114,7 +1113,6 @@ module Spider
                         end
                 end
             rescue LoadError, RuntimeError => exc
-                debugger
                 msg = _('Unable to start debugger. Ensure ruby-debug or byebug is installed (or set debugger.start to false).')
                 Spider.output(exc.message)
                 Spider.output(msg)
