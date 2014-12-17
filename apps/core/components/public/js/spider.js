@@ -804,3 +804,11 @@ function basename(path){
 function dirname(path){
     return path.replace(/\\/g, '/').replace(/\/[^\/]*$/, '');
 }
+
+if(!String.prototype.trim) {
+  String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
+}
+
+
+
+
