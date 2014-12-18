@@ -8,6 +8,13 @@ module Spider; module Forms
             return val ? true : false
         end
 
+        def value
+        	val = super
+            return ( val.blank? ? false : true )
+        end
+
+
+
     end
     
 end; end
