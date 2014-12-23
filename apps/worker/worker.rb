@@ -141,7 +141,7 @@ module Spider
         end
         
         def self.in(time, proc_string)
-            secs = Rufus.parse_time_string(time)
+            secs = Rufus::Scheduler.parse(time)
             self.at(Time.now+secs, proc_string)
         end
         
