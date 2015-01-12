@@ -278,11 +278,11 @@ module Spider; module Model
                     create_junction = false
                 elsif (first_model.constant_defined?(assoc_type_name) )
                     assoc_type = first_model.const_get(assoc_type_name)
-                    if (!assoc_type.attributes[:sub_model]) # other kind of inline model
+                    if (assoc_type.respond_to?(:attributes) && !assoc_type.attributes[:sub_model]) # other kind of inline model
                         assoc_type_name += 'Junction'
                         create_junction = false if (first_model.const_defined?(assoc_type_name))
                     else
-                        create_junction = false
+                        createP_junction = false
                     end
                 end
                 attributes[:junction] = true
