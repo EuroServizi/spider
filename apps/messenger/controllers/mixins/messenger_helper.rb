@@ -75,12 +75,14 @@ module Spider; module Messenger
             else
                 mail.body = text
             end
-
             if attachments && !attachments.empty?
                 attachments.each do |att|
                     if att.is_a?(Hash)
-                        filename = att.delete(:filename)
-                        mail.attachments[filename] = att
+                        #filename = att.delete(:filename)
+                        filename = att[:filename].dup
+                        mime_type = att[:mime_type].dup
+                        content = att[:content].dup
+                        mail.attachments[filename] = { :mime_type => mime_type, :content => content }
                     else
                         mail.add_file(att)
                     end
