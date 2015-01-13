@@ -543,7 +543,7 @@ module Spider; module Model; module Storage; module Db
             alter_fields = alter[:alter_fields]
             alter_attributes = alter[:attributes]
             sqls = []
-            
+
             add_fields.each do |field|
                 name, type, attributes = field
                 sqls += sql_add_field(table_name, field[:name], field[:type], field[:attributes])
@@ -576,7 +576,6 @@ module Spider; module Model; module Storage; module Db
             return sqls
         end
         
-        
         # Executes a create table structured description.
         def create_table(create)
             sqls = sql_create_table(create)
@@ -590,6 +589,28 @@ module Spider; module Model; module Storage; module Db
             sqls = sql_alter_table(alter)
             sqls.each do |sql|
                 execute(sql)
+            end
+        end
+
+        # Executes a create index structured description.
+        def create_index(table_name, field_name, attribute)
+            sqls = sql_add_index(table_name, field_name, attribute)
+            begin
+                sqls.each{ |sql| execute(sql) }
+            rescue StorageException => exc
+                Spider.logger.error "Duplicate Key during create unique index into table #{table_name} and referred to column #{field_name}"
+            rescue => exc
+                drop_index(table_name, field_name)
+                retry
+            end
+        end
+
+        # Drop the index from DB.
+        def drop_index(table_name, field_name)
+            sqls = sql_drop_index(table_name, field_name)
+            begin
+                sqls.each{ |sql| execute(sql) }
+            rescue => exc
             end
         end
         
@@ -662,6 +683,14 @@ module Spider; module Model; module Storage; module Db
 
         def sql_change_field(table_name, field, new_field, type, attributes)
             ["ALTER TABLE #{table_name} CHANGE #{field} #{sql_table_field(new_field, type, attributes)}"]
+        end
+
+        def sql_add_index(table_name, field, attribute)
+            ["CREATE #{(attribute.to_s.upcase == 'UNIQUE' ? attribute.to_s.upcase : '')} INDEX #{field}_idx ON #{table_name} (#{field})"]
+        end
+
+        def sql_drop_index(table_name, field)
+            ["DROP INDEX #{field}_idx ON #{table_name}"]
         end
         
         # Checks if a DB field is equal to a schema field.

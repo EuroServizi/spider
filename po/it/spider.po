@@ -1176,9 +1176,9 @@ msgstr "Tns sembra non rispondere."
 msgid "Server seems not responding."
 msgstr "Il Server sembra non rispondere."
 
-#: lib/spiderfw/spider.rb:850
-msgid "Unable to start debugger. Ensure ruby-debug is installed (or set debugger.start to false)."
-msgstr "Impossibile avviare il debugger. Assicurati che ruby-debug sia installato (o imposta debugger.start a false)."
+#: lib/spiderfw/spider.rb:1116
+msgid "Unable to start debugger. Ensure ruby-debug or byebug is installed (or set debugger.start to false)."
+msgstr "Impossibile avviare il debugger. Assicurati che ruby-debug o byebug sia installato (o imposta debugger.start a false)."
 
 #: views/errors/404.shtml:4
 msgid "We are sorry, but the required page was not found"

@@ -1165,7 +1165,7 @@ msgstr ""
 msgid "Server seems not responding."
 msgstr ""
 
-#: lib/spiderfw/spider.rb:850
+#: lib/spiderfw/spider.rb:1116
 msgid ""
 "Unable to start debugger. Ensure ruby-debug is installed (or set debugger."
 "start to false)."
