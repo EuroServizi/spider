@@ -1643,20 +1643,22 @@ module Spider; module Model
         def set_loaded_value(element, value, mark_loaded=true)
             element_name = element.is_a?(Element) ? element.name : element
             element = self.class.elements[element_name]
-            if element.integrated?
-                integrated = get(element.integrated_from)
-                integrated.set_loaded_value(element.integrated_from_element, value) if integrated
-            else
-                value = prepare_child(element.name, value)
-                current = instance_variable_get("@#{element_name}")
-                current.set_parent(nil, nil) if current && current.is_a?(BaseModel)
-                value.set_parent(self, element.name) if value.is_a?(BaseModel)
-                instance_variable_set("@#{element_name}", value)
+            unless element.blank?
+                if element.integrated?
+                    integrated = get(element.integrated_from)
+                    integrated.set_loaded_value(element.integrated_from_element, value) if integrated
+                else
+                    value = prepare_child(element.name, value)
+                    current = instance_variable_get("@#{element_name}")
+                    current.set_parent(nil, nil) if current && current.is_a?(BaseModel)
+                    value.set_parent(self, element.name) if value.is_a?(BaseModel)
+                    instance_variable_set("@#{element_name}", value)
+                end
+                value.loaded = true if (value.is_a?(QuerySet))
+                element_loaded(element_name) if mark_loaded
+                set_reverse(element, value) if element.model? && value
+                @_modified_elements[element_name] = false
             end
-            value.loaded = true if (value.is_a?(QuerySet))
-            element_loaded(element_name) if mark_loaded
-            set_reverse(element, value) if element.model? && value
-            @_modified_elements[element_name] = false
         end
         
         # Records that the element has been loaded.
