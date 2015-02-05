@@ -62,19 +62,33 @@ module Spider; module Messenger
                 mail[key] = value.convert_object 
             end
 
-            if html
+            # if html
+            #     mail.html_part do
+            #         content_type 'text/html; charset=UTF-8'
+            #         body html
+            #     end 
+            # end  
+            # if attachments && !attachments.empty?
+            #     mail.text_part do
+            #         body text
+            #     end       
+            # else
+            #     mail.body = text
+            # end
+            #ritornato al vecchio metodo con piu controlli per problema con invio comunicazioni con immagini 5/2/2015
+
+            if html || text
+                mail.text_part do
+                    body text
+                end unless text.blank?
                 mail.html_part do
                     content_type 'text/html; charset=UTF-8'
                     body html
-                end 
-            end  
-            if attachments && !attachments.empty?
-                mail.text_part do
-                    body text
-                end       
+                end unless html.blank?
             else
                 mail.body = text
             end
+
             if attachments && !attachments.empty?
                 attachments.each do |att|
                     if att.is_a?(Hash)
