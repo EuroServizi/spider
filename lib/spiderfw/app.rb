@@ -161,7 +161,7 @@ module Spider
             
             # @return [String] If the site supports SSL, returns the #https_url; otherwise, the #http_url
             def http_s_url(action=nil)
-                return https_url(action)# if Spider.site && Spider.site.ssl?
+                return https_url(action) if Spider.site && Spider.site.ssl?
                 return http_url(action)
             end
             
