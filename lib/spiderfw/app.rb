@@ -143,18 +143,26 @@ module Spider
             # The full url used to access the application from the browser, prefixed
             # with https
             # @return [String] 
-            def https_url
+            def https_url(action=nil)
+                if u = Spider.conf.get("#{@dotted_name}.https_url") 
+                    if action
+                        u += '/' if u[-1].chr != '/'
+                        u += action.to_s
+                    end
+                    return u 
+                end
                 return nil unless Spider.site && Spider.site.ssl?
                 u = "https://#{Spider.site.domain}"
                 u += ":#{Spider.site.ssl_port}" unless Spider.site.ssl_port == 443
                 u += url
+                u += "/"+action.to_s if action
                 u
             end
             
             # @return [String] If the site supports SSL, returns the #https_url; otherwise, the #http_url
-            def http_s_url
-                return https_url if Spider.site && Spider.site.ssl?
-                return http_url
+            def http_s_url(action=nil)
+                return https_url(action)# if Spider.site && Spider.site.ssl?
+                return http_url(action)
             end
             
             # @return [String] The url to the app's public content. If the static_content.mode configuration
