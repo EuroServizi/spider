@@ -82,7 +82,7 @@ module Spider; module Model; module Storage; module Db
                     bind_vars << query[:limit] + 1
                 end
                 replaced_fields.each do |f, repl|
-                    order = order.gsub(f, repl)
+                    order = order.gsub(f.to_s, repl)
                 end
                 sql = "SELECT * FROM (#{sql}) as RowConstrainedResult WHERE #{limit} order by #{order}"
             else
