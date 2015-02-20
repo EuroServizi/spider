@@ -33,7 +33,7 @@ module Spider; module AppServer
                     end
                 end
                 @last_modified = repo.commits.first.authored_date # FIXME
-                @spec.app_server ||= AppServer::AppServerController.http_url
+                @spec.app_server ||= AppServer::AppServerController.http_s_url
                 break
             end
             @repo = repo

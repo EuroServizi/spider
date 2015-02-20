@@ -19,7 +19,7 @@ module Spider; module Admin
         end
         
         def self.logout_redirect
-            AdminController.http_url('login')
+            AdminController.http_s_url('login')
         end
     end
     
@@ -54,7 +54,7 @@ module Spider; module Admin
                     next if app[:options][:users] && (app[:options][:users] & (@request.users.map{ |u| u.class})).empty?
                     next if app[:options][:check] && !@request.users.any?{ |u| app[:options][:check].call(u) }
                 end
-                url = self.class.http_url(short_name)
+                url = self.class.http_s_url(short_name)
                 @scene.apps << {
                     :icon => app[:options][:icon] ? app[:module].pub_url+'/'+app[:options][:icon] : nil,
                     :url => self.class.http_s_url(short_name),
@@ -65,7 +65,7 @@ module Spider; module Admin
                 }
             end
             @scene.admin_breadcrumb = []
-            @scene.admin_breadcrumb << {:url => self.class.http_url, :label => _('Home')} if @scene.apps.length > 1
+            @scene.admin_breadcrumb << {:url => self.class.http_s_url, :label => _('Home')} if @scene.apps.length > 1
 
             # FIXME
             @scene.apps.sort!{ |a,b| b[:priority] <=> a[:priority] }

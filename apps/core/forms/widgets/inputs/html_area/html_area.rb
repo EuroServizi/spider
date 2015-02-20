@@ -20,8 +20,8 @@ module Spider; module Forms
                 :image_manager => attributes[:"image-manager"],
                 :link_manager => attributes[:"link-manager"] || attributes[:"file-manager"]
             }
-            options[:link_manager] ||= Spider::Files.http_url(:manager) if Spider.app?('spider_files')
-            options[:image_manager] ||= Spider::Images.http_url(:manager) if Spider.app?('spider_images')
+            options[:link_manager] ||= Spider::Files.http_s_url(:manager) if Spider.app?('spider_files')
+            options[:image_manager] ||= Spider::Images.http_s_url(:manager) if Spider.app?('spider_images')
             options[:full_page] = attributes[:"full-page"]
             @scene.options = options.to_json
         end

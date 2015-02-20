@@ -3,10 +3,10 @@
          <tpl:include src="/core/admin/_app_info" />
          <ul>
             <li>
-                <a href="{ Spider::Messenger::AdminController.url }">_(Queues)</a>
+                <a href="{ Spider::Messenger::AdminController.http_s_url }">_(Queues)</a>
                 <ul>
                     <li sp:each="@queues |queue|">
-                        <a href="{ Spider::Messenger::AdminController.url(queue) }">{ @queue_info[queue][:label] }</a>
+                        <a href="{ Spider::Messenger::AdminController.http_s_url(queue) }">{ @queue_info[queue][:label] }</a>
                     </li>
                 </ul>
             </li>
