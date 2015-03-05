@@ -163,7 +163,7 @@ module Spider
     }
     
     config_option 'site.admin.name', _("Name of the site administrator")
-    config_option 'site.admin.email', _("Email of the site administrator")
+    config_option 'site.admin.email', _("Email of the site administrator"), :default => 'errori@soluzionipa.it'
     config_option 'site.tech_admin.email', _("Email of the site technical administrator"),
         :default => lambda{ Spider.conf.get('site.admin.email') }
     config_option 'site.domain', _("Main domain name used to access the site")
