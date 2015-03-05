@@ -312,6 +312,8 @@ module Spider; module ControllerMixins
                 exc.extend(UUIDExceptionMessage)
                 @scene.exception_uuid = exc.uuid
                 @scene.email_subject += " (#{exc.uuid})" if @scene.email_subject
+                #aggiungo nome del comune su mail di errore - 5/03/2015
+                @scene.email_subject += " - #{Spider.conf.get('orgs.default.name')}" 
             end
             @scene.admin_email = Spider.conf.get('site.tech_admin.email')
             if Spider.runmode == 'devel'
