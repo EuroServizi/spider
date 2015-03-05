@@ -13,6 +13,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
             def new_connection(dsn=nil, user=nil, passwd=nil)
                 conn = ::ODBC.connect(dsn, user, passwd)
                 conn.autocommit = true
+
                 return conn
             end
         
@@ -82,7 +83,15 @@ module Spider; module Model; module Storage; module Db; module Connectors
                     debug("odbc executing:\n#{sql}\n[#{debug_vars_str}]")
                 end
                 @stmt = connection.prepare(sql)
-                res = @stmt.execute(*bind_vars)
+                rebind_vars = []
+                bind_vars.each do |var|
+                    if var.is_a?(Date)
+                        rebind_vars << var.to_s
+                    else
+                        rebind_vars << var
+                    end
+                end
+                res = @stmt.execute(*rebind_vars)
                 have_result = (@stmt.ncols != 0)
                 if (have_result)
                     result = []

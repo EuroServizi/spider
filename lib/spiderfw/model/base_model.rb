@@ -2399,7 +2399,7 @@ module Spider; module Model
                 .map{ |el|
                     val = get(el.name).to_s
                     if RUBY_VERSION =~ /1.8/
-                        val = ic.iconv(val + ' ')[0..-2]
+                        val = ic.iconv(val + ' ')[0..-2] if val
                     else
                         begin
                             val = ((val+' ').encode('UTF-8', enc, :invalid => :replace, :undef => :replace))[0..-2] if val
