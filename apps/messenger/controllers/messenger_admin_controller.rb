@@ -41,12 +41,12 @@ module Spider; module Messenger
             model = Spider::Messenger.const_get(q[:model])
             @scene.queue = @queue
             @scene.title = q[:label]
-            @scene.admin_breadcrumb << {:label => @scene.title, :url => self.class.url(@queue)}
+            @scene.admin_breadcrumb << {:label => @scene.title, :url => self.class.http_s_url(@queue)}
 
             if id
                 return view_message(@queue, id)
             end
-            @scene.msg_view_url = self.class.url(@queue)+'/'
+            @scene.msg_view_url = self.class.http_s_url(@queue)+'/'
             @scene.queued = model.queued_messages
             @scene.sent = model.sent_messages
             @scene.failed = model.failed_messages
@@ -58,7 +58,7 @@ module Spider; module Messenger
             model = Spider::Messenger.const_get(details[:model])
             @scene.message = model.load(:id => id)
             raise NotFound.new("Message #{queue} #{id}") unless @scene.message
-            @scene.admin_breadcrumb << {:label => id, :url => self.class.url("#{queue}/#{id}")}
+            @scene.admin_breadcrumb << {:label => id, :url => self.class.http_s_url("#{queue}/#{id}")}
             render("admin/view_#{queue}")
         end
 
