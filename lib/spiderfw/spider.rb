@@ -251,9 +251,22 @@ module Spider
                     raise "Unable to use FSSM for monitoring templates; use template.cache.disable instead"
                 end
             end
-            trap('TERM'){ Spider.main_process_shutdown; exit }
-            trap('INT'){ Spider.main_process_shutdown; exit }
-            trap('HUP'){ Spider.respawn! } unless RUBY_PLATFORM =~ /win32|mingw32/
+            Signal.trap("TERM") do
+                Spider.main_process_shutdown
+                exit
+            end
+            Signal.trap("INT") do
+                Spider.main_process_shutdown
+                exit
+            end
+            unless RUBY_PLATFORM =~ /win32|mingw32/
+                Signal.trap("HUP") do
+                    Spider.respawn!
+                end
+            end
+            # trap('TERM'){ Spider.main_process_shutdown; exit }
+            # trap('INT'){ Spider.main_process_shutdown; exit }
+            # trap('HUP'){ Spider.respawn! } unless RUBY_PLATFORM =~ /win32|mingw32/
             
             if @main_process_startup_blocks
                 @main_process_startup_blocks.each{ |block| block.call }
@@ -1072,13 +1085,45 @@ module Spider
         # Inits the pry debugger
         # @return [void]
         def init_pry_debug
-            require 'pry'
-            require 'pry-nav'
-            require 'pry-stack_explorer'
-            if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
-                require 'pry-remote'
+            begin
+                require 'pry'
+                require 'pry-nav'
+                require 'pry-stack_explorer'
+                if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                    require 'pry-remote'
+                end
+                Pry::Commands.alias_command "l=", "whereami"
+                begin
+                    case RUBY_VERSION
+                        when /2/
+                            require 'byebug'
+                        else
+                            require 'ruby-debug'
+                    end
+                rescue
+                    require 'debugger'
+                end
+                case RUBY_VERSION
+                    when /2/
+                        if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                            Byebug.wait_connection = true
+                            Byebug.start
+                        else
+                            Byebug.start
+                        end
+                    else
+                        if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                            Debugger.wait_connection = true
+                            Debugger.start_remote
+                        else
+                            Debugger.start
+                        end
+                end
+            rescue LoadError, RuntimeError => exc
+                msg = _('Unable to start debugger. Ensure ruby-debug or byebug is installed (or set debugger.start to false).')
+                Spider.output(exc.message)
+                Spider.output(msg)
             end
-            Pry::Commands.alias_command "l=", "whereami"
         end
         
         # @private

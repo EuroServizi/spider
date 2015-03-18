@@ -121,7 +121,7 @@ module Spider; module HTTP
 
                     pid_file = File.join(Spider.paths[:var], 'run/server.pid')
                     begin
-                        File.unlink(pid_file)
+                        FileUtils.rm_f(pid_file)
                     rescue Errno::ENOENT
                         Spider.logger.info "Unlink del pid file non riuscito"
                     end
@@ -152,7 +152,8 @@ module Spider; module HTTP
                 end
                 Process.detach(forked)
             else
-                Spider.init_base
+                #questo fa Loads configuration, sets up Locale and GetText, sets paths and the default Logger.
+                Spider.init_base 
                 spawner_started = false
                 if Spider.conf.get('webserver.respawn_on_change')
                     Spider.start_loggers
@@ -172,6 +173,7 @@ module Spider; module HTTP
                     end
                 end
                 unless spawner_started
+                    #in devel qui non entra
                     Spider.main_process_startup
                     Spider.startup
                     begin
@@ -207,8 +209,9 @@ module Spider; module HTTP
 
                 unless @already_forked
                     Spider.main_process_startup
-                    exit_spawner = Proc.new{ 
-                        Spider.logger.debug "Spawner exiting" 
+                    exit_spawner = Proc.new{
+                        #QUESTO LOG FA COMPARIRE UN MESSAGGIO DI ERRORE IN DEVEL
+                        #Spider.logger.debug "Spawner exiting" 
                         Process.kill 'KILL', @monitor_thread[:spawner_child_pid]
                     }
                     Spider.on_main_process_shutdown(&exit_spawner)
@@ -227,8 +230,14 @@ module Spider; module HTTP
             else
                 # Child
                 $SPIDER_SPAWNED = true
-                trap('TERM'){ }
-                trap('INT'){ }
+                Signal.trap("TERM") do
+                    
+                end
+                Signal.trap("INT") do
+                    
+                end
+                # trap('TERM'){ }
+                # trap('INT'){ }
                 rd.close
                 Spider.spawner = wr
                 return unless @actions[action]
@@ -254,17 +263,17 @@ module Spider; module HTTP
 
                         update { |base, relative| 
                             Spider.logger.debug("#{relative} updated, restarting")
-                            Process.kill 'KILL', Thread.current[:spawner_child_pid]
+                            Process.kill 'KILL', spawner.child_pid
                             spawner.spawn(action)
                         }
                         delete { |base, relative|
                             Spider.logger.debug("#{relative} deleted, restarting")
-                            Process.kill 'KILL', Thread.current[:spawner_child_pid]
+                            Process.kill 'KILL', spawner.child_pid
                             spawner.spawn(action)
                         }
                         create { |base, relative|
                             Spider.logger.debug("#{relative} created, restarting")
-                            Process.kill 'KILL', Thread.current[:spawner_child_pid]
+                            Process.kill 'KILL', spawner.child_pid
                             spawner.spawn(action)
                         }
                     end
