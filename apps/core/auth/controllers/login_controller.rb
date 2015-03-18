@@ -9,11 +9,11 @@ module Spider; module Auth
         layout 'login'
         
         def self.default_redirect
-            nil
+            self.http_s_url
         end
         
         def self.logout_redirect
-            nil
+            self.class.http_s_url
         end
         
         def self.users=(val)
@@ -73,6 +73,7 @@ module Spider; module Auth
         end
         
         def success_redirect
+            
             if (@request.params['redirect'] && !@request.params['redirect'].empty?)
                 redir_to = @request.params['redirect']
                 redirect(redir_to, Spider::HTTP::SEE_OTHER)

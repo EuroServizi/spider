@@ -253,7 +253,7 @@ module Spider
         
         # If the site supports SSL, returns the #https_url; otherwise, the #http_url
         def self.http_s_url(action=nil)
-            Spider.site.http_s_url + route_path(action)
+            (Spider.site.blank? ? "" : Spider.site.http_s_url) + route_path(action)
         end
 
         # The main controller's execution method. The Controller will dispatch

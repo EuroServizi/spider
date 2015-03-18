@@ -15,7 +15,7 @@ module Spider; module Admin
 
         
         def self.default_redirect
-            AdminController.url
+            AdminController.http_s_url
         end
         
         def self.logout_redirect
