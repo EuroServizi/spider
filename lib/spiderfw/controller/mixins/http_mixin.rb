@@ -54,10 +54,13 @@ module Spider; module ControllerMixins
             return request_path unless @request.env['HTTP_HOST']
             #'http://'+@request.env['HTTP_HOST']+request_path  vecchia versione con problemi con https
             if @request.env["HTTPS"] == "on"
-                u = "https://#{@request.env['HTTP_HOST']}#{request_path}"
+                protocol =  (@request.env['HTTP_X_FORWARDED_PROTO'].blank? ? 'https://' : @request.env['HTTP_X_FORWARDED_PROTO'])
+                u = "#{protocol}#{@request.env['HTTP_HOST']}#{request_path}"
             else
-                u = "http://#{@request.env['HTTP_HOST']}#{request_path}"
+                protocol =  (@request.env['HTTP_X_FORWARDED_PROTO'].blank? ? 'http://' : @request.env['HTTP_X_FORWARDED_PROTO'])
+                u = "#{protocol}#{@request.env['HTTP_HOST']}#{request_path}"
             end
+            u
         end
         
         # @return [String] the request_url with query params, if any
