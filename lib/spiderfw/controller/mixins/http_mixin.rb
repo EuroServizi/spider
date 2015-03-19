@@ -53,12 +53,10 @@ module Spider; module ControllerMixins
         def request_url
             return request_path unless @request.env['HTTP_HOST']
             #'http://'+@request.env['HTTP_HOST']+request_path  vecchia versione con problemi con https
-            if @request.env["HTTPS"] == "on"
-                protocol =  (@request.env['HTTP_X_FORWARDED_PROTO'].blank? ? 'https' : @request.env['HTTP_X_FORWARDED_PROTO'])
-                u = "#{protocol}://#{@request.env['HTTP_HOST']}#{request_path}"
+            if @request.env["HTTPS"] == "on" || @request.env['HTTP_X_FORWARDED_PROTO'] == 'https' # uso anche il parametro HTTP_X_FORWARDED_PROTO per reverse_proxy con ssl_offloading
+                u = "https://#{@request.env['HTTP_HOST']}#{request_path}"
             else
-                protocol =  (@request.env['HTTP_X_FORWARDED_PROTO'].blank? ? 'http' : @request.env['HTTP_X_FORWARDED_PROTO'])
-                u = "#{protocol}://#{@request.env['HTTP_HOST']}#{request_path}"
+                u = "http://#{@request.env['HTTP_HOST']}#{request_path}"
             end
             u
         end
