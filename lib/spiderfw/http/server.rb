@@ -231,10 +231,13 @@ module Spider; module HTTP
                 # Child
                 $SPIDER_SPAWNED = true
                 Signal.trap("TERM") do
-                    
+                    exit
                 end
                 Signal.trap("INT") do
-                    
+                    exit
+                end
+                Signal.trap("HUP") do
+                    exit
                 end
                 # trap('TERM'){ }
                 # trap('INT'){ }
@@ -252,46 +255,72 @@ module Spider; module HTTP
         
         def monitor_fs
             require 'fssm'
+            require 'listen'
             spawner = self
             action = 'spawn'
             return Thread.new do
-                fsm_exclude = ['var', 'tmp']
-                FSSM.monitor do
-                    #Spider.logger.debug("Monitoring #{Spider.paths[:apps]} for changes")
-                    path Spider.paths[:apps] do 
-                        glob '**/*.rb'
+                #VECCHIA VERSIONE CON FSSM PER RUBY 1.8.7
+                if RUBY_VERSION =~ /1.8/
+                    fsm_exclude = ['var', 'tmp']
+                    FSSM.monitor do
+                        #Spider.logger.debug("Monitoring #{Spider.paths[:apps]} for changes")
+                        path Spider.paths[:apps] do 
+                            glob '**/*.rb'
 
-                        update { |base, relative| 
-                            Spider.logger.debug("#{relative} updated, restarting")
-                            Process.kill 'KILL', spawner.child_pid
-                            spawner.spawn(action)
-                        }
-                        delete { |base, relative|
-                            Spider.logger.debug("#{relative} deleted, restarting")
-                            Process.kill 'KILL', spawner.child_pid
-                            spawner.spawn(action)
-                        }
-                        create { |base, relative|
-                            Spider.logger.debug("#{relative} created, restarting")
-                            Process.kill 'KILL', spawner.child_pid
-                            spawner.spawn(action)
-                        }
+                            update { |base, relative| 
+                                Spider.logger.debug("#{relative} updated, restarting")
+                                Process.kill 'KILL', spawner.child_pid
+                                spawner.spawn(action)
+                            }
+                            delete { |base, relative|
+                                Spider.logger.debug("#{relative} deleted, restarting")
+                                Process.kill 'KILL', spawner.child_pid
+                                spawner.spawn(action)
+                            }
+                            create { |base, relative|
+                                Spider.logger.debug("#{relative} created, restarting")
+                                Process.kill 'KILL', spawner.child_pid
+                                spawner.spawn(action)
+                            }
+                        end
+                        # path Spider.paths[:root] do
+                        #     glob '**/*.shtml'
+                        #     
+                        #     update { |base, relative|
+                        #         puts "Changed #{base}, #{relative}"
+                        #         Spider::Template.cache.invalidate(File.join('ROOT', relative))
+                        #     }
+                        # end
+
+                        # path '/some/other/directory/' do
+                        #   update {|base, relative|}
+                        #   delete {|base, relative|}
+                        #   create {|base, relative|}
+                        # end
                     end
-                    # path Spider.paths[:root] do
-                    #     glob '**/*.shtml'
-                    #     
-                    #     update { |base, relative|
-                    #         puts "Changed #{base}, #{relative}"
-                    #         Spider::Template.cache.invalidate(File.join('ROOT', relative))
-                    #     }
-                    # end
+                else
+                    listener = Listen.to(Spider.paths[:apps], only: /\.rb/) { |modified, added, removed|
+                        unless modified.blank?
+                            Spider.logger.debug("#{modified.first} updated, restarting")
+                            Process.kill 'KILL', spawner.child_pid
+                            spawner.spawn(action)
+                        end
+                        unless added.blank?
+                            Spider.logger.debug("#{added.first} created, restarting")
+                            Process.kill 'KILL', spawner.child_pid
+                            spawner.spawn(action)
+                        end
+                        unless removed.blank?
+                            Spider.logger.debug("#{removed.first} deleted, restarting")
+                            Process.kill 'KILL', spawner.child_pid
+                            spawner.spawn(action)
+                        end
 
-                    # path '/some/other/directory/' do
-                    #   update {|base, relative|}
-                    #   delete {|base, relative|}
-                    #   create {|base, relative|}
-                    # end
+                    }
+                    listener.start
+                    sleep
                 end
+
             end
             
         end

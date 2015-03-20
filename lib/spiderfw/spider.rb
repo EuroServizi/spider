@@ -14,6 +14,8 @@ require 'timeout'
 
 begin
     require 'fssm'
+    require 'listen'
+    require 'rbconfig'
 rescue LoadError
 end
 
@@ -179,7 +181,10 @@ module Spider
             FileUtils.mkdir_p(Spider.paths[:var])
             FileUtils.mkdir_p(File.join(Spider.paths[:var], 'memory'))
             FileUtils.mkdir_p(File.join(Spider.paths[:var], 'data'))
-            
+            #nuove cartelle aggiunte
+            FileUtils.mkdir_p(Spider.paths[:data])
+            FileUtils.mkdir_p(File.join(Spider.paths[:var], 'session'))
+
         end
 
 
@@ -218,39 +223,57 @@ module Spider
         # Note that in some environments (e.g. Phusion Passenger) there will not be a main process, so
         # this method will not be called.
         def main_process_startup
-            if defined?(FSSM)
-                monitor = FSSM::Monitor.new
+            if RUBY_VERSION =~ /1.8/
+                if defined?(FSSM)
+                    monitor = FSSM::Monitor.new
 
-                monitor.path(Spider.paths[:tmp], 'restart.txt') do
-                    create { |base, relative| Process.kill 'HUP', $$ }
-                    update { |base, relative| Process.kill 'HUP', $$ }            
-                end
-
-                if Spider.conf.get('template.cache.use_fssm')
-                    monitor.path(Spider.paths[:root]) do
-                        glob '**/*.shtml'
-                        create { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }
-                        update { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }                                    
+                    monitor.path(Spider.paths[:tmp], 'restart.txt') do
+                        create { |base, relative| Process.kill 'HUP', $$ }
+                        update { |base, relative| Process.kill 'HUP', $$ }            
                     end
-                    monitor.path($SPIDER_PATH) do
-                        glob '**/*.shtml'
-                        create { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }
-                        update { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }                                    
+
+                    if Spider.conf.get('template.cache.use_fssm')
+                        monitor.path(Spider.paths[:root]) do
+                            glob '**/*.shtml'
+                            create { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }
+                            update { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }                                    
+                        end
+                        monitor.path($SPIDER_PATH) do
+                            glob '**/*.shtml'
+                            create { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }
+                            update { |base, relative| FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates')) }                                    
+                        end
+                        FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates'))
                     end
-                    FileUtils.rm_rf(File.join(Spider.paths[:var], 'cache', 'templates'))
-                end
 
-                @fssm_thread = Thread.new do
-                    monitor.run
-                end
-                Spider.output("Monitoring restart.txt")
+                    @fssm_thread = Thread.new do
+                        monitor.run
+                    end
+                    Spider.output("Monitoring restart.txt")
 
-            else
-                Spider.output("FSSM not installed, unable to monitor restart.txt")
-                if Spider.conf.get('template.cache.use_fssm')
-                    raise "Unable to use FSSM for monitoring templates; use template.cache.disable instead"
+                else
+                    Spider.output("FSSM not installed, unable to monitor restart.txt")
+                    if Spider.conf.get('template.cache.use_fssm')
+                        raise "Unable to use FSSM for monitoring templates; use template.cache.disable instead"
+                    end
+                end
+            else #VERSIONI > 1.8.7
+                if defined?(Listen)
+                    listener = Listen.to(Spider.paths[:tmp], only: /restart.txt$/) { |modified, added, removed|
+                        unless modified.blank?
+                            Process.kill 'HUP', $$
+                        end
+                        unless added.blank?
+                            Process.kill 'HUP', $$
+                        end
+                    }
+                    listener.start
+                    #sleep
+                else
+                    Spider.output("Listen gem not installed, unable to monitor restart.txt")
                 end
             end
+
             Signal.trap("TERM") do
                 Spider.main_process_shutdown
                 exit
@@ -296,6 +319,7 @@ module Spider
         # Invoked when a server is shutdown. Apps may implement the app_shutdown method, that will be called.        
         # @return [void]
         def shutdown(force=false)
+            #Byebug.stop unless defined?(Byebug).blank?
             unless force
                 #return unless Thread.current == Thread.main
                 return if @shutdown_done
@@ -319,6 +343,7 @@ module Spider
                     end
                 end
             end
+            
             Debugger.post_mortem = false if Object.const_defined?(:Debugger) && Debugger.post_mortem?
             @apps.each do |name, mod|
                 mod.app_shutdown if mod.respond_to?(:app_shutdown)
@@ -1024,10 +1049,10 @@ module Spider
             Thread.critical = crit
         end
          
+        #chiamato al touch tmp/restart in produzione
         # Terminates the current process and starts a new one
         # @return [void]
         def respawn!
-            require 'rbconfig'
             Spider.logger.info("Restarting")
             ruby = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).sub(/.*\s.*/m, '"\&"')
             Spider.main_process_shutdown
