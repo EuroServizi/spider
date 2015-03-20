@@ -304,7 +304,8 @@ module Spider; module HTTP
                         # end
                     end
                 else
-                    listener = Listen.to(Spider.paths[:apps], only: /\.rb/) { |modified, added, removed|
+                    listener = Listen.to(Spider.paths[:apps], { :only => /\.rb|\.shtml/ } ) { |modified, added, removed|
+                        
                         unless modified.blank?
                             Spider.logger.debug("#{modified.first} updated, restarting")
                             Process.kill 'KILL', spawner.child_pid
@@ -320,7 +321,6 @@ module Spider; module HTTP
                             Process.kill 'KILL', spawner.child_pid
                             spawner.spawn(action)
                         end
-
                     }
                     listener.start
                     sleep

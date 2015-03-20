@@ -259,7 +259,8 @@ module Spider
                 end
             else #VERSIONI > 1.8.7
                 if defined?(Listen)
-                    listener = Listen.to(Spider.paths[:tmp], only: /restart.txt$/) { |modified, added, removed|
+                    listener = Listen.to(Spider.paths[:tmp], { :only => /restart.txt$/ } ) { |modified, added, removed|
+
                         unless modified.blank?
                             Process.kill 'HUP', $$
                         end
@@ -267,8 +268,9 @@ module Spider
                             Process.kill 'HUP', $$
                         end
                     }
-                    listener.start
-                    #sleep
+                    @celluloid_thread = Celluloid::Thread.new do 
+                        listener.start
+                    end
                 else
                     Spider.output("Listen gem not installed, unable to monitor restart.txt")
                 end
