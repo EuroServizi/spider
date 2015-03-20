@@ -13,8 +13,8 @@ require 'spiderfw/version'
 require 'timeout'
 
 begin
-    require 'fssm'
-    require 'listen'
+    require 'listen' if RUBY_VERSION > "1.8.7"
+    require 'fssm' if RUBY_VERSION =~ /1.8/
     require 'rbconfig'
 rescue LoadError
 end
@@ -171,7 +171,7 @@ module Spider
         end
         
 
-        # Creates runtime folders: 'tmp', 'var', 'var/memory' and 'var/data'
+        # Creates runtime folders: 'tmp', 'var', 'var/memory', 'var/data' and 'var/sessions'
         # @return [void]
         def setup_env
             unless File.exists?(File.join(Spider.paths[:root], 'init.rb'))
@@ -183,7 +183,7 @@ module Spider
             FileUtils.mkdir_p(File.join(Spider.paths[:var], 'data'))
             #nuove cartelle aggiunte
             FileUtils.mkdir_p(Spider.paths[:data])
-            FileUtils.mkdir_p(File.join(Spider.paths[:var], 'session'))
+            FileUtils.mkdir_p(File.join(Spider.paths[:var], 'sessions'))
 
         end
 
@@ -344,7 +344,12 @@ module Spider
                 end
             end
             
-            Debugger.post_mortem = false if Object.const_defined?(:Debugger) && Debugger.post_mortem?
+            case RUBY_VERSION
+                when /2/
+                    Byebug.post_mortem = false if Object.const_defined?(:Debugger) && Byebug.post_mortem?
+                else
+                    Debugger.post_mortem = false if Object.const_defined?(:Debugger) && Debugger.post_mortem?
+            end
             @apps.each do |name, mod|
                 mod.app_shutdown if mod.respond_to?(:app_shutdown)
             end
@@ -1118,6 +1123,9 @@ module Spider
                     require 'pry-remote'
                 end
                 Pry::Commands.alias_command "l=", "whereami"
+                Pry::Commands.alias_command "c", "continue"
+                Pry::Commands.alias_command "n", "next"
+                Pry::Commands.alias_command "s", "step"
                 begin
                     case RUBY_VERSION
                         when /2/

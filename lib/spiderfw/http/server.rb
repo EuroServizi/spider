@@ -115,7 +115,12 @@ module Spider; module HTTP
                     end
                 end
                 do_shutdown = Proc.new{
-                    Debugger.post_mortem = false if defined?(Debugger)
+                    case RUBY_VERSION
+                    when /2/
+                        Byebug.post_mortem = false if defined?(Byebug)
+                    else
+                        Debugger.post_mortem = false if defined?(Debugger)
+                    end
                     server.shutdown if server
                     ssl_server.shutdown if ssl_server
 
@@ -254,8 +259,8 @@ module Spider; module HTTP
         end
         
         def monitor_fs
-            require 'fssm'
-            require 'listen'
+            require 'fssm' if RUBY_VERSION =~ /1.8/
+            require 'listen' if RUBY_VERSION > "1.8.7"
             spawner = self
             action = 'spawn'
             return Thread.new do
