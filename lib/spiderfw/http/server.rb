@@ -304,7 +304,7 @@ module Spider; module HTTP
                         # end
                     end
                 else
-                    listener = Listen.to(Spider.paths[:apps], { :only => /\.rb|\.shtml/ } ) { |modified, added, removed|
+                    listener = Listen.to(Spider.paths[:apps], { :only => /\.rb/ } ) { |modified, added, removed|
                         
                         unless modified.blank?
                             Spider.logger.debug("#{modified.first} updated, restarting")
