@@ -9,7 +9,7 @@ require 'ruby-debug'
 class Cmd
 
     def initialize
-        @cmd = CmdParse::CommandParser.new( true, true )
+        @cmd = CmdParse::CommandParser.new({:handle_exceptions => true, :takes_commands => true})
         @cmd.program_name = "spider-servant"
         @cmd.options = CmdParse::OptionParserWrapper.new do |opt|
             opt.separator _("Global options:")

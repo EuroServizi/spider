@@ -16,7 +16,7 @@ module Spider; module CommandLine
     class Cmd
 
         def initialize
-            @cmd = CmdParse::CommandParser.new( true, true )
+            @cmd = CmdParse::CommandParser.new({:handle_exceptions => true, :takes_commands => true})
             @cmd.program_name = "spider"
             @cmd.options = CmdParse::OptionParserWrapper.new do |opt|
                 opt.separator _("Global options:")
