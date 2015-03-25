@@ -1,3 +1,28 @@
+== 0.6.35
+* modificata instanziazione CmdParser in base all'ultimo rilascio della gemma CmdParse
+* Aggiunto controllo per files .shtml in respawing e attivato celluloid.thread per Listen
+* modifiche correttive relative all'uso di ByeBug e corretta gestione del respawn con Listen
+* Modifiche per gemma fssm sostituita con listen
+* Usato il parametro HTTP_X_FORWARDED_PROTO nel caso di reverse_proxy con ssl-offloading
+* Modifiche per problemi con respawn, kill dei child_thread e trap
+* Corretto il redirect su login per admin
+* Cambiata pagina di errore con invio mail con nome comune
+* Aggiunto valore di default per site.tech_admin.email con errori@soluzionipa.it
+== 0.6.34
+* modificata logica di gestione delle date in odbc
+* Cambiato http_url con http_s_url e corretto funzioni
+* modificata funzionalità riguardante alias per ordinamento in mssql
+* Rimesso controllo se site.ssl attivo
+* Adeguata https_url con action come http_url in app.rb
+* Modifiche su invio mail multipart per problema con comunicazioni con immagini
+* Aggiunto un controllo se l'elemento non blank in set_loaded_value del base_model
+* Controllo se gia definita la costante per non avere il warning:already initialized constant News/Contents
+* Aggiunta funzione to_bool alla class String
+* Cambiata gestione allegati in send_email del messenger_helper
+* controllo se campo esiste in schema
+* Aggiunto controllo relativo al tipo di assoc_type
+* modificata chiamata rufus perchè non + supportata
+* aggiunto controllo in creazione indice non contemplando eventuali models che sono estensioni di altri
 == 0.6.33
 * Modifiche per problemi con accenti e chiamate json
 * Encode aggiunto su funzione inspect
