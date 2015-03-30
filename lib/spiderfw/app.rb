@@ -76,7 +76,11 @@ module Spider
             # Initializes missing variables to default variables.
             def init
                 unless @path
-                    file = caller[1].split(':')[0]
+                    if caller[1].split(":").count <=3 && caller[1].split(":")[0].length > 1
+                        file = caller[1].split(':')[0]
+                    else
+                        file = caller[1].split(':')[0..-(caller[1].split(":").count-1)].join(':')
+                    end
                     dir = File.dirname(file)
                     @path = dir
                 end
