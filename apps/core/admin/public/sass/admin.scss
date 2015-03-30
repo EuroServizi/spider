@@ -1,25 +1,19 @@
-@import "grid.scss";
-@import "compass";
-@import "icons/*.png";
+@import 'grid.scss';
+@import 'compass';
+@import 'icons/*.png';
 
 @include all-icons-sprites;
-
 
 $base_color: #417690;
 $sidebar_color: #DFDFDF;
 
-#admin {
+#admin{
     form.form-horizontal {
-
         .help-block {
             max-width: 550px;    
         }
-        
-
-        input[type="text"],
-        textarea,
-        select,
-        .uneditable-input {
+    
+        input[type="text"], textarea, select, .uneditable-input {
             width: 300px;
         }
 
