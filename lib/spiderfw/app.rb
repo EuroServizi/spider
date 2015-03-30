@@ -275,7 +275,7 @@ module Spider
             # @param [Hash|file1,file2,...] files to require
             # @return [nil]
             def req(*list)
-                do_require = lambda{ |f| 
+                do_require = Proc.new{ |f| 
                     Kernel.require File.join(@path, f) 
                 }
                 if list.first.is_a?(Hash)
