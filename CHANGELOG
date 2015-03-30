@@ -1,3 +1,7 @@
+== 0.6.36
+* correzioni bugs
+* gestione di caricamento del path dell'app rivisto e corretto anche per windows
+* Ricompilato admin.css
 == 0.6.35
 * modificata instanziazione CmdParser in base all'ultimo rilascio della gemma CmdParse
 * Aggiunto controllo per files .shtml in respawing e attivato celluloid.thread per Listen
