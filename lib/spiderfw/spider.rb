@@ -1119,7 +1119,7 @@ module Spider
         def init_pry_debug
             begin
                 require 'pry'
-                require 'pry-nav'
+                #require 'pry-nav'
                 require 'pry-stack_explorer'
                 if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
                     require 'pry-remote'
@@ -1132,8 +1132,10 @@ module Spider
                     case RUBY_VERSION
                         when /2/
                             require 'byebug'
+                            require 'pry-byebug'
                         else
                             require 'ruby-debug'
+                            require 'pry-debugger'
                     end
                 rescue
                     require 'debugger'
