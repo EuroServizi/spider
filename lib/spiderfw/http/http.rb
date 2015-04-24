@@ -272,9 +272,9 @@ module Spider
                 filename = head[FILENAME_REGEX, 1]
                 content_type = head[CONTENT_TYPE_REGEX, 1]
                 name = head[NAME_REGEX, 1]
-
                 if filename && !filename.empty?
-                  body = UploadedFile.new(filename, content_type)
+                    #se sono con ruby >= 1.9 ricavo l'encoding
+                    body = UploadedFile.new(filename, content_type, (buf.respond_to?(:encoding) ? buf.encoding.to_s : nil) )
                 end
                 next
               end
@@ -317,13 +317,18 @@ module Spider
     
     
     class UploadedFile < ::Tempfile
-        attr_reader :filename, :content_type
+        #aggiunto encoding per problemi con upload file "\xFF" from ASCII-8BIT to UTF-8 (Encoding::UndefinedConversionError)
+        attr_reader :filename, :content_type, :encoding
         
-        def initialize(filename, content_type)
+        def initialize(filename, content_type, encoding)
             @filename = filename
             @content_type = content_type
-            super('uploaded', Spider.paths[:tmp])
-            
+            @encoding = encoding
+            if RUBY_VERSION >= "1.9"
+                super('uploaded', Spider.paths[:tmp], content_type, :encoding => encoding)
+            else #caso con ruby 1.8.7
+                super('uploaded', Spider.paths[:tmp])
+            end
         end
         
     end

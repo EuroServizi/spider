@@ -132,11 +132,11 @@ module Spider; module HTTP
                     end
                 }
                 Spider.on_shutdown(&do_shutdown)
-                
                 begin
                     thread.join if thread
                     ssl_thread.join if ssl_thread
                 rescue SystemExit
+                    Spider.logger.error "Problema nella creazione di un thread"
                 end
             }
             if options[:daemonize]
