@@ -20,7 +20,7 @@ module Spider; module HTTP
                 :host => '0.0.0.0',
                 :port => 8080
             }
-            return defaults.merge(opts)
+            return defaults.merge!(opts)
         end
         
         def start(opts={})
@@ -39,9 +39,11 @@ module Spider; module HTTP
 
         def self.get_opts(server_name, options)
             server_name ||= Spider.conf.get('http.server')
+            options[:host] ||= Spider.conf.get('webserver.host')
             options[:port] ||= Spider.conf.get('webserver.port')
             opts = {
                 :server => server_name,
+                :Host => options[:host],
                 :Port => options[:port],
                 :config => File.join(Spider.paths[:root], 'config.ru')
             }
@@ -84,12 +86,12 @@ module Spider; module HTTP
         end
         
         def self.start(server_name, options={})
-            start = lambda{
+            start = Proc.new{
                 
                 
                 pid_file = File.join(Spider.paths[:var], 'run/server.pid')
                 puts _("Using webserver %s") % server_name if options[:verbose]
-                puts _("Listening on port %s") % opts[:port] if options[:verbose]
+                puts _("Listening on port %s") % opts[:Port] if options[:verbose]
                 rack = nil
                 ssl_rack = nil
                 server = nil

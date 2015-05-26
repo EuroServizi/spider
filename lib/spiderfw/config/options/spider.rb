@@ -28,6 +28,7 @@ module Spider
     config_option 'webserver.reload_sources', _("Reload application and spider sources on each request"), 
         :type => Spider::DataTypes::Bool,
         :default => Proc.new{ Spider.config.get('runmode') == 'devel' ? true : false }
+    config_option 'webserver.host', _("Port to use for the http server"), :type => Fixnum, :default => '0.0.0.0'
     config_option 'webserver.port', _("Port to use for the http server"), :type => Fixnum, :default => 8080
     config_option 'webserver.force_threads', _("Force threading on non-threaded adapters"), :type => Spider::DataTypes::Bool,
         :default => Proc.new{ Spider.runmode != 'test' && RUBY_VERSION_PARTS[1] == '8'}

@@ -12,7 +12,7 @@ module Spider; module HTTP
         def options(opts)
             opts = super(opts)
             defaults = {
-                :host   => 'localhost',
+                :Host   => '0.0.0.0',
                 :app    => 'spider'
             }
             return defaults.merge(opts)
@@ -22,10 +22,13 @@ module Spider; module HTTP
         def start_server(opts={})
             opts = options(opts)
             options = {
-                :Port           => opts[:port],
-                :BindAddress    => opts[:host]
+                :Port           => opts[:Port],
+                :BindAddress    => opts[:Host]
             }
-            @server = ::Thin::Server.start(opts[:host], opts[:port].to_i, Spider::HTTP::RackApplication.new)
+            @server = ::Thin::Server.start(opts[:Host], opts[:Port].to_i, Spider::HTTP::RackApplication.new) do 
+                use Rack::CommonLogger
+                use Rack::ShowExceptions
+            end
         end
 
         def shutdown_server
