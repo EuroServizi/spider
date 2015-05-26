@@ -1,3 +1,4 @@
+# coding: UTF-8
 # -*- encoding : utf-8 -*-
 require 'spiderfw/model/mixins/state_machine'
 require 'spiderfw/model/element'
@@ -2452,16 +2453,25 @@ module Spider; module Model
                     val = get(name)
                     enc = Spider.conf.get('storages')['default']['encoding']
                     enc ||= 'UTF-8'
-
                     if (el.type == String || el.type == Text)
                         if RUBY_VERSION =~ /1.8/
                             val = ic.iconv(val + ' ')[0..-2] if val
-                        else
+                        elsif val.encoding == "ASCII-8BIT" && val.is_a?(String)
+                                begin
+                                    val = ((val+' ').force_encoding("UTF-8").encode('UTF-8', :invalid => :replace, :undef => :replace))[0..-2] if val
+                                rescue
+                                    Spider.logger.error("Errore di encoding relativamente al seguente valore inserito in json #{val}")
+                                ensure
+                                    val ||= ''
+                                end
+                        elsif val.is_a?(String)
                             begin
-                                val = ((val+' ').encode('UTF-8', enc, :invalid => :replace, :undef => :replace))[0..-2] if val
-                            rescue EncodingError  
-                                val = ''  
-                            end 
+                                val = ((val+' ').encode('UTF-8', enc))[0..-2] if val
+                            rescue EncodingError 
+                                val = ((val+' ').encode('UTF-8', 'UTF-8', :invalid => :replace, :undef => :replace))[0..-2] if val
+                            ensure
+                                val ||= ''
+                            end
                         end
                     end
                     val = val.to_json
@@ -2628,7 +2638,6 @@ module Spider; module Model
                 return pks[0] if pks.length == 1
                 return pks
             end 
-
             self.class.elements_array.each do |el|
                 next unless mapper.have_references?(el) || (el.junction? && el.model.attributes[:sub_model] == self.class)
                 if (el.model?)
@@ -2646,6 +2655,8 @@ module Spider; module Model
                         case val.class.name.to_sym
                         when :Date, :DateTime, :Time
                             val = val.strftime
+                        when :String
+                            val = val.force_encoding(Encoding::UTF_8).encode(Encoding::UTF_8) if val && val.encoding == Encoding::ASCII_8BIT
                         end
                     end
                     h[el.name] = val
