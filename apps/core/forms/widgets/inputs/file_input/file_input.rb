@@ -27,12 +27,14 @@ module Spider; module Forms
             if val['file'] && !val['file'].is_a?(String)
                 dest_path = @save_path+'/'+val['file'].filename
                 FileUtils.copy(val['file'].path, dest_path)
-                return dest_path
-            elsif val['clear']
-                self.value = nil
-                return
             end
-            return @value
+            #se clicco su pulisci cancello il file
+            if val['clear'] == 'on'
+                FileUtils.rm_f(val['file_name']) if File.exist?(val['file_name'])
+                self.value = nil
+                return 'cancellato' if val['file'].blank?
+            end
+            return (dest_path.blank? ? self.value : dest_path)
         end
         
         __.action
