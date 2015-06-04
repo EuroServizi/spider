@@ -274,12 +274,15 @@ module Spider; module CASServer::CAS
     path = '/' if path.empty?
     
     req = Net::HTTP::Post.new(path)
+    str_saml_logout =  %{<samlp:LogoutRequest ID="#{rand}" Version="2.0" IssueInstant="#{time.rfc2822}">
+      <saml:NameID></saml:NameID>
+      <samlp:SessionIndex>#{st.ticket}</samlp:SessionIndex>
+      </samlp:LogoutRequest>}
+    
+    Spider.logger.debug "*** Logout saml#{str_saml_logout}"
     req.set_form_data(
-      'logoutRequest' => %{<samlp:LogoutRequest ID="#{rand}" Version="2.0" IssueInstant="#{time.rfc2822}">
-<saml:NameID></saml:NameID>
-<samlp:SessionIndex>#{st.ticket}</samlp:SessionIndex>
-</samlp:LogoutRequest>}
-    )
+      'logoutRequest' => str_saml_logout
+      )
     
     http.start do |conn|
       response = conn.request(req)

@@ -25,6 +25,9 @@ module Spider; module DataTypes
             return self.to_s if attributes[:hashed]
             salt = attributes[:salt] || Spider.conf.get('password.salt')
             # TODO: better salts
+            #(0..10) -> ruby range, cioe crea un array da 0 a 10
+            #rand(89) numero casuale tra 0 e 88
+            #si ottiene un salt di 11 caratteri casuali che serve per effettuare l'hash
             salt ||= (0..10).inject('') { |r, i| r << rand(89) + 37 }
             hash_type = attributes[:hash] || Spider.conf.get('password.hash')
             return "#{hash_type}$#{salt}$#{self.class.do_hash(hash_type, self.to_s, salt)}"

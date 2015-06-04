@@ -222,7 +222,7 @@ module Spider; module CASServer
                         TicketGrantingTicket.storage.commit
                     rescue Exception => exc
                         TicketGrantingTicket.storage.rollback
-                        Spider.logger.error "** Errore logout cas"
+                        $LOG.error "** Errore logout cas"
 
                     end
 
