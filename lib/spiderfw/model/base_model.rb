@@ -2638,6 +2638,7 @@ module Spider; module Model
                 return pks[0] if pks.length == 1
                 return pks
             end 
+            ic = Iconv.new('UTF-8//IGNORE', 'UTF-8') if RUBY_VERSION =~ /1.8/
             self.class.elements_array.each do |el|
                 next unless mapper.have_references?(el) || (el.junction? && el.model.attributes[:sub_model] == self.class)
                 if (el.model?)
@@ -2656,7 +2657,11 @@ module Spider; module Model
                         when :Date, :DateTime, :Time
                             val = val.strftime
                         when :String
-                            val = val.force_encoding(Encoding::UTF_8).encode(Encoding::UTF_8) if val && val.encoding == Encoding::ASCII_8BIT
+                            if RUBY_VERSION =~ /1.8/
+                                val = ic.iconv(val) if val
+                            else
+                                val = val = val.force_encoding(Encoding::UTF_8).encode(Encoding::UTF_8) if val && val.encoding == Encoding::ASCII_8BIT
+                            end
                         end
                     end
                     h[el.name] = val
