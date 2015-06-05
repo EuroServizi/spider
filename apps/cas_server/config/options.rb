@@ -10,5 +10,6 @@ module Spider
     config_option 'cas.saml_compliant_tickets', :type => String, :choices => [false, '1', '2', '4'], :default => lambda{
         Spider.conf.get('cas.saml1_1_compatible') ? '1' : false
     }
+    config_option 'cas.url_logout_cas', "Indirizzo url assoluto per il logout generale tramite CAS dei servizi php", :type => String
     
 end

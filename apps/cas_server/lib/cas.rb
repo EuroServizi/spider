@@ -1,5 +1,6 @@
 require 'uri'
 require 'net/https'
+require "net/http"
 require 'apps/cas_server/lib/utils'
 
 # Encapsulates CAS functionality. This module is meant to be included in
@@ -273,6 +274,9 @@ module Spider; module CASServer::CAS
     path = uri.path
     path = '/' if path.empty?
     
+    url_logout_cas = Spider.conf.get('cas.url_logout_cas')
+    path = url_logout_cas unless url_logout_cas.blank?
+
     req = Net::HTTP::Post.new(path)
     str_saml_logout =  %{<samlp:LogoutRequest ID="#{rand}" Version="2.0" IssueInstant="#{time.rfc2822}">
       <saml:NameID></saml:NameID>
