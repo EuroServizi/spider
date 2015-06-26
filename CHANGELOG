@@ -1,3 +1,13 @@
+== 0.6.38
+* Aggiunto path per fare il logout cas
+* Modificato cas.rb e log vari
+* aggiunto controllo per ruby 1.8
+* Cancellazione di un file caricato con widget file input
+* aggiunta options host per webserver, a seguito di modifiche intervenute su gem rack ver 1.6.0
+* aggiunta gestione encoding per ruby > 1.8.7 nella funzione to_json
+* aggiunta gestione corretta per usare pry e pry-byebug
+* Ricavo encoding da request per creare un tempfile con upload file da form
+== 0.6.37
 == 0.6.36
 * correzioni bugs
 * gestione di caricamento del path dell'app rivisto e corretto anche per windows
