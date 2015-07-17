@@ -261,3 +261,24 @@ Spider::Template.define_named_asset 'bootstrap-3-transition', [
     [:js, 'bootstrap_3/js/transition.js', Spider::Components]
 ]
 
+
+#
+# ASSETS PER FONTAWESOME, ICONE VETTORIALI
+#
+
+Spider::Template.define_named_asset 'fontawesome_4', [
+    [:css, 'fontawesome_4/stylesheets/font-awesome.scss', Spider::Components]
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
