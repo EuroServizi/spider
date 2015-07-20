@@ -1290,10 +1290,12 @@ module Spider; module Model; module Mappers
                     end
                 end
             end
-            #debugger if ['civiliaopen__persona','civiliaopen__residente'].include?(schema.table.name)
             @model.elements_array.select{ |el| el.attributes[:index] }.each do |el|
                 found = false
-                schema.table.fields.map{|field| found = (field.name == el.name.to_s); break if found }
+                schema.table.fields.map do |field| 
+                    found = (field.name == el.name.to_s)
+                    break if found 
+                end
                 sql = @storage.create_index(schema.table,el.name.to_s,el.attributes[:index]) if found
                     
             end if @model.extended_models.empty?

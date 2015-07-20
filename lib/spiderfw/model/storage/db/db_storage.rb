@@ -546,10 +546,14 @@ module Spider; module Model; module Storage; module Db
 
             add_fields.each do |field|
                 name, type, attributes = field
+                #Verify if primary_keys is not a multiple key
+                field[:attributes][:primary_key] = false if alter_attributes[:primary_keys].is_a?(Array) && field[:attributes][:primary_key]
                 sqls += sql_add_field(table_name, field[:name], field[:type], field[:attributes])
             end
             alter_fields.each do |field|
                 name, type, attributes = field
+                #Verify if primary_keys is not a multiple key
+                field[:attributes][:primary_key] = false if alter_attributes[:primary_keys].is_a?(Array) && field[:attributes][:primary_key]
                 sqls += sql_alter_field(table_name, field[:name], field[:type], field[:attributes])
             end
             if (alter_attributes[:primary_keys] && !alter_attributes[:primary_keys].empty?)

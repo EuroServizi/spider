@@ -339,7 +339,8 @@ module Spider; module Model; module Storage; module Db
          end
 
          def sql_create_primary_key(table_name, fields)
-            nil # done in add field or alter field
+            sqls = super
+            #nil # done in add field or alter field
         end
          
         def function(func)
