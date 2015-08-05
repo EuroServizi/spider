@@ -158,9 +158,7 @@ module Spider; module Forms
             cond = search_condition(@request.params['q'])
             return unless cond
             @search_results = @model.where(cond).limit(@request.params['limit'] || @attributes[:limit])
-            $out <<  @search_results.map{ |row| {:label => (row.to_s.respond_to?(:force_encoding) ? row.to_s.force_encoding(Encoding::UTF_8), :value => obj_to_key_str(row) } }.to_json
-            $out <<  @search_results.map{ |row| {:label => (row.to_s.respond_to?(:force_encoding) ? row.to_s.force_encoding(Encoding::UTF_8) : row.to_s), :value => obj_to_key_str(row) } }.to_json
-            
+            $out << @search_results.map{ |row| {:label => (row.to_s.respond_to?(:force_encoding) ? row.to_s.force_encoding(Encoding::UTF_8) : row.to_s), :value => obj_to_key_str(row) } }.to_json
         end
 
     end
