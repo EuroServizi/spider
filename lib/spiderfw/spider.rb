@@ -268,6 +268,7 @@ module Spider
                             Process.kill 'HUP', $$
                         end
                     }
+                    require 'celluloid/current'
                     @celluloid_thread = Celluloid::Thread.new do 
                         listener.start
                     end
