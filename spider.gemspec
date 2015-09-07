@@ -45,8 +45,12 @@ Gem::Specification.new do |s|
   s.add_dependency("rack")
   s.add_development_dependency("rake", ["> 0.7.3"])
   s.add_development_dependency("gettext", ['>= 2.1.0'])
-  s.add_development_dependency("fssm")
-
+  if RUBY_VERSION >= '1.9'
+    s.add_development_dependency("celluloid")
+    s.add_development_dependency("listen")
+  else
+    s.add_development_dependency("fssm")
+  end
   s.requirements << "Optional dependencies: ripl, ripl-irb, ripl-multi_line, json, openssl, sqlite3, mongrel, ruby-oci8 >2.0, mysql, yui-compressor, cldr"
   # optional dependencies
   # 
