@@ -13,7 +13,7 @@ module Spider; module Auth
         end
         
         def self.logout_redirect
-            self.class.http_s_url
+            self.http_s_url
         end
         
         def self.users=(val)
