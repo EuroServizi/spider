@@ -29,7 +29,7 @@ Spider::Template.define_named_asset 'spider-utils', [
 # jQuery UI
 
 Spider::Template.define_runtime_asset 'jquery-ui-datepicker-locale' do |request, response, scene|
-    Spider::Components.pub_url+"/js/jquery/jquery-ui-1.9.2/ui/i18n/jquery.ui.datepicker-#{request.locale.language}.js"
+    Spider::Components.pub_url+"/js/jquery/jquery-ui-1.9.2/ui/i18n/jquery.ui.datepicker-#{request.locale.language}-min.js"
 end
 
 Spider::Template.define_named_asset 'jquery-ui', [
