@@ -38,7 +38,7 @@ module Spider; module Messenger; module Backends; module SMS
                 #result = gw.sendSMS('send_sms_classic_report', 'Hi Mike, how are you', recipients, { :senderNumber => '393471234567' } )
 
                 #Invio SMS Classic con mittente personalizzato di tipo alfanumerico
-                result = gw.sendSMS('send_sms_classic', text, to, { :senderString => from, :charset => 'UTF-8' } )
+                result = gw.sendSMS('send_sms_classic_report', text, to, { :senderString => from, :charset => 'UTF-8' } )
                 if result
                     gw.printResponse
                 else
