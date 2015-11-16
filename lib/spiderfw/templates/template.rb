@@ -713,7 +713,6 @@ module Spider
                 prev_domain = Spider::GetText.set_domain(td)
             end
             scene ||= @scene
-            scene = scene.convert_object
             load unless loaded?
             init(scene) unless init_done?
             exec
