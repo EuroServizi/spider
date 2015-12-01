@@ -60,3 +60,6 @@
 
 // Utility classes
 @import "utilities"; // Has to be last to override when necessary
+
+//scss di classi mancanti in bootstrap2 rispetto al bootstrap3
+@import "_aggiunte_bootstrap_3";

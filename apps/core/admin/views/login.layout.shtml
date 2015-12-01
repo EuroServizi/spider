@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-        <title>Cms - Amministrazione</title>
+        <title>Amministrazione</title>
         <link rel="stylesheet" href="{ Spider::Admin.pub_url }/css/login.css">
     </head>
     <body>

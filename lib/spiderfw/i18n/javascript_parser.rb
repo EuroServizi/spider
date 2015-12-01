@@ -49,7 +49,7 @@ module Spider; module I18n
         end
 
     end
-    
-    ::GetText::RGetText.add_parser(JavascriptParser)
+    #::GetText::RGetText.add_parser(JavascriptParser)
+    ::GetText::Tools::XGetText.add_parser(JavascriptParser)
 
 end; end

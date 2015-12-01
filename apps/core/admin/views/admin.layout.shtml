@@ -1,7 +1,10 @@
 <!DOCTYPE HTML>
 <html>
+    <tpl:asset name="jquery" />
+    <tpl:asset name="bootstrap-3-dropdown" /> <!-- per paginatore -->
     <tpl:asset name="bootstrap-sass" />
     <tpl:asset type="css" src="sass/admin.scss" />
+
     <head>
         <title>_(Administration)
               <tpl:pass sp:if="@current_app && @current_app[:module]"> - { @current_app[:module].name }</tpl:pass>

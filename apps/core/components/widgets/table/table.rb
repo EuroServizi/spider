@@ -136,8 +136,15 @@ module Spider; module Components
             if @attributes[:paginate]
                 @scene.pages = (@rows.total_rows.to_f / @attributes[:row_limit]).ceil
                 @scene.paginate_last = [@scene.paginate_first + 9, @scene.pages].min
+                #passo un array con tutte le pagine
+                array_pag = []
+                1.upto(@scene.pages) do |i|
+                    array_pag << i
+                end
+                @scene.array_pag = array_pag
             end
             @scene.columns = @elements.size
+
             super
         end
         

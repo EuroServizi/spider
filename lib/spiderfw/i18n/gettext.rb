@@ -34,6 +34,39 @@ module Spider
             FastGettext.text_domain = domain
         end
         
+        def self.update_pofiles(textdomain, files, app_version, options = {})
+            require 'debugger'
+            debugger
+            puts options.inspect if options[:verbose]
+        
+            #write found messages to tmp.pot
+            temp_pot = "tmp.pot"
+            ::GetText::Tools::XGetText.run("-o", temp_pot, *files)
+        
+            #merge tmp.pot and existing pot
+            po_root = options.delete(:po_root) || "po"
+            FileUtils.mkdir_p(po_root)
+            ::GetText::Tools::MsgMerge.run("#{po_root}/#{textdomain}.pot", temp_pot, app_version, options.dup)
+        
+            #update local po-files
+            only_one_language = options.delete(:lang)
+            if only_one_language
+              ::GetText::Tools::MsgMerge.run("#{po_root}/#{only_one_language}/#{textdomain}.po", temp_pot, app_version, options.dup)
+            else
+              Dir.glob("#{po_root}/*/#{textdomain}.po") do |po_file|
+                ::GetText::Tools::MsgMerge.run(po_file, temp_pot, app_version, options.dup)
+              end
+            end
+        
+            File.delete(temp_pot)
+          end
+
+
+
+
+
+
+
     end
     
 end

@@ -31,12 +31,23 @@
     </table>
     <div sp:if="!@pages.blank? && @pages > 1" class="pagination">
         <ul>
+        <!-- versione con file po, da ricreare file per traduzioni
             <li sp:if="@page > 1">
                 <a class="prev" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page-1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }">&larr; _(Previous)</a>
             </li>
             <li sp:if="@page == 1" class="disabled">
                 <a class="prev disabled">&larr; _(Previous)</a>
             </li>
+        -->
+            <li sp:if="@page > 1">
+                <a class="prev" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ 1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }"> << </a>
+                <a class="page" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page-1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }"> < </a>
+            </li>
+            <li sp:if="@page == 1" class="disabled">
+                <a class="prev disabled"> << </a>
+                <a class="page disabled"> < </a>    
+            </li>
+
             <sp:pass sp:if="@paginate_first > 1">
                 <li>
                     <a href="{ @request[:path] }?_w{ @widget[:param] }[page]=1{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">1</a>
@@ -61,12 +72,35 @@
                     <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @pages }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">{ @pages }</a> 
                 </li>
             </sp:pass>
+            <!-- versione con traduzioni
             <li sp:if="@has_more">
                 <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page+1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }">_(Next) &rarr;</a>
             </li>
             <li sp:if="!@has_more" class="disabled">
                 <a class="next disabled">_(Next) &rarr;</a>
             </li>
+            -->
+            <li sp:if="@has_more">
+                <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page+1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }"> > </a>
+                <a class="next" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @pages }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }"> >> </a>
+
+            </li>
+            <li sp:if="!@has_more" class="disabled">
+                <a class="disabled"> > </a>
+                <a class="next disabled"> >> </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Single button -->
+    <div class="btn-group dropup sel_pagine" sp:if="!@page.blank? && @page > 1">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Pag <strong>{ @page }</strong> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu lista_pagine">
+        <li sp:each="@array_pag |pag_corrente|">
+            <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ pag_corrente }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }">{ pag_corrente }</a>
+        </li>
         </ul>
     </div>
     <div sp:if="!@rows || @rows.length < 1" class="no_result">

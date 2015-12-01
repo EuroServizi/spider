@@ -70,12 +70,12 @@ msgstr "Elimina"
 #: widgets/table/table.shtml:28
 #: widgets/table/table.shtml:31
 msgid "Previous"
-msgstr "Indietro"
+msgstr "<"
 
 #: widgets/table/table.shtml:58
 #: widgets/table/table.shtml:61
 msgid "Next"
-msgstr "Avanti"
+msgstr ">"
 
 #: public/js/utils.js:9
 msgid "Are you sure?"

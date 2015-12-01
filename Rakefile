@@ -16,9 +16,10 @@ end
 desc "Update pot/po files. To update a single app, call rake updatepo[app_relative_path], where app_relative_path is the path relative to the apps folder (or 'spider')."
 task :updatepo, [:app] do |t, args|
     require 'spiderfw/spider'
-    require 'spiderfw/i18n/shtml_parser'
-    require 'spiderfw/i18n/javascript_parser'
+    #require 'spiderfw/i18n/shtml_parser'
+    #require 'spiderfw/i18n/javascript_parser'
     require 'gettext/tools'
+
 
     if !args[:app] || args[:app] == 'spider'
         Dir.chdir($SPIDER_PATH)
@@ -61,7 +62,7 @@ end
 
 desc "Create mo-files. To create for a single app, call rake makemo[app_relative_path], where app_relative_path is the path relative to the apps folder (or 'spider')."
 task :makemo, [:app] do |t, args|
-    require 'gettext/tools'
+    require 'gettext'
     if !args[:app] || args[:app] == 'spider' || args[:app] == 'home'
         GetText.create_mofiles(:verbose => true) 
     else

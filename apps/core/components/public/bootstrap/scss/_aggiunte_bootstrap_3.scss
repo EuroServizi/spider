@@ -1,0 +1,54 @@
+//DROWUP
+//** Width of the `border` for generating carets that indicator dropdowns.
+$caret-width-base:          4px !default;
+//** Carets increase slightly in size for larger components.
+$caret-width-large:         5px !default;
+
+// Upside down carets for .dropup
+.dropup .btn-lg .caret {
+  border-width: 0 $caret-width-large $caret-width-large;
+}
+
+// The dropdown wrapper (div)
+.dropup {
+  position: relative;
+}
+
+.dropup {
+	position: relative;
+  	// Reverse the caret
+  	.caret {
+    	border-top: 0;
+    	border-bottom: $caret-width-base dashed;
+    	border-bottom: $caret-width-base solid \9; // IE8
+    	content: "";
+  	}
+  
+    // Different positioning for bottom up menu
+  	.dropdown-menu {
+    	top: auto;
+    	bottom: 100%;
+    	margin-bottom: 2px;
+  	}
+}
+
+@media print {
+	.dropup > .btn {
+        > .caret {
+            border-top-color: #000 !important;
+        }
+    }
+}
+
+.dropup > .btn > .caret {
+    border-top-color: #000 !important;
+  }
+
+.dropdown-menu {
+ // Allow for dropdowns to go bottom up (aka, dropup-menu)
+	&.bottom-up {
+		top: auto;
+		bottom: 100%;
+		margin-bottom: 2px;
+	}
+}

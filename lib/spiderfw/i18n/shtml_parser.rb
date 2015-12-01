@@ -35,7 +35,7 @@ module Spider; module I18n
         end
 
     end
-    
-    ::GetText::RGetText.add_parser(SHTMLParser)
+    #::GetText::RGetText.add_parser(SHTMLParser)
+    ::GetText::Tools::XGetText.add_parser(SHTMLParser)
 
 end; end
