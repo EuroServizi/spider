@@ -92,8 +92,8 @@
         </ul>
     </div>
     
-    <!-- Single button -->
-    <div class="btn-group dropup sel_pagine" sp:if="!@page.blank? && @page > 1">
+    <!-- select con pagine per navigatore -->
+    <div class="btn-group dropup sel_pagine" sp:if="!@page.blank? && @pages > 1">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Pag <strong>{ @page }</strong> <span class="caret"></span>
         </button>

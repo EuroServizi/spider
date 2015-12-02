@@ -1,9 +1,10 @@
+@charset "UTF-8";
 /* line 33, ../../sass/grid.scss */
 body {
   width: 100%;
   *zoom: 1;
 }
-/* line 20, ../../sass/grid.scss */
+/* line 19, ../../sass/grid.scss */
 body:before, body:after {
   content: "";
   display: table;
@@ -13,12 +14,13 @@ body:after {
   clear: both;
 }
 
-/* line 42, icons/*.png */
+/* line 48, icons/*.png */
 .icons-sprite, .icons-logout, #header #admin_controls .logout_link {
-  background: url('../../img/icons-s8b18557db6.png') no-repeat;
+  background-image: url('../../img/icons-s8b18557db6.png');
+  background-repeat: no-repeat;
 }
 
-/* line 60, ../../../../../../../../../../Users/fabiano/.rvm/gems/ruby-1.8.7-p374/gems/compass-0.12.6/frameworks/compass/stylesheets/compass/utilities/sprites/_base.scss */
+/* line 84, ../../../../../../../../../../home/fabiano/.rvm/gems/ruby-1.9.3-p551/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
 .icons-logout, #header #admin_controls .logout_link {
   background-position: 0 0;
 }
@@ -47,7 +49,7 @@ body:after {
 /* line 38, ../../sass/admin.scss */
 #header {
   padding-bottom: 10px;
-  background: url('../../img/css/header_bg.png?1389186654') repeat-x scroll center top;
+  background: url('../../img/css/header_bg.png?1447840002') repeat-x scroll center top;
   background-color: #417690;
   position: relative;
   border-bottom: 2px solid #555555;
@@ -100,21 +102,18 @@ body:after {
   min-width: 200px;
   margin-left: 60px;
   background-color: #f4f5f6;
-  -webkit-box-shadow: 0px 0px 5px #333333;
   -moz-box-shadow: 0px 0px 5px #333333;
+  -webkit-box-shadow: 0px 0px 5px #333333;
   box-shadow: 0px 0px 5px #333333;
-  -webkit-border-radius: 1px;
   -moz-border-radius: 1px;
-  -ms-border-radius: 1px;
-  -o-border-radius: 1px;
+  -webkit-border-radius: 1px;
   border-radius: 1px;
   overflow: hidden;
   *zoom: 1;
-  display: -moz-inline-stack;
   display: inline-block;
   vertical-align: middle;
   *vertical-align: auto;
-  zoom: 1;
+  *zoom: 1;
   *display: inline;
 }
 /* line 98, ../../sass/admin.scss */
@@ -175,7 +174,7 @@ body:after {
 
 /* line 156, ../../sass/admin.scss */
 #container, .spider-admin-container {
-  background: url('../../img/css/side_bg.png?1389186654') repeat-y;
+  background: url('../../img/css/side_bg.png?1447840002') repeat-y;
   position: relative;
   min-width: 940px;
   padding-left: 20px;
@@ -217,4 +216,54 @@ body:after {
   #header #main_title {
     font-size: 10px;
   }
+}
+/* paginazione per paginatore js */
+/* line 206, ../../sass/admin.scss */
+.page_navigation.pagination {
+  display: inline-block;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+/* line 211, ../../sass/admin.scss */
+.page_navigation.pagination .active_page {
+  font-size: 120%;
+  font-weight: 700;
+}
+/* line 215, ../../sass/admin.scss */
+.page_navigation.pagination ul.lista_pagine {
+  list-style: none;
+  overflow: hidden;
+  display: none;
+}
+/* line 221, ../../sass/admin.scss */
+.page_navigation.pagination .active a {
+  font-size: 120%;
+  font-weight: 700;
+  cursor: default;
+}
+/* line 227, ../../sass/admin.scss */
+.page_navigation.pagination li.previous_link, .page_navigation.pagination li.next_link {
+  border-left-width: 1px;
+  border-radius: 3px 0 0 3px;
+}
+
+/* selettore delle pagine, fatto con dropup bootstrap 3 */
+/* line 236, ../../sass/admin.scss */
+.sel_pagine {
+  display: inline-block;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+/* line 240, ../../sass/admin.scss */
+.sel_pagine button {
+  color: #049cdb;
+}
+/* line 244, ../../sass/admin.scss */
+.sel_pagine .dropdown-menu {
+  min-width: 30px;
+}
+/* line 246, ../../sass/admin.scss */
+.sel_pagine .dropdown-menu.lista_pagine {
+  max-height: 300px;
+  overflow-y: scroll;
 }

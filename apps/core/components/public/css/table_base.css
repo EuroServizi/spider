@@ -1,21 +1,21 @@
-.pagination{
+.spider.components.table .pagination{
 	display: inline-block;
 	margin-bottom: 5px;
     margin-left: 20px;
 }
 
-.pagination ul{
+.spider.components.table .pagination ul{
   list-style: none;
   overflow: hidden;
 }
 
-.pagination .active a {
+.spider.components.table .pagination .active a {
 	font-size: 120%;
 	font-weight: 700;
     cursor: default;
 }
 
-.spider.components.table .pagination li:first-child a, .spider.components.table .pagination li:last-child a {
+.spider.components.table .pagination li:first-child a, .spider.components.table .spider.components.table .pagination li:last-child a {
     border-left-width: 0;
     border-radius: 0;
 }
@@ -25,21 +25,21 @@
     border-radius: 3px 0 0 3px;
 }
 
-.sel_pagine{
+.spider.components.table .sel_pagine{
 	display: inline-block;
 	margin-bottom: 5px;
 	margin-left: 20px;
 }
 
-.sel_pagine button{
+.spider.components.table .sel_pagine button{
 	color: #049cdb;
 }
 
-.dropdown-menu{
+.spider.components.table .dropdown-menu{
 	min-width: 30px;
 }
 
-.dropdown-menu.lista_pagine{
-	height: 300px;
+.spider.components.table .dropdown-menu.lista_pagine{
+	max-height: 300px;
 	overflow-y: scroll; 
 }
