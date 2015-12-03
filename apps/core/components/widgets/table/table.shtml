@@ -52,7 +52,7 @@
                 <li>
                     <a href="{ @request[:path] }?_w{ @widget[:param] }[page]=1{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">1</a>
                 </li>
-                <li class="disabled"><a>...</a></li>
+                <li><a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @paginate_first-1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">...</a></li>
             </sp:pass>
             <sp:pass sp:each="(@paginate_first..@paginate_last) |i|" >
                 <li sp:if="i != @page">
@@ -65,8 +65,8 @@
                 </li>
             </sp:pass>
             <sp:pass sp:if="@paginate_last < @pages-1">
-                <li class="disabled"> 
-                    <a>...</a>
+                <li> 
+                    <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @paginate_last+1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">...</a>
                 </li>
                 <li>
                     <a href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @pages }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="page">{ @pages }</a> 

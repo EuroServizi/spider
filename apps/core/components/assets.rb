@@ -9,6 +9,7 @@ Spider::Template.define_named_asset 'jquery', [
 Spider::Template.define_named_asset 'spider', [
     [:js, 'js/inheritance.js', Spider::Components],
     [:js, 'js/spider.js', Spider::Components],
+    [:js, 'js/paginatore.js', Spider::Components],
     [:js, 'js/jquery/plugins/jquery.query-2.1.6.js', Spider::Components],
     [:js, 'js/jquery/plugins/jquery.form.js', Spider::Components],
     [:js, 'js/plugins/plugin.js', Spider::Components],
