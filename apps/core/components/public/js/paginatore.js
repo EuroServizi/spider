@@ -175,14 +175,14 @@ function init_paginatore(scope){
     $(scope).find('#show_per_page').val(show_per_page);
     popola_select(scope)
 
-    if(number_of_pages>0){
+    if(number_of_pages>1){
 
         var navigation_html = "<ul><li class=\"previous_link\"><a href=\"javascript:first_page('"+scope+"');\"> << </a></li>";
         navigation_html += "<li><a href=\"javascript:previous('"+scope+"');\"> < </a></li>";
         var current_link = 1;
         if(number_of_pages<max_page_in_navbar)
         {
-            while(number_of_pages > current_link){
+            while(number_of_pages >= current_link){
                 navigation_html += "<li class=\"page_link\" longdesc=\"" + current_link +"\"><a href=\"javascript:go_to_page(" + current_link +", '" + scope + "')\" >"+ (current_link) +"</a></li>";
                 //navigation_html += '<li class="page_link" longdesc="' + current_link +'"><a href="javascript:go_to_page(' + current_link +', \"' + scope + '\")" >'+ (current_link + 1) +'</a></li></ul>';
                 current_link++;
