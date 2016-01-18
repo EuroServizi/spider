@@ -1,6 +1,86 @@
 /* PAGINATORE JS V 2 */
-/* il parametro scope limita il funzionamento ad un pezzo della pagina, serve per avere più paginatori nella pagina */
+/*  campi hidden da avere nella pagina dove si vuole usare il paginatore
+        Imposto il numero di righe per pagina che viene passato al js
+        <input type='hidden' id='items_per_page' value="10" />  
 
+        Imposto il numero di link di pagine da mostrare nella navbar 
+        <input type='hidden' id='max_page_in_navbar' value="14"/>
+
+        Campi usati dalle funzioni del paginatore
+        <input type='hidden' id='current_page' />
+        <input type='hidden' id='show_per_page' />
+
+    stili per tabella con paginazione (sono in admin.scss)
+        
+        .page_navigation{
+            &.pagination{
+                display: inline-block;
+                margin-bottom: 5px;
+                margin-left: 20px;
+            
+                .active_page{
+                    font-size: 120%;
+                    font-weight: 700;
+                }
+                ul.lista_pagine{
+                    list-style: none;
+                    overflow: hidden;
+                    display: none;
+                }
+
+                .active a {
+                    font-size: 120%;
+                    font-weight: 700;
+                    cursor: default;
+                }
+                
+                li.previous_link, li.next_link{
+                    border-left-width: 1px;
+                    border-radius: 3px 0 0 3px;
+                }
+                
+            }
+        }
+
+    selettore delle pagine, fatto con dropup bootstrap 3 
+        .sel_pagine{
+            display: inline-block;
+            margin-bottom: 5px;
+            margin-left: 20px;
+            button{
+                color: #049cdb;
+            }
+
+            .dropdown-menu{
+                min-width: 30px;
+                &.lista_pagine{
+                    max-height: 300px;
+                    overflow-y: scroll; 
+                }
+            }
+
+        }
+
+
+    Esempio di uso
+        <table class="pagination_content">  -> indica che questo elemento sarà il contenitore
+            <tbody>
+                <tr class="paginated_element"> -> elemento conteggiato per la paginazione
+                    <td>.....
+                </tr>
+            .....
+        </table>
+        <div class="page_navigation pagination"><ul></ul></div>  -> dopo il pagination_content serve un page_navigation per la barra di navigazione
+
+
+*/
+
+
+
+
+
+
+/* il parametro scope limita il funzionamento ad un pezzo della pagina, serve per avere più paginatori nella pagina */
 
 /* porta alla prima pagina, usato nel bottone << */
 function first_page(scope){
