@@ -10,6 +10,7 @@ Spider::Template.define_named_asset 'spider', [
     [:js, 'js/inheritance.js', Spider::Components],
     [:js, 'js/spider.js', Spider::Components],
     [:js, 'js/paginatore.js', Spider::Components],
+    [:js, 'js/spin.js', Spider::Components],
     [:js, 'js/jquery/plugins/jquery.query-2.1.6.js', Spider::Components],
     [:js, 'js/jquery/plugins/jquery.form.js', Spider::Components],
     [:js, 'js/plugins/plugin.js', Spider::Components],
@@ -268,7 +269,7 @@ Spider::Template.define_named_asset 'bootstrap-3-transition', [
 #
 
 Spider::Template.define_named_asset 'fontawesome_4', [
-    [:css, 'fontawesome_4/stylesheets/font-awesome.scss', Spider::Components]
+    [:css, 'fontawesome_4/stylesheets/font_awesome.scss', Spider::Components]
 ]
 
 
