@@ -12,53 +12,53 @@
 
     stili per tabella con paginazione (sono in admin.scss)
         
-        .page_navigation{
-            &.pagination{
+        :not(.spider.components.table){
+           .page_navigation{
+                &.pagination{
+                    display: inline-block;
+                    margin-bottom: 10px;
+                    margin-left: 20px;
+                
+                    .active_page{
+                        font-size: 120%;
+                        font-weight: 700;
+                    }
+                    ul.lista_pagine{
+                        list-style: none;
+                        overflow: hidden;
+                        display: none;
+                    }
+
+                    .active a {
+                        font-size: 120%;
+                        font-weight: 700;
+                        cursor: default;
+                    }
+                    
+                    li.previous_link, li.next_link{
+                        border-left-width: 1px;
+                        border-radius: 3px 0 0 3px;
+                    }
+                    
+                }
+            }
+
+            selettore delle pagine, fatto con dropup bootstrap 3
+            .sel_pagine{
                 display: inline-block;
                 margin-bottom: 5px;
                 margin-left: 20px;
-            
-                .active_page{
-                    font-size: 120%;
-                    font-weight: 700;
+                button{
+                    color: #049cdb;
                 }
-                ul.lista_pagine{
-                    list-style: none;
-                    overflow: hidden;
-                    display: none;
+                .dropdown-menu{
+                    min-width: 30px;
+                    &.lista_pagine{
+                        max-height: 300px;
+                        overflow-y: scroll; 
+                    }
                 }
-
-                .active a {
-                    font-size: 120%;
-                    font-weight: 700;
-                    cursor: default;
-                }
-                
-                li.previous_link, li.next_link{
-                    border-left-width: 1px;
-                    border-radius: 3px 0 0 3px;
-                }
-                
-            }
-        }
-
-    selettore delle pagine, fatto con dropup bootstrap 3 
-        .sel_pagine{
-            display: inline-block;
-            margin-bottom: 5px;
-            margin-left: 20px;
-            button{
-                color: #049cdb;
-            }
-
-            .dropdown-menu{
-                min-width: 30px;
-                &.lista_pagine{
-                    max-height: 300px;
-                    overflow-y: scroll; 
-                }
-            }
-
+            } 
         }
 
 
@@ -71,6 +71,12 @@
             .....
         </table>
         <div class="page_navigation pagination"><ul></ul></div>  -> dopo il pagination_content serve un page_navigation per la barra di navigazione
+
+
+    Nel javascript per abilitare il paginatore bisogna richiamare la funzione 
+    init_paginatore();
+    Se si vuole limitarlo ad una porzione di dom (uno scope) ad esempio: <div id="elemento_paginatore" >..</div> , si usa
+    init_paginatore("#elemento_paginatore");
 
 
 */

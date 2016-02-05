@@ -184,7 +184,15 @@ module Spider
             #nuove cartelle aggiunte
             FileUtils.mkdir_p(Spider.paths[:data])
             FileUtils.mkdir_p(File.join(Spider.paths[:var], 'sessions'))
-
+            #creo le cartelle per i file scss
+            FileUtils.mkdir_p(Spider.paths[:public])
+            FileUtils.mkdir_p(File.join(Spider.paths[:public],'sass'))
+            FileUtils.mkdir_p(File.join(Spider.paths[:public],'img'))
+            if File.exist?(File.join(Spider.paths[:public],'sass')) && !File.exists?(File.join(Spider.paths[:public],'sass','custom_stile.scss'))
+                File.new(File.join(Spider.paths[:public],'sass','custom_stile.scss'), "w+")
+            end
+            #creo cartelle per ridefinire layout portale
+            FileUtils.mkdir_p(Spider.paths[:personalized_views]) 
         end
 
 
@@ -532,6 +540,8 @@ module Spider
             @paths[:log] = File.join(@paths[:var], 'log')
             @paths[:restart_file] = File.join(@paths[:tmp], 'restart.txt')
             @paths[:clear_file] = File.join(@paths[:tmp], 'clear.txt')
+            @paths[:public] = File.join(root, 'public')
+            @paths[:personalized_views] = File.join(root, 'views')
             @paths.each do |k, path|
                 @paths[k] = File.expand_path(File.readlink(path)) if File.symlink?(path)
             end

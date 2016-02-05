@@ -1,7 +1,7 @@
 <div class="{ @widget[:css_class] }">
     <tpl:asset type="js" src="widgets/table.js" />
     <tpl:asset type="css" src="css/table_base.css" />
-    <table sp:if="@rows && @rows.length > 0" class="table-bordered table-striped">
+    <table sp:if="@rows && @rows.length > 0" class="table table-bordered table-striped table-hover row_linked width_auto">
         <thead>
             <tr class="heading_row">
                 <th sp:each="@elements |element|" class="{ @sortable[element] ? 'sortable' : '' }  { (@sorted[element] ? 'sorted-'+@sorted[element].to_s : '') }">
@@ -14,23 +14,23 @@
         <tbody>
             <tpl:pass sp:each_index="@rows |row_i|">
                 <tr class="{ (row_i%2==0) ? 'odd' : 'even' }">
-                    <td sp:each="@elements |element|">
-                        <a sp:if="((!@link_el.blank? && element == @link_el) && @link.blank?)" href="{ Spider::HTTP.urlencode(@data[row_i][@link_id]) }?current_page={ @page }">
-                            { URI.decode(@rows[row_i][element]) }
-                        </a>   
-                        <a sp:if="@link_el && element == @link_el && !@link.blank?" href="{ @link }{ Spider::HTTP.urlencode(@data[row_i][@link_id]) }&current_page={ @page }">
-                            { URI.decode(@rows[row_i][element]) }
-                        </a>
-                        <span sp:if="element != @link_el" >
-                            { URI.decode(@rows[row_i][element]) }
-                        </span>
-                    </td>
+                        <td sp:each="@elements |element|">
+                            <a sp:if="((!@link_el.blank? && element == @link_el) && @link.blank?)" href="{ Spider::HTTP.urlencode(@data[row_i][@link_id]) }?current_page={ @page }">
+                                { URI.decode(@rows[row_i][element]) }
+                            </a>   
+                            <a sp:if="@link_el && element == @link_el && !@link.blank?" href="{ @link }{ Spider::HTTP.urlencode(@data[row_i][@link_id]) }&current_page={ @page }">
+                                { URI.decode(@rows[row_i][element]) }
+                            </a>
+                            <span sp:if="element != @link_el" >
+                                { URI.decode(@rows[row_i][element]) }
+                            </span>
+                        </td>
                 </tr>
             </tpl:pass>
         </tbody>
     </table>
-    <div sp:if="!@pages.blank? && @pages > 1" class="pagination">
-        <ul>
+    <ul sp:if="!@pages.blank? && @pages > 1" class="pagination">
+        
         <!-- versione con file po, da ricreare file per traduzioni
             <li sp:if="@page > 1">
                 <a class="prev" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page-1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }">&larr; _(Previous)</a>
@@ -89,8 +89,7 @@
                 <a class="disabled"> > </a>
                 <a class="next disabled"> >> </a>
             </li>
-        </ul>
-    </div>
+    </ul>
     
     <!-- select con pagine per navigatore -->
     <div class="btn-group dropup sel_pagine" sp:if="!@page.blank? && @pages > 1">

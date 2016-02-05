@@ -607,6 +607,7 @@ module Spider; module ControllerMixins
                 layout.asset_set = params[:assets] if params[:assets]
                 layout.no_asset_profiles(*params[:no_asset_profiles]) if params[:no_asset_profiles]
                 layout.only_asset_profiles(params[:only_asset_profiles]) if params[:only_asset_profiles]
+                layout.single_layout = params[:single_layout] if params[:single_layout]
                 layout
             end
 

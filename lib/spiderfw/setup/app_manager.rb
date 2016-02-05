@@ -118,6 +118,14 @@ module Spider
             else
                 pack_install(spec, options)
             end
+            #alla fine dell'installazione, se sto installando il portal creo la cartella 'portal' dentro a 'views'
+            if spec.app_id == 'portal'
+                #Spider.output "Copio layout del portale"
+                dest_layout = File.join(Spider.paths[:personalized_views],spec.app_id)
+                source_layout_file = File.join(Spider.paths[:apps],spec.app_id,'views','portal.layout.shtml')
+                FileUtils.mkdir_p(dest_layout)
+                FileUtils.cp(source_layout_file,dest_layout)
+            end
         end
 
         

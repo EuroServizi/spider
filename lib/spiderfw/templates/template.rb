@@ -286,13 +286,14 @@ module Spider
             res =  root.children ? root.children_of_type('tpl:asset') : []
             res_init = ""
             res.each do |r|
-                @assets << Spider::Template.parse_asset_element(r)
+                #se ho l'attributo runtime carico il file se il runtime coincide o non viene specificato
+                @assets << Spider::Template.parse_asset_element(r) if (r.get_attribute("runmode") == Spider.runmode || r.get_attribute("runmode").nil?)
                 r.set_attribute('class', 'to_delete')
             end
             new_assets = []
             @assets.each do |ass|
                 a = parse_asset(ass[:type], ass[:src], ass)
-                new_assets += a
+                new_assets += a unless new_assets.include?(a) #non inserisco duplicati
             end
             @assets = new_assets
             root.search('.to_delete').remove
@@ -323,6 +324,7 @@ module Spider
                         s_template.load(s)
                         @assets = s_template.assets + @assets
                     end
+
                 end
             end
             root.search('tpl:assets').remove
@@ -351,12 +353,15 @@ module Spider
                 # sub_c = sub.compile(options.merge({:mode => :widget}))
                 @assets = wt.compiled.assets + @assets
             end
-            
             seen = {}
             # @assets.each_index do |i|
             #     ass = @assets[i]
             #     if ass[:name]
             # end
+            #
+            #rendo univoco all'inizio l'array per non caricare piu' volte lo stesso asset
+            assets_univoci = @assets.uniq!
+            @assets = ( assets_univoci.nil? ? @assets : assets_univoci )
             @assets.each do |ass|
                 ass[:profiles] = ((ass[:profiles] || []) + @asset_profiles).uniq if @asset_profiles
                 next if seen[ass.inspect]
@@ -372,7 +377,7 @@ module Spider
             end
             compiled.block.init_code = res_init + compiled.block.init_code
             compiled.devel_info["source.xml"] = root.to_html
-            compiled.assets = (@assets + assets).uniq
+            compiled.assets = @assets #(@assets + assets).uniq sono univoci e assets == @assets
             return compiled
         end
         
@@ -446,6 +451,7 @@ module Spider
             else
                 base_url = ''
             end
+
             ass[:rel_path] = src
             ass[:src] = base_url + src
             ass_info = self.class.asset_types[type]
@@ -470,6 +476,8 @@ module Spider
             [:gettext, :media, :if_ie_lte, :cdn].each do |key|
                 ass[key] = attributes[key] if attributes.key?(key)
             end
+
+            ass[:order] = attributes[:order]
             return [ass]
         end
         

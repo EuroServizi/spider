@@ -271,8 +271,12 @@ Spider::Template.define_named_asset 'bootstrap-3-transition', [
 Spider::Template.define_named_asset 'fontawesome_4', [
     [:css, 'fontawesome_4/stylesheets/font_awesome.scss', Spider::Components]
 ]
-
-
+#
+# ASSETS PER JS MENU LATERALE RESPONSIVE
+#
+Spider::Template.define_named_asset 'mmenu_js', [
+    [:js, 'mmenu/js/jquery.mmenu.js', Spider::Components]
+]
 
 
 

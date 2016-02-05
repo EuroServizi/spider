@@ -6,7 +6,9 @@ module Spider
 #        allow_blocks :HTML, :Text, :Render, :Yield, :If, :TagIf, :Each, :Pass, :Widget
         attr_accessor :template
         attr_accessor :asset_set
+        attr_accessor :single_layout
         
+
         def init(scene)
             super
             @template = @template.is_a?(Template) ? @template : Template.new(@template)
@@ -40,52 +42,58 @@ module Spider
             cname += "-#{@asset_set}" if @asset_set
             @cname = cname
 
-            all_assets.each do |ass|
-                seen_check = ass[:runtime] || ass[:src]
-                next if ass[:src].blank? && !ass[:runtime]
-                next if seen[seen_check]
-                seen[seen_check] = true
-                ass[:app] = Spider.home if ass[:app] == :home
-                
-                ass = compile_asset(ass)
+            @content[:yield_to] = @template
+            #se sono nel layout del portale ho il :single_layout, se sono in un layout di un app faccio scaricare gli assets solo se ho single_layout a true
+            if  !/(admin|login|error|portal|simple|generic|cms|stampa)/.match(cname).blank? || self.single_layout 
+                all_assets.each do |ass|
+                    seen_check = ass[:runtime] || ass[:src]
+                    next if ass[:src].blank? && !ass[:runtime]
+                    next if seen[seen_check]
+                    seen[seen_check] = true
+                    ass[:app] = Spider.home if ass[:app] == :home
+                    
+                    ass = compile_asset(ass)
 
-                res = prepare_asset(ass, compress_assets, js_translations)
-                assets[:css] += res[:css]
-                assets[:js] += res[:js]
-
-            end
-
-
-            if @compile_less == false
-                less = Spider::Template.get_named_asset('less')
-                less.each do |ass|
-                    res = prepare_asset(parse_asset(ass[:type], ass[:src], ass).first)
+                    res = prepare_asset(ass, compress_assets, js_translations)
                     assets[:css] += res[:css]
                     assets[:js] += res[:js]
+
                 end
-            end
-            assets[:js].each do |ass|
-                if ass[:cpr]
-                    compressed = compress_javascript(ass)
-                    @template_assets[:js] << Spider.home.controller.pub_url+'/'+COMPILED_FOLDER+'/'+compressed
-                else
-                    ass[:src] = ass[:cdn] if ass[:cdn] && use_cdn
-                    @template_assets[:js] << ass[:src]
+                #ordino gli assets in base al parametro order
+                assets[:css] = assets[:css].sort_by { |hsh| hsh[:order].to_i }
+                assets[:js] = assets[:js].sort_by { |hsh| hsh[:order].to_i }
+                
+                if @compile_less == false
+                    less = Spider::Template.get_named_asset('less')
+                    less.each do |ass|
+                        res = prepare_asset(parse_asset(ass[:type], ass[:src], ass).first)
+                        assets[:css] += res[:css]
+                        assets[:js] += res[:js]
+                    end
                 end
-            end
-            assets[:css].each do |ass|
-                if ass[:cpr]
-                    compressed = compress_css(ass)
-                    @template_assets[:css] << Spider.home.controller.pub_url+'/'+COMPILED_FOLDER+'/'+compressed
-                else
-                    ass[:src] = ass[:cdn] if ass[:cdn] && use_cdn
-                    is_dyn = ass[:if_ie_lte] || ass[:media] || ass[:rel]
-                    @template_assets[:css] << (is_dyn ? ass : ass[:src])
+                assets[:js].each do |ass|
+                    if ass[:cpr]
+                        compressed = compress_javascript(ass)
+                        @template_assets[:js] << Spider.home.controller.pub_url+'/'+COMPILED_FOLDER+'/'+compressed
+                    else
+                        ass[:src] = ass[:cdn] if ass[:cdn] && use_cdn
+                        @template_assets[:js] << ass[:src]
+                    end
                 end
-            end
+                assets[:css].each do |ass|
+                    if ass[:cpr]
+                        compressed = compress_css(ass)
+                        @template_assets[:css] << Spider.home.controller.pub_url+'/'+COMPILED_FOLDER+'/'+compressed
+                    else
+                        ass[:src] = ass[:cdn] if ass[:cdn] && use_cdn
+                        is_dyn = ass[:if_ie_lte] || ass[:media] || ass[:rel]
+                        @template_assets[:css] << (is_dyn ? ass : ass[:src])
+                    end
+                end
             
-            @content[:yield_to] = @template
-            @scene.assets = @template_assets
+                @scene.assets = @template_assets
+            end
+
             @scene.extend(LayoutScene)
             if js_translations.empty?
                 @scene.js_translations = ""

@@ -32,7 +32,6 @@ module Spider
             dest_path = path+'/'+name
             source_path = $SPIDER_PATH+'/blueprints/home'
             create(source_path, dest_path)
-            
             begin
                 require 'git'
 

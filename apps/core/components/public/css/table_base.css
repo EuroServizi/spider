@@ -4,7 +4,7 @@
     margin-left: 20px;
 }
 
-.spider.components.table .pagination ul{
+.spider.components.table ul.pagination {
   list-style: none;
   overflow: hidden;
 }
@@ -13,6 +13,7 @@
 	font-size: 120%;
 	font-weight: 700;
     cursor: default;
+    padding: 4px 12px;
 }
 
 .spider.components.table .pagination li:first-child a, .spider.components.table .spider.components.table .pagination li:last-child a {
@@ -25,9 +26,13 @@
     border-radius: 3px 0 0 3px;
 }
 
+.spider.components.table .btn-group{
+	vertical-align: bottom;
+}
+
 .spider.components.table .sel_pagine{
 	display: inline-block;
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 	margin-left: 20px;
 }
 

@@ -346,7 +346,7 @@ module Spider
             # @param [String] message The error message
             def initialize(element, value, message)
                 @element = element
-                @message = message
+                @message = message+" (valore: #{value})"
                 @value = value
                 super(message)
             end
@@ -357,6 +357,7 @@ module Spider
                 Spider::GetText.in_domain('spider'){
                     _(@message) % label
                 }
+
             end
             
         end
