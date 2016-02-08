@@ -186,13 +186,13 @@ module Spider
             FileUtils.mkdir_p(File.join(Spider.paths[:var], 'sessions'))
             #creo le cartelle per i file scss
             FileUtils.mkdir_p(Spider.paths[:public])
-            FileUtils.mkdir_p(File.join(Spider.paths[:public],'sass'))
-            FileUtils.mkdir_p(File.join(Spider.paths[:public],'img'))
+            FileUtils.mkdir_p(File.join(Spider.paths[:public],'sass')) unless File.exist?(File.join(Spider.paths[:public],'sass'))
+            FileUtils.mkdir_p(File.join(Spider.paths[:public],'img')) unless File.exist?(File.join(Spider.paths[:public],'img'))
             if File.exist?(File.join(Spider.paths[:public],'sass')) && !File.exists?(File.join(Spider.paths[:public],'sass','custom_stile.scss'))
                 File.new(File.join(Spider.paths[:public],'sass','custom_stile.scss'), "w+")
             end
             #creo cartelle per ridefinire layout portale
-            FileUtils.mkdir_p(Spider.paths[:personalized_views]) 
+            FileUtils.mkdir_p(Spider.paths[:personalized_views]) unless File.exist?(Spider.paths[:personalized_views])
         end
 
 
