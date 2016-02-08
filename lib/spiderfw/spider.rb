@@ -177,6 +177,8 @@ module Spider
             unless File.exists?(File.join(Spider.paths[:root], 'init.rb'))
                 raise "This command must be run from the root directory"
             end
+            FileUtils.chown_R 'www-data', 'wwb', Spider.paths[:root]
+            FileUtils.chmod_R "g=rw", Spider.paths[:root]
             FileUtils.mkdir_p(Spider.paths[:tmp])
             FileUtils.mkdir_p(Spider.paths[:var])
             FileUtils.mkdir_p(File.join(Spider.paths[:var], 'memory'))
