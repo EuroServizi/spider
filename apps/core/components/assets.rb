@@ -280,14 +280,23 @@ Spider::Template.define_named_asset 'mmenu_js', [
 #
 # ASSETS PER EDITOR TINYMCE
 #
-Spider::Template.define_named_asset 'tinymce', [
+Spider::Template.define_named_asset 'tinymce_js', [
     [:js, 'js/tinymce/tinymce.js', Spider::Components],
+    [:js, 'js/tinymce/langs/it.js', Spider::Components],
+    [:js, 'js/tinymce/themes/modern/theme.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/fullpage/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/hr/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/fullscreen/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/code/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/importcss/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/table/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/paste/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/nonbreaking/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/template/plugin.js', Spider::Components]
 ]
 
-
-
-
-
-
-
+Spider::Template.define_named_asset 'tinymce_css', [
+    [:css, 'css/tinymce/skins/lightgray/skin.min.css', Spider::Components],
+    [:css, 'css/tinymce/skins/lightgray/content.min.css', Spider::Components]
+]
 
