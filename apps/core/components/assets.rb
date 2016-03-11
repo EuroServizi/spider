@@ -277,9 +277,12 @@ Spider::Template.define_named_asset 'fontawesome_4', [
 Spider::Template.define_named_asset 'mmenu_js', [
     [:js, 'mmenu/js/jquery.mmenu.js', Spider::Components]
 ]
-
-
-
+#
+# ASSETS PER EDITOR TINYMCE
+#
+Spider::Template.define_named_asset 'tinymce', [
+    [:js, 'js/tinymce/tinymce.js', Spider::Components],
+]
 
 
 
