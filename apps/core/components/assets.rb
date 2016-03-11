@@ -261,3 +261,9 @@ Spider::Template.define_named_asset 'bootstrap-3-transition', [
     [:js, 'bootstrap_3/js/transition.js', Spider::Components]
 ]
 
+#
+# ASSETS PER EDITOR TINYMCE
+#
+Spider::Template.define_named_asset 'tinymce', [
+    [:js, 'js/tinymce/tinymce.js', Spider::Components],
+]
