@@ -276,7 +276,9 @@ Spider::Template.define_named_asset 'tinymce_js', [
     [:js, 'js/tinymce/plugins/table/plugin.js', Spider::Components],
     [:js, 'js/tinymce/plugins/paste/plugin.js', Spider::Components],
     [:js, 'js/tinymce/plugins/nonbreaking/plugin.js', Spider::Components],
-    [:js, 'js/tinymce/plugins/template/plugin.js', Spider::Components]
+    [:js, 'js/tinymce/plugins/template/plugin.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/template/advlist.js', Spider::Components],
+    [:js, 'js/tinymce/plugins/template/pagebreak.js', Spider::Components]
 ]
 
 Spider::Template.define_named_asset 'tinymce_css', [
