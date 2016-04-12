@@ -169,12 +169,25 @@ Spider::Template.define_named_asset 'bootstrap-sass', [
     [:css, 'bootstrap/scss/bootstrap.scss', Spider::Components]
 ]
 
+Spider::Template.define_named_asset 'bootstrap-2-js', [
+    [:js, 'bootstrap/js/bootstrap-alert.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-button.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-dropdown.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-modal.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-tooltip.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-popover.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-scrollspy.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-tab.js', Spider::Components],
+    [:js, 'bootstrap/js/bootstrap-transition.js', Spider::Components]
+    
+]
+
 Spider::Template.define_named_asset 'bootstrap-alerts', [
-    [:js, 'bootstrap/js/bootstrap-alerts.js', Spider::Components]
+    [:js, 'bootstrap/js/bootstrap-alert.js', Spider::Components]
 ]
 
 Spider::Template.define_named_asset 'bootstrap-buttons', [
-    [:js, 'bootstrap/js/bootstrap-buttons.js', Spider::Components]
+    [:js, 'bootstrap/js/bootstrap-button.js', Spider::Components]
 ]
 
 Spider::Template.define_named_asset 'bootstrap-dropdown', [
@@ -202,16 +215,37 @@ Spider::Template.define_named_asset 'bootstrap-tab', [
     [:js, 'bootstrap/js/bootstrap-tab.js', Spider::Components]
 ]
 
-Spider::Template.define_named_asset 'bootstrap-twipsy', [
-    [:js, 'bootstrap/js/bootstrap-twipsy.js', Spider::Components]
+Spider::Template.define_named_asset 'bootstrap-collapse', [
+    [:js, 'bootstrap/js/bootstrap-collapse.js', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-transition', [
+    [:js, 'bootstrap/js/bootstrap-transition.js', Spider::Components]
 ]
 
 #
 # NUOVI ASSETS PER BOOTSTRAP 3
 #
 
+
+
 Spider::Template.define_named_asset 'bootstrap-3-sass', [
     [:css, 'bootstrap_3/scss/bootstrap.scss', Spider::Components]
+]
+
+Spider::Template.define_named_asset 'bootstrap-3-js', [
+    [:js, 'bootstrap_3/js/affix.js', Spider::Components],
+    [:js, 'bootstrap_3/js/alert.js', Spider::Components],
+    [:js, 'bootstrap_3/js/button.js', Spider::Components],
+    [:js, 'bootstrap_3/js/carousel.js', Spider::Components],
+    [:js, 'bootstrap_3/js/collapse.js', Spider::Components],
+    [:js, 'bootstrap_3/js/dropdown.js', Spider::Components],
+    [:js, 'bootstrap_3/js/modal.js', Spider::Components],
+    [:js, 'bootstrap_3/js/popover.js', Spider::Components],
+    [:js, 'bootstrap_3/js/scrollspy.js', Spider::Components],
+    [:js, 'bootstrap_3/js/tab.js', Spider::Components],
+    [:js, 'bootstrap_3/js/tooltip.js', Spider::Components],
+    [:js, 'bootstrap_3/js/transition.js', Spider::Components]
 ]
 
 Spider::Template.define_named_asset 'bootstrap-3-affix', [
@@ -303,3 +337,9 @@ Spider::Template.define_named_asset 'tinymce_css', [
     [:css, 'css/tinymce/skins/lightgray/content.min.css', Spider::Components]
 ]
 
+#
+# ASSET PER BOOTBOX 2 
+#
+Spider::Template.define_named_asset 'bootbox_2', [
+    [:js, 'js/bootbox_2/bootbox.js', Spider::Components]
+]
