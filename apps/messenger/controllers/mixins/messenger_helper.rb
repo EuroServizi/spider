@@ -40,6 +40,17 @@ module Spider; module Messenger
             
         end
         
+        def self.send_sms(to, text, params=nil)
+            params = {} if params.blank?
+            to = "+39"+to if (!to.include?("+") && (to.length == 10 || to.length == 9) )
+            if (to.length == 13 || to.length == 12)
+                msg = Spider::Messenger.sms(to, text, params)
+                return msg
+            else
+                Spider.logger.error "Number #{cellulare} not valid"
+                return false
+            end
+        end
 
 
 
