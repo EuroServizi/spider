@@ -302,11 +302,11 @@ module Spider; module Model
                 other_name = attributes[:junction_their_element]
                 if (create_junction)
                     #evita il warning 'already initialized constant News' e 'already initialized constant Contents'
-                    if first_model.constant_defined?(assoc_type_name) 
-                        return nil
-                    else
+                    #if first_model.constant_defined?(assoc_type_name) 
+                    #    return nil
+                    #else
                         assoc_type = first_model.const_set(assoc_type_name, Class.new(BaseModel))
-                    end
+                    #end
                     assoc_type.attributes[:sub_model] = self
                     assoc_type.attributes[:sub_model_element] = name
                     embedder = attributes[:junction_embedded] == false ? false : true
