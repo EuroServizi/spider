@@ -370,6 +370,8 @@ module Spider; module Forms
 #                    obj.set(element_name, @inputs[element_name].prepare_value(@data[element_name.to_s]))
                 rescue FormatError => exc
                     add_error(exc.message, element_name, exc)
+                rescue Spider::Model::NotUniqueError => exc
+                    add_error(exc.message, element_name, exc)
                 end
             end
             if (@fixed)
@@ -408,7 +410,7 @@ module Spider; module Forms
                 after_save(obj, save_mode)
                 trigger(:save, obj, save_mode)
                 @auto_redirect = true if @auto_redirect.is_a?(String) && @auto_redirect.strip == 'true'
-                if @auto_redirect
+                if @auto_redirect && !@error
                     if @auto_redirect.is_a?(String)
                         redirect(@auto_redirect)
                     else
