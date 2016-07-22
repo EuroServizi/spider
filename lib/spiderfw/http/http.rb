@@ -273,7 +273,6 @@ module Spider
                 content_type = head[CONTENT_TYPE_REGEX, 1]
                 name = head[NAME_REGEX, 1]
                 if filename && !filename.empty?
-                    debugger
                     #se sono con ruby >= 1.9 ricavo l'encoding
                     body = UploadedFile.new(filename, content_type, (buf.respond_to?(:encoding) ? buf.encoding.to_s : nil) )
                 end
