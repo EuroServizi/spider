@@ -57,6 +57,9 @@ class Object
             elsif RUBY_VERSION =~ /1.9/
                 self_dup = self.dup
                 self.replace(self_dup.force_encoding(encoding)) unless self.frozen?
+            else
+                self_dup = self.dup
+                self.replace(self_dup.force_encoding(encoding)) unless self.frozen?
             end
         end
     end
