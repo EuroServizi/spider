@@ -329,7 +329,7 @@ module Spider
             elsif RUBY_VERSION =~ /^1.8.7/ #caso con ruby 1.8.7
                 super('uploaded', Spider.paths[:tmp])
             else
-                super('uploaded', Spider.paths[:tmp], content_type, :encoding => encoding)
+                super('uploaded', Spider.paths[:tmp], :encoding => encoding)
             end
         end
         
