@@ -34,7 +34,7 @@ module Spider; module Messenger
                 sent_sms(msg.ticket)
                 return msg
             else
-                Spider.logger.error "Number #{cellulare} not valid"
+                Spider.logger.error "Number #{to} not valid"
                 return false
             end
             
@@ -47,7 +47,7 @@ module Spider; module Messenger
                 msg = Spider::Messenger.sms(to, text, params)
                 return msg
             else
-                Spider.logger.error "Number #{cellulare} not valid"
+                Spider.logger.error "Number #{to} not valid"
                 return false
             end
         end
