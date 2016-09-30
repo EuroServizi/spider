@@ -324,10 +324,12 @@ module Spider
             @filename = filename
             @content_type = content_type
             @encoding = encoding
-            if RUBY_VERSION >= "1.9"
+            if RUBY_VERSION =~ /^1.9.3/
                 super('uploaded', Spider.paths[:tmp], content_type, :encoding => encoding)
-            else #caso con ruby 1.8.7
+            elsif RUBY_VERSION =~ /^1.8.7/ #caso con ruby 1.8.7
                 super('uploaded', Spider.paths[:tmp])
+            else
+                super('uploaded', Spider.paths[:tmp], :encoding => encoding)
             end
         end
         

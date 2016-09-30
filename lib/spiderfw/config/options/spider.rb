@@ -89,7 +89,7 @@ module Spider
         val
     }
     config_option 'i18n.rails_path', _("Path where rails-style locales are found"), :default => lambda{ Spider.paths[:root]+'/locales' }
-    config_option 'i18n.default_locale', _("Fallback locale"), :default => 'en'
+    config_option 'i18n.default_locale', _("Fallback locale"), :default => 'it'
  
     config_option 'runner.sleep', _("Sleep time for the periodic runner"), :default => 10
     

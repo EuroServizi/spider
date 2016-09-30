@@ -49,7 +49,7 @@ module Spider; module Forms
                 @scene.data.condition.and(conn_cond)
             end
             @scene.values = {}
-            @scene.selected = {}
+            @scene.selected ||= {}
             if @model || (@scene.data.is_a?(Spider::Model::QuerySet) && @scene.data.autoload?)
                 tree_el = nil
                 if attributes[:tree_element]

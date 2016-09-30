@@ -26,13 +26,31 @@ module Spider; module Messenger
             msg
         end
 
-        def send_sms(to, text, params={})
-            to = "+39"+to if !to.include?("+")
-            msg = Spider::Messenger.sms(to, text, params)
-            sent_sms(msg.ticket)
-            msg
+        def send_sms(to, text, params=nil)
+            params = {} if params.blank?
+            to = "+39"+to if (!to.include?("+") && (to.length == 10 || to.length == 9) )
+            if (to.length == 13 || to.length == 12)
+                msg = Spider::Messenger.sms(to, text, params)
+                sent_sms(msg.ticket)
+                return msg
+            else
+                Spider.logger.error "Number #{to} not valid"
+                return false
+            end
+            
         end
         
+        def self.send_sms(to, text, params=nil)
+            params = {} if params.blank?
+            to = "+39"+to if (!to.include?("+") && (to.length == 10 || to.length == 9) )
+            if (to.length == 13 || to.length == 12)
+                msg = Spider::Messenger.sms(to, text, params)
+                return msg
+            else
+                Spider.logger.error "Number #{to} not valid"
+                return false
+            end
+        end
 
 
 

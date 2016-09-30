@@ -809,6 +809,10 @@ if(!String.prototype.trim) {
   String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
 }
 
-
-
-
+/* funzione per alzare il menu laterale se piu' alto di min-height */
+if($("#spider-admin #container #sidebar #menu").length > 0){
+	var h_menu_sidebar_admin = $("#spider-admin #container #sidebar #menu").height();
+	if(h_menu_sidebar_admin > parseInt($("#spider-admin #container").css("min-height"))){
+		$("#spider-admin #container").css("min-height",(h_menu_sidebar_admin+30).toString() +"px");
+	}
+}

@@ -81,6 +81,13 @@ module Spider; module HTTP
 
         def call(env)
             Spider.request_started
+            if RUBY_PLATFORM =~ /mingw32/
+                multithread = false
+            else    
+                multithread = env['rack.multithread'] || Spider.conf.get('webserver.force_threads')
+                #env['rack.multithread'] nella request da passare al server in base a quando imposto nel config.yml
+                env["rack.multithread"] = multithread
+            end
             env = prepare_env(env)
             controller_request = RackRequest.new(env)
             controller_request.server = RackApplication
@@ -91,11 +98,8 @@ module Spider; module HTTP
 
             w = nil
             controller_response = Spider::Response.new
-            if RUBY_PLATFORM =~ /mingw32/
-                multithread = false
-            else    
-                multithread = env['rack.multithread'] || Spider.conf.get('webserver.force_threads')
-            end
+
+            
             if multithread
                 r, w = IO.pipe
                 rack_response_hash = {:body => r}
@@ -164,6 +168,7 @@ module Spider; module HTTP
                     Thread.stop
                 end
                 if (Time.now - t) >= 60
+                    Spider.remove_thread(controllerThread) 
                     controllerThread.kill
                 end
                 Spider.add_thread(controllerThread) unless controller_done

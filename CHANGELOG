@@ -1,3 +1,36 @@
+== 0.6.39
+* Corretto messaggio di log nel messenger_helper
+* Aggiunto caso con ruby 2 a convert_object
+* Corretto redirect del form se eccezione per chiave non univoca
+* Cambiato path per icone di bootstrap che le carica dal framework
+* Commentato costrutto if..then perchè generava problemi con l'associazione many to many
+* Aggiunto metodo di classe per send_sms
+* Cambiato controllo su invio sms e controllo su ruby2
+* Aggiornati asset, Aggiunto js per bootbox
+* Aggiunto plugin a editor moduli
+* Corretti asset per plugin advlist e pagebreak tinymce, Corretto layout
+* Corretti assets per tinymce, aggiunti css tinymce e corretto content.min.css
+* Aggiunto editor tinymce anche in master
+* Fatto il convert_object sulla scene del template.rb per non avee problemi con caratteri strani
+* Modifiche per invio sms senza blocco con +39
+* Defer su js, uuid errore con id_comune, minif di datepicker-it
+* Modifica per problemi con logout fatto su classe che dava errore in master
+* modificata chiamata di Celluloid in base alla versione ruby
+* aggiunto require celluloid
+* Modificata widget select per precaricare dati selected
+* Modificato search_select per problemi del force_encoding su ruby 187
+* Aggiunto force_encodig per jquery autocomplete 
+* Modificata logica di creazione indice primario nel caso di fields multipli
+== 0.6.38
+* Aggiunto path per fare il logout cas
+* Modificato cas.rb e log vari
+* aggiunto controllo per ruby 1.8
+* Cancellazione di un file caricato con widget file input
+* aggiunta options host per webserver, a seguito di modifiche intervenute su gem rack ver 1.6.0
+* aggiunta gestione encoding per ruby > 1.8.7 nella funzione to_json
+* aggiunta gestione corretta per usare pry e pry-byebug
+* Ricavo encoding da request per creare un tempfile con upload file da form
+== 0.6.37
 == 0.6.36
 * correzioni bugs
 * gestione di caricamento del path dell'app rivisto e corretto anche per windows

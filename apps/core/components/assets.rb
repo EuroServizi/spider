@@ -31,7 +31,7 @@ Spider::Template.define_named_asset 'spider-utils', [
 # jQuery UI
 
 Spider::Template.define_runtime_asset 'jquery-ui-datepicker-locale' do |request, response, scene|
-    Spider::Components.pub_url+"/js/jquery/jquery-ui-1.9.2/ui/i18n/jquery.ui.datepicker-#{request.locale.language}.js"
+    Spider::Components.pub_url+"/js/jquery/jquery-ui-1.9.2/ui/i18n/jquery.ui.datepicker-#{request.locale.language}-min.js"
 end
 
 Spider::Template.define_named_asset 'jquery-ui', [
@@ -202,7 +202,6 @@ Spider::Template.define_named_asset 'bootstrap-tooltip', [
     [:js, 'bootstrap/js/bootstrap-tooltip.js', Spider::Components]
 ]
 
-
 Spider::Template.define_named_asset 'bootstrap-popover', [
     [:js, 'bootstrap/js/bootstrap-popover.js', Spider::Components]
 ]
@@ -297,7 +296,6 @@ Spider::Template.define_named_asset 'bootstrap-3-transition', [
     [:js, 'bootstrap_3/js/transition.js', Spider::Components]
 ]
 
-
 #
 # ASSETS PER FONTAWESOME, ICONE VETTORIALI
 #
@@ -311,6 +309,7 @@ Spider::Template.define_named_asset 'fontawesome_4', [
 Spider::Template.define_named_asset 'mmenu_js', [
     [:js, 'mmenu/js/jquery.mmenu.js', Spider::Components]
 ]
+
 #
 # ASSETS PER EDITOR TINYMCE
 #

@@ -274,6 +274,12 @@ module Spider
                             Process.kill 'HUP', $$
                         end
                     }
+                    if RUBY_VERSION =~ /1.9.3/
+                        require 'celluloid' #for version previouse 17.0
+                    else
+                        require 'celluloid/current'
+                    end
+                    
                     @celluloid_thread = Celluloid::Thread.new do 
                         listener.start
                     end
