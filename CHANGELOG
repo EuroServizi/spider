@@ -1,3 +1,5 @@
+== 1.0.0
+* Master Release for use spider with bootstrap 3.3.5
 == 0.6.39
 * Corretto messaggio di log nel messenger_helper
 * Aggiunto caso con ruby 2 a convert_object
