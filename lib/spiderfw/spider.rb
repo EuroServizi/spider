@@ -1111,7 +1111,8 @@ module Spider
                 end
             end
             Spider.paths[:var] = File.join(Spider.paths[:var], mode) if mode != 'production'
-            Bundler.require(:default, @runmode.to_sym) if defined?(Bundler)
+            gemfile = File.join(Spider.paths[:root], 'Gemfile')
+            Bundler.require(:default, @runmode.to_sym) if File.exists?(gemfile) && defined?(Bundler) 
         end
 
         # Starts the debugger (ruby-debug, or Pry if debugger.pry configuration is true)
