@@ -1,3 +1,5 @@
+== 1.0.1
+* Uso Gemfile se esiste nella installazione e installato bundler
 == 1.0.0
 * Master Release for use spider with bootstrap 3.3.5
 == 0.6.39

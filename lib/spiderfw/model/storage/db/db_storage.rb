@@ -62,7 +62,7 @@ module Spider; module Model; module Storage; module Db
             diff = now - curr[:query_start]
             diff = 0 if diff < 0 # ??? 
             diff = diff*1000
-            Spider.logger.info("Db query (#{@instance_name}) done in #{diff}ms")
+            Spider.logger.debug("Db query (#{@instance_name}) done in #{diff}ms")
         end
         
         # The constructor takes the connection URL, which will be parsed into connection params.

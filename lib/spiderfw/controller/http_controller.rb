@@ -115,7 +115,7 @@ module Spider
             if @request.format && @request.get? && static_level != true
                 allowed = Spider.conf.get('log.non_static_extensions_list')
                 unless allowed.include?(@request.format.to_s)
-                    Spider.logger.info("GET #{@request.path}")
+                    Spider.logger.debug("GET #{@request.path}")
                     @logger_static_prev = Spider.logger.set_request_level(static_level)
                 end
             end

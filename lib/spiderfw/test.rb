@@ -105,8 +105,30 @@ end; end
 require 'spiderfw/controller/controller'
 require 'spiderfw/config/options/spider'
 begin
-    require 'ruby-debug'
-    Debugger.start
+    case RUBY_VERSION
+        when /2/
+            require 'byebug'
+            require 'pry-byebug'
+        else
+            require 'ruby-debug'
+            require 'pry-debugger'
+    end
+    case RUBY_VERSION
+        when /2/
+            if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                Byebug.wait_connection = true
+                Byebug.start
+            else
+                Byebug.start
+            end
+        else
+            if File.exists?(File.join($SPIDER_RUN_PATH,'tmp', 'debug.txt'))
+                Debugger.wait_connection = true
+                Debugger.start_remote
+            else
+                Debugger.start
+            end
+    end
 rescue
 end
 require 'spiderfw/test/extensions/db_storage'
