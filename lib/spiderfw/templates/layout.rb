@@ -44,7 +44,7 @@ module Spider
 
             @content[:yield_to] = @template
             #se sono nel layout del portale ho il :single_layout, se sono in un layout di un app faccio scaricare gli assets solo se ho single_layout a true
-            if  !/(admin|login|error|portal|simple|generic|cms|stampa)/.match(cname).blank? || self.single_layout 
+            if  !/(admin|login|error|portal|simple|generic|cms|stampa|auth_box|missioni)/.match(cname).blank? || self.single_layout 
                 all_assets.each do |ass|
                     seen_check = ass[:runtime] || ass[:src]
                     next if ass[:src].blank? && !ass[:runtime]
