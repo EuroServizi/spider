@@ -76,6 +76,7 @@ module Spider; module Model; module Storage; module Db
         def self.new_connection(host=nil, user=nil, passwd=nil, db=nil, port=nil, sock=nil, flag=0)
             conn = ::Mysql.new(host, user, passwd, db, port.to_i, sock, flag)
             conn.autocommit(true)
+            conn.reconnect = true
             conn.query("SET NAMES 'utf8'")
             return conn
         end
