@@ -258,7 +258,7 @@ module Spider; module Model; module Storage; module Db
                 elsif RUBY_VERSION >= '1.9' 
                     if enc != Encoding::BINARY
                         begin
-                            value = (value.to_s).encode(Encoding::UTF_8, enc, :invalid => :replace, :undef => :replace) if value 
+                            value = (value.to_s).encode(enc, Encoding::UTF_8, :invalid => :replace, :undef => :replace) if value 
                         rescue EncodingError
                             value = ''
                         end
