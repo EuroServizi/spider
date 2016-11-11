@@ -1,5 +1,5 @@
 RUBY_VERSION_PARTS = RUBY_VERSION.split('.')
-ENV['LC_CTYPE'] = 'en_US.UTF-8'
+ENV['LC_ALL'] = 'it_IT.UTF-8'
 if RUBY_VERSION >= "1.9"  
 	Encoding.default_external = Encoding::UTF_8  
 	#Encoding.default_internal = Encoding::UTF_8  

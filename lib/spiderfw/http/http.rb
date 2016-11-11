@@ -211,15 +211,63 @@ module Spider
         # Hash:: Normalized parameters
         #--
         # from Merb
+        ######OLD VERSION ############
+        # def self.normalize_params(parms, name, val=nil)
+        #   name =~ %r([\[\]]*([^\[\]]+)\]*)
+        #   key = $1 || ''
+        #   after = $' || ''
+
+        #   if after == ""
+        #     parms[key] = val
+        #   elsif after == "[]"
+        #     (parms[key] ||= []) << val
+        #   elsif after =~ %r(^\[\])
+        #     parms[key] ||= []
+        #     parms[key] << normalize_params({}, after, val)
+        #   else
+        #     parms[key] ||= {}
+        #     parms[key] = normalize_params(parms[key], after, val)
+        #   end
+        #   parms
+        # end
+        
+        ###########NEW VERSION ###########
         def self.normalize_params(parms, name, val=nil)
           name =~ %r([\[\]]*([^\[\]]+)\]*)
           key = $1 || ''
           after = $' || ''
-
           if after == ""
-            parms[key] = val
+            if RUBY_VERSION >= '1.9'
+                if !val.blank? && val.encoding != Encoding::BINARY
+                    begin
+                        parms[key] = val.encode(Encoding::UTF_8, val.encoding, :invalid => :replace, :undef => :replace)
+                    rescue EncodingError
+                    end
+                elsif !val.blank?
+                    begin
+                        parms[key] = val.force_encoding('UTF-8').encode('UTF-8')
+                    rescue EncodingError
+                    end
+                end
+            else
+                parms[key] = val
+            end
           elsif after == "[]"
-            (parms[key] ||= []) << val
+            if RUBY_VERSION >= '1.9'
+                if !val.blank? && val.encoding != Encoding::BINARY
+                    begin
+                        (parms[key] ||= []) << val.encode(Encoding::UTF_8, val.encoding, :invalid => :replace, :undef => :replace)
+                    rescue EncodingError
+                    end
+                elsif !val.blank?
+                    begin
+                        (parms[key] ||= []) << val.force_encoding('UTF-8').encode('UTF-8')
+                    rescue EncodingError
+                    end
+                end
+            else
+                (parms[key] ||= []) << val
+            end
           elsif after =~ %r(^\[\])
             parms[key] ||= []
             parms[key] << normalize_params({}, after, val)
@@ -229,7 +277,7 @@ module Spider
           end
           parms
         end
-        
+
         # ==== Parameters
         # request<IO>:: The raw request.
         # boundary<String>:: The boundary string.
