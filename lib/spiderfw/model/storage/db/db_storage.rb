@@ -204,17 +204,30 @@ module Spider; module Model; module Storage; module Db
         # Converts a value loaded from the DB to return it to the mapper.
         def value_to_mapper(type, value)
             if (type.name == 'String' || type.name == 'Spider::DataTypes::Text')
-                enc = @configuration['encoding']
-                if (enc && enc.downcase != 'utf-8')
-                    if RUBY_VERSION =~ /1.8/
+                enc = nil
+                begin
+                    enc = Encoding.find(@configuration['encoding']) if @configuration['encoding']
+                rescue EncodingError
+                    Spider.Logger.error("The Storage Encoding is not correct, view your configuration")
+                    exit
+                end
+                enc ||= value.encoding unless value.blank?
+                if RUBY_VERSION =~ /1.8/
+                    begin
+                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] if value
+                    rescue Iconv::InvalidCharacter
+                        value = ''
+                    end
+                elsif RUBY_VERSION >= '1.9' 
+                    if enc != Encoding::BINARY
                         begin
-                            value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] if value
-                        rescue Iconv::InvalidCharacter
+                            value = (value.to_s).encode(Encoding::UTF_8, enc, :invalid => :replace, :undef => :replace) if value 
+                        rescue EncodingError
                             value = ''
                         end
                     else
                         begin
-                            value = (value.to_s).encode('UTF-8', enc, :invalid => :replace, :undef => :replace) if value  
+                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') if value  
                         rescue EncodingError
                             value = ''
                         end
@@ -228,17 +241,30 @@ module Spider; module Model; module Storage; module Db
         def prepare_value(type, value)
             case type.name
             when 'String', 'Spider::DataTypes::Text'
-                enc = @configuration['encoding']
-                if (enc && enc.downcase != 'utf-8')
-                    if RUBY_VERSION =~ /1.8/
+                enc = nil
+                begin
+                    enc = Encoding.find(@configuration['encoding']) if @configuration['encoding']
+                rescue EncodingError
+                    Spider.Logger.error("The Storage Encoding is not correct, view your configuration")
+                    exit
+                end
+                enc ||= value.encoding unless value.blank?
+                if RUBY_VERSION =~ /1.8/
+                    begin
+                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] if value
+                    rescue Iconv::InvalidCharacter
+                        value = ''
+                    end
+                elsif RUBY_VERSION >= '1.9' 
+                    if enc != Encoding::BINARY
                         begin
-                            value = Iconv.conv(enc+'//IGNORE//TRANSLIT', 'utf-8', value.to_s+' ')[0..-2]
-                        rescue Iconv::InvalidCharacter
+                            value = (value.to_s).encode(Encoding::UTF_8, enc, :invalid => :replace, :undef => :replace) if value 
+                        rescue EncodingError
                             value = ''
                         end
                     else
                         begin
-                            value = (value.to_s).encode(enc, 'UTF-8', :invalid => :replace, :undef => :replace) if value  
+                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') if value  
                         rescue EncodingError
                             value = ''
                         end
