@@ -214,20 +214,20 @@ module Spider; module Model; module Storage; module Db
                 enc ||= value.encoding unless value.blank?
                 if RUBY_VERSION =~ /1.8/
                     begin
-                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] if value
+                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.blank?
                     rescue Iconv::InvalidCharacter
                         value = ''
                     end
                 elsif RUBY_VERSION >= '1.9' 
                     if enc != Encoding::BINARY
                         begin
-                            value = (value.to_s).encode(Encoding::UTF_8, enc, :invalid => :replace, :undef => :replace) if value 
+                            value = (value.to_s).encode(Encoding::UTF_8, enc, :invalid => :replace, :undef => :replace) unless value.blank?
                         rescue EncodingError
                             value = ''
                         end
                     else
                         begin
-                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') if value  
+                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank?  
                         rescue EncodingError
                             value = ''
                         end
@@ -251,20 +251,20 @@ module Spider; module Model; module Storage; module Db
                 enc ||= value.encoding unless value.blank?
                 if RUBY_VERSION =~ /1.8/
                     begin
-                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] if value
+                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.blank?
                     rescue Iconv::InvalidCharacter
                         value = ''
                     end
                 elsif RUBY_VERSION >= '1.9' 
                     if enc != Encoding::BINARY
                         begin
-                            value = (value.to_s).encode(enc, Encoding::UTF_8, :invalid => :replace, :undef => :replace) if value 
+                            value = (value.to_s).encode(enc, Encoding::UTF_8, :invalid => :replace, :undef => :replace) unless value.blank? 
                         rescue EncodingError
                             value = ''
                         end
                     else
                         begin
-                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') if value  
+                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
                         rescue EncodingError
                             value = ''
                         end
