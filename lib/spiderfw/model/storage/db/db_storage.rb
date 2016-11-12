@@ -205,13 +205,9 @@ module Spider; module Model; module Storage; module Db
         def value_to_mapper(type, value)
             if (type.name == 'String' || type.name == 'Spider::DataTypes::Text')
                 enc = nil
-                begin
-                    enc = Encoding.find(@configuration['encoding']) if @configuration['encoding']
-                rescue EncodingError
-                    Spider.Logger.error("The Storage Encoding is not correct, view your configuration")
-                    exit
-                end
-                enc ||= value.encoding unless value.blank?
+                enc = @configuration['encoding'] unless @configuration['encoding']
+                enc ||= value.encoding unless value.blank? && value.respond_to?(:encoding)
+                enc ||= Encoding::UTF_8
                 if RUBY_VERSION =~ /1.8/
                     begin
                         value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.blank?
@@ -242,13 +238,9 @@ module Spider; module Model; module Storage; module Db
             case type.name
             when 'String', 'Spider::DataTypes::Text'
                 enc = nil
-                begin
-                    enc = Encoding.find(@configuration['encoding']) if @configuration['encoding']
-                rescue EncodingError
-                    Spider.Logger.error("The Storage Encoding is not correct, view your configuration")
-                    exit
-                end
-                enc ||= value.encoding unless value.blank?
+                enc = @configuration['encoding'] unless @configuration['encoding']
+                enc ||= value.encoding unless value.blank? && value.respond_to?(:encoding)
+                enc ||= Encoding::UTF_8
                 if RUBY_VERSION =~ /1.8/
                     begin
                         value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.blank?
