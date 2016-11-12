@@ -206,7 +206,7 @@ module Spider; module Model; module Storage; module Db
             if (type.name == 'String' || type.name == 'Spider::DataTypes::Text')
                 enc = nil
                 enc = @configuration['encoding'] unless @configuration['encoding']
-                enc ||= value.encoding unless value.blank? && value.respond_to?(:encoding)
+                enc ||= value.encoding if !value.blank? && value.respond_to?(:encoding)
                 enc ||= Encoding::UTF_8
                 if RUBY_VERSION =~ /1.8/
                     begin
@@ -239,7 +239,7 @@ module Spider; module Model; module Storage; module Db
             when 'String', 'Spider::DataTypes::Text'
                 enc = nil
                 enc = @configuration['encoding'] unless @configuration['encoding']
-                enc ||= value.encoding unless value.blank? && value.respond_to?(:encoding)
+                enc ||= value.encoding if !value.blank? && value.respond_to?(:encoding)
                 enc ||= Encoding::UTF_8
                 if RUBY_VERSION =~ /1.8/
                     begin
