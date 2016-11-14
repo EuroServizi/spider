@@ -1,0 +1,60 @@
+.loading-empty{
+    background: url(img/ajax-loader.gif) no-repeat 10px 10px;
+}
+
+.loading{
+    background-color: #ececec;
+    color: gray;
+}
+
+/* paginazione per paginatore js */
+.page_navigation{
+
+    
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-left: 20px;
+
+    ul.lista_pagine{
+        list-style: none;
+        overflow: hidden;
+        display: none;
+    }
+
+    .active a {
+        font-weight: 800;
+        cursor: default;
+    }
+    
+    li.previous_link, li.next_link{
+        border-left-width: 1px;
+        border-radius: 3px 0 0 3px;
+    }
+        
+    
+}
+
+/* selettore delle pagine, fatto con dropup bootstrap 3 */
+.sel_pagine{
+    &.dropup{
+        &.btn-group{
+            vertical-align: baseline;
+        }
+        margin-bottom: 20px;
+        margin-left: 20px;
+        button{
+            color: #049cdb;
+        }
+
+        .dropdown-menu{
+            min-width: 30px;
+            &.lista_pagine{
+                max-height: 300px;
+                overflow-y: scroll;
+                @media (max-width: 768px){
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}

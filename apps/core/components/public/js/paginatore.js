@@ -103,7 +103,7 @@ function previous(scope){
     } 
     new_page = parseInt($(scope).find('#current_page').val())-1;
     /* if there is an item before the current active link run the function */
-    if($(scope).find('.active_page').prev('.page_link').length==true){
+    if($(scope).find('.active').prev('.page_link').length==true){
         go_to_page(new_page, scope);
     }
 
@@ -116,7 +116,7 @@ function next(scope){
     }
     new_page = parseInt($(scope).find('#current_page').val())+1;
     /*if there is an item after the current active link run the function */
-    if($(scope).find('.active_page').next('.page_link').length==true){
+    if($(scope).find('.active').next('.page_link').length==true){
         go_to_page(new_page, scope);
     }
 
@@ -154,9 +154,9 @@ function go_to_page(page_num, scope){
     /*hide all children elements of pagination_content div, get specific items and show them*/
     $(scope).find('.pagination_content .paginated_element').hide().slice(start_from, end_on).show();
 
-    /*get the page link that has longdesc attribute of the current page and add active_page class to it
+    /*get the page link that has longdesc attribute of the current page and add active class to it
     and remove that class from previously active page link*/
-    $(scope).find('.page_link.active_page').removeClass('active_page');
+    $(scope).find('.page_link.active').removeClass('active');
 
     /* numero di pagine nella navigation bar */
     var max_page_in_navbar = parseInt($(scope).find("#max_page_in_navbar").val());
@@ -175,9 +175,14 @@ function go_to_page(page_num, scope){
         /* su la pag corrente è maggiore del numero di pagine - metà delle pagine mostrate nella navbar non traslo più le pagine, le sto già vedendo tutte le restanti */
         if(page_num >= (number_of_pages-Math.floor(parseInt(max_page_in_navbar)/2)))
         {
+            var window_width = $( window ).width();
+            var classi_paginatore = "pagination";
+            if(window_width <= 768){
+                classi_paginatore += " pagination-lg";
+            }
             /* svuoto la lista di pagine */ 
             $(scope).find(".page_navigation").empty();
-            var navigation_html = "<ul><li class=\"previous_link\"><a href=\"javascript:first_page('"+scope+"');\"> << </a></li>";
+            var navigation_html = "<ul class='"+classi_paginatore+"'><li class=\"previous_link\"><a href=\"javascript:first_page('"+scope+"');\"> << </a></li>";
             navigation_html += "<li><a href=\"javascript:previous('"+scope+"');\"> < </a></li>";
             if(page_num>=(Math.floor(parseInt(max_page_in_navbar)/2)+1) ){
                 navigation_html += "<li class=\"page_link\" longdesc=\"...\"><a href=\"javascript:go_to_page("+( (number_of_pages-max_page_in_navbar)-1 )+", '" + scope + "')\">...</a></li>";
@@ -219,7 +224,7 @@ function go_to_page(page_num, scope){
     $(scope).find('.sel_pagine').append("<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">Pag <strong>"+(page_num)+"</strong> <span class=\"caret\"></span></button><ul class=\"dropdown-menu lista_pagine\"></ul>");    
     popola_select(scope);
 
-    $(scope).find(".page_link[longdesc='"+page_num+"']").addClass('active_page');
+    $(scope).find(".page_link[longdesc='"+page_num+"']").addClass('active');
 
 };
 
@@ -261,9 +266,19 @@ function init_paginatore(scope){
     $(scope).find('#show_per_page').val(show_per_page);
     popola_select(scope)
 
+    var window_width = $( window ).width();
+    var classi_paginatore = "pagination";
+    var classi_selettore = "btn-group";
+    if(window_width <= 768){
+        classi_paginatore += " pagination-lg";
+        classi_selettore += " btn-group-lg";
+    }
+    //$(window).resize(function() {};
+
+
     if(number_of_pages>1){
 
-        var navigation_html = "<ul><li class=\"previous_link\"><a href=\"javascript:first_page('"+scope+"');\"> << </a></li>";
+        var navigation_html = "<ul class='"+classi_paginatore+"'><li class=\"previous_link\"><a href=\"javascript:first_page('"+scope+"');\"> << </a></li>";
         navigation_html += "<li><a href=\"javascript:previous('"+scope+"');\"> < </a></li>";
         var current_link = 1;
         if(number_of_pages<max_page_in_navbar)
@@ -286,8 +301,8 @@ function init_paginatore(scope){
 
         $(scope).find('.page_navigation').html(navigation_html);
 
-        /*add active_page class to the first page link*/
-        $(scope).find('.page_navigation .page_link:first').addClass('active_page');
+        /*add active class to the first page link*/
+        $(scope).find('.page_navigation .page_link:first').addClass('active');
 
         /*hide all the elements inside pagination_content div*/
         /*$(scope).find('.pagination_content').children().css('display', 'none');*/
@@ -297,7 +312,7 @@ function init_paginatore(scope){
         /*$(scope).find('.pagination_content').children().slice(0, show_per_page).css('display', 'block');*/
         $(scope).find('.pagination_content .paginated_element').slice(0, show_per_page).show();
 
-        $(scope).find('.page_navigation.pagination').after("<div class=\"btn-group dropup sel_pagine\"><button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">Pag <strong>1</strong> <span class=\"caret\"></span></button><ul class=\"dropdown-menu lista_pagine\"></ul></div>");
+        $(scope).find('.page_navigation').after("<div class=\""+classi_selettore+" dropup sel_pagine\"><button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">Pag <strong>1</strong> <span class=\"caret\"></span></button><ul class=\"dropdown-menu lista_pagine\"></ul></div>");
         popola_select(scope);
     }
 
