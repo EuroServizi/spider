@@ -218,14 +218,18 @@ module Spider; module Model; module Storage; module Db
                 elsif RUBY_VERSION >= '1.9' 
                     if enc != Encoding::BINARY
                         begin
-                            value = (value.to_s).encode(Encoding::UTF_8, enc, :invalid => :replace, :undef => :replace) unless value.blank?
-                        rescue EncodingError
-                            value = ''
+                            value = (value.to_s).encode(Encoding::UTF_8, enc) unless value.blank?
+                        rescue Encoding::UndefinedConversionError
+                            begin
+                                value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
+                            rescue Encoding::UndefinedConversionError
+                                value = ''
+                            end
                         end
                     else
                         begin
                             value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank?  
-                        rescue EncodingError
+                        rescue Encoding::UndefinedConversionError
                             value = ''
                         end
                     end
@@ -252,14 +256,20 @@ module Spider; module Model; module Storage; module Db
                 elsif RUBY_VERSION >= '1.9' 
                     if enc != Encoding::BINARY
                         begin
-                            value = (value.to_s).encode(enc, Encoding::UTF_8, :invalid => :replace, :undef => :replace) unless value.blank? 
-                        rescue EncodingError
-                            value = ''
+                            value = (value.to_s).encode(enc, Encoding::UTF_8) unless value.blank? 
+                        rescue Encoding::UndefinedConversionError
+                            begin
+                                value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
+                            rescue Encoding::UndefinedConversionError => exc
+                                Spider.logger.error("Encoding error: #{exc.message}, reset params to blank")
+                                value = ''
+                            end
                         end
                     else
                         begin
                             value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                        rescue EncodingError
+                        rescue Encoding::UndefinedConversionError => exc
+                            Spider.logger.error("Encoding error: #{exc.message}, reset params to blank")
                             value = ''
                         end
                     end
