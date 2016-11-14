@@ -236,38 +236,37 @@ module Spider
           name =~ %r([\[\]]*([^\[\]]+)\]*)
           key = $1 || ''
           after = $' || ''
+          new_val = val.dup unless val.nil?
           if after == ""
             if RUBY_VERSION >= '1.9'
-                if !val.blank? && val.encoding != Encoding::BINARY
+                if !val.blank? && val.is_a?(String)
                     begin
-                        parms[key] = val.encode(Encoding::UTF_8, val.encoding, :invalid => :replace, :undef => :replace)
-                    rescue EncodingError
-                    end
-                elsif !val.blank?
-                    begin
-                        parms[key] = val.force_encoding('UTF-8').encode('UTF-8')
-                    rescue EncodingError
+                        new_val = val.encode(Encoding::UTF_8, val.encoding)
+                    rescue Encoding::UndefinedConversionError
+                        begin
+                        new_val = val.force_encoding('UTF-8').encode('UTF-8')
+                        rescue Encoding::UndefinedConversionError => exc
+                            Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
+                        end
                     end
                 end
-            else
-                parms[key] = val
             end
+            parms[key] = new_val
           elsif after == "[]"
             if RUBY_VERSION >= '1.9'
-                if !val.blank? && val.encoding != Encoding::BINARY
+                if !val.blank? && val.is_a?(String)
                     begin
-                        (parms[key] ||= []) << val.encode(Encoding::UTF_8, val.encoding, :invalid => :replace, :undef => :replace)
-                    rescue EncodingError
-                    end
-                elsif !val.blank?
-                    begin
-                        (parms[key] ||= []) << val.force_encoding('UTF-8').encode('UTF-8')
-                    rescue EncodingError
+                        new_val = val.encode(Encoding::UTF_8, val.encoding)
+                    rescue Encoding::UndefinedConversionError
+                        begin
+                        new_val << val.force_encoding('UTF-8').encode('UTF-8')
+                         rescue Encoding::UndefinedConversionError => exc
+                            Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
+                        end
                     end
                 end
-            else
-                (parms[key] ||= []) << val
             end
+            (parms[key] ||= []) << new_val
           elsif after =~ %r(^\[\])
             parms[key] ||= []
             parms[key] << normalize_params({}, after, val)
