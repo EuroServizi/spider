@@ -26,8 +26,8 @@ module Spider; module DataTypes
             super(s)
         end
         
-        def as_json
-            to_f
+        def as_json(options = nil) #:nodoc:
+            finite? ? to_s : nil
         end
         
         def to_json(options=nil)
