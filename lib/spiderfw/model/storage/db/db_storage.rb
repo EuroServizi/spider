@@ -207,7 +207,7 @@ module Spider; module Model; module Storage; module Db
                 enc = nil
                 enc = @configuration['encoding'] if @configuration['encoding']
                 enc ||= value.encoding if value.respond_to?(:encoding)
-                enc ||= ::Encoding::UTF_8
+                enc ||= "UTF-8"
                 
                 if RUBY_VERSION =~ /1.8/
                     begin
@@ -216,20 +216,20 @@ module Spider; module Model; module Storage; module Db
                         value = ''
                     end
                 elsif RUBY_VERSION >= '1.9' 
-                    if enc != ::Encoding::BINARY
+                    if enc != "ASCII-8BIT"
                         begin
-                            value = (value.to_s).encode(::Encoding::UTF_8, enc) unless value.blank?
-                        rescue ::Encoding::UndefinedConversionError
+                            value = (value.to_s).encode(Encoding::UTF_8, enc) unless value.blank?
+                        rescue Encoding::UndefinedConversionError
                             begin
                                 value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                            rescue ::Encoding::UndefinedConversionError
+                            rescue Encoding::UndefinedConversionError
                                 value = ''
                             end
                         end
                     else
                         begin
                             value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank?  
-                        rescue ::Encoding::UndefinedConversionError
+                        rescue Encoding::UndefinedConversionError
                             value = ''
                         end
                     end
@@ -245,7 +245,7 @@ module Spider; module Model; module Storage; module Db
                 enc = nil
                 enc = @configuration['encoding'] if @configuration['encoding']
                 enc ||= value.encoding if value.respond_to?(:encoding)
-                enc ||= ::Encoding::UTF_8
+                enc ||= 'UTF-8'
 
                 if RUBY_VERSION =~ /1.8/
                     begin
@@ -254,13 +254,13 @@ module Spider; module Model; module Storage; module Db
                         value = ''
                     end
                 elsif RUBY_VERSION >= '1.9' 
-                    if enc != ::Encoding::BINARY
+                    if enc != Encoding::BINARY
                         begin
-                            value = (value.to_s).encode(enc, ::Encoding::UTF_8) unless value.blank? 
-                        rescue ::Encoding::UndefinedConversionError
+                            value = (value.to_s).encode(enc, Encoding::UTF_8) unless value.blank? 
+                        rescue Encoding::UndefinedConversionError
                             begin
                                 value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                            rescue ::Encoding::UndefinedConversionError => exc
+                            rescue Encoding::UndefinedConversionError => exc
                                 Spider.logger.error("Encoding error: #{exc.message}, reset params to blank")
                                 value = ''
                             end
@@ -268,7 +268,7 @@ module Spider; module Model; module Storage; module Db
                     else
                         begin
                             value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                        rescue ::Encoding::UndefinedConversionError => exc
+                        rescue Encoding::UndefinedConversionError => exc
                             Spider.logger.error("Encoding error: #{exc.message}, reset params to blank")
                             value = ''
                         end
