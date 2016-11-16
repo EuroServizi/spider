@@ -239,45 +239,50 @@ module Spider
           new_val = val.dup unless val.nil?
           if after == ""
             if RUBY_VERSION >= '1.9'
-                
-                # if !val.blank? && val.is_a?(String)
-                #     begin
-                #         new_val = val.encode(Encoding::UTF_8, val.encoding)
-                #     rescue Encoding::UndefinedConversionError
-                #         begin
-                #         new_val = val.force_encoding('UTF-8').encode('UTF-8')
-                #         rescue Encoding::UndefinedConversionError => exc
-                #             Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
-                #         end
+                #Versione fabiano 
+                # if new_val.is_a?(String)
+                #     orig_encoding = new_val.encoding
+                #     new_val = new_val.force_encoding('UTF-8')
+                #     unless new_val.valid_encoding?
+                #         #Spider.logger.error "** ENCODING ORIGINALE: #{orig_encoding}" #ritorna sempre ASCII-8BIT,anche se ci sono caratteri latin1 e utf-8..
+                #         new_val = new_val.force_encoding("ISO-8859-1").encode("UTF-8").force_encoding('UTF-8')
                 #     end
                 # end
-                if new_val.is_a?(String)
-                    new_val = new_val.force_encoding('UTF-8')
-                    unless new_val.valid_encoding?
-                        new_val = new_val.force_encoding('binary').encode('binary', 'UTF-8', :invalid => :replace)
+                if !val.nil? && val.is_a?(String)
+                    begin
+                         new_val = val.encode(Encoding::UTF_8, val.encoding)
+                    rescue Encoding::UndefinedConversionError
+                        begin
+                        new_val = val.force_encoding('UTF-8').encode('UTF-8')
+                        rescue Encoding::UndefinedConversionError => exc
+                            Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
+                        end
                     end
                 end
             end
             parms[key] = new_val
           elsif after == "[]"
             if RUBY_VERSION >= '1.9'
-                # if !val.blank? && val.is_a?(String)
-                #     begin
-                #         new_val = val.encode(Encoding::UTF_8, val.encoding)
-                #     rescue Encoding::UndefinedConversionError
-                #         begin
-                #         new_val << val.force_encoding('UTF-8').encode('UTF-8')
-                #          rescue Encoding::UndefinedConversionError => exc
-                #             Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
-                #         end
+                #Versione fabiano 
+                # if new_val.is_a?(String)
+                #     orig_encoding = new_val.encoding
+                #     new_val = new_val.force_encoding('UTF-8')
+                #     unless new_val.valid_encoding?
+                #         #Spider.logger.error "** ENCODING ORIGINALE: #{orig_encoding}" #ritorna sempre ASCII-8BIT,anche se ci sono caratteri latin1 e utf-8..
+                #         new_val = new_val.force_encoding("ISO-8859-1").encode("UTF-8").force_encoding('UTF-8')
                 #     end
                 # end
-                if new_val.is_a?(String)
-                    new_val = new_val.force_encoding('UTF-8')
-                    unless new_val.valid_encoding?
-                        new_val = new_val.force_encoding('binary').encode('binary', 'UTF-8', :invalid => :replace)
-                    end
-                end
+                if !val.nil? && val.is_a?(String)
+                     begin
+                         new_val = val.encode(Encoding::UTF_8, val.encoding)
+                     rescue Encoding::UndefinedConversionError
+                         begin
+                         new_val << val.force_encoding('UTF-8').encode('UTF-8')
+                          rescue Encoding::UndefinedConversionError => exc
+                             Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
+                         end
+                     end
+                 end
             end
             (parms[key] ||= []) << new_val
           elsif after =~ %r(^\[\])
