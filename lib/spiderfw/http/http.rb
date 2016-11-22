@@ -251,11 +251,11 @@ module Spider
                 if !val.nil? && val.is_a?(String)
                     begin
                          new_val = val.encode(Encoding::UTF_8, val.encoding)
-                    rescue Encoding::UndefinedConversionError
+                    rescue => exc
                         begin
                         new_val = val.force_encoding('UTF-8').encode('UTF-8')
-                        rescue Encoding::UndefinedConversionError => exc
-                            Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
+                        rescue => exc
+                            Spider.logger.error("Encoding error from http data: #{exc.message}")
                         end
                     end
                 end
@@ -275,11 +275,11 @@ module Spider
                 if !val.nil? && val.is_a?(String)
                      begin
                          new_val = val.encode(Encoding::UTF_8, val.encoding)
-                     rescue Encoding::UndefinedConversionError
+                     rescue => exc
                          begin
-                         new_val << val.force_encoding('UTF-8').encode('UTF-8')
-                          rescue Encoding::UndefinedConversionError => exc
-                             Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
+                         new_val = val.force_encoding('UTF-8').encode('UTF-8')
+                          rescue => exc
+                             Spider.logger.error("Encoding error from http data: #{exc.message}")
                          end
                      end
                  end
