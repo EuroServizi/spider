@@ -243,7 +243,7 @@ module Spider; module Model; module Storage; module Db
                     rescue Iconv::InvalidCharacter
                         value = ''
                     end
-                elsif value.is_a?(String)
+                elsif value.is_a?(String) && !value.frozen?
                     value = (value.to_s).force_encoding(enc)
                     unless value.valid_encoding?
                         value = value.force_encoding(enc).encode(enc, 'UTF-8')
