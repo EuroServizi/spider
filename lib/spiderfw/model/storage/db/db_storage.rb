@@ -202,76 +202,51 @@ module Spider; module Model; module Storage; module Db
         
         
         # Converts a value loaded from the DB to return it to the mapper.
-        def value_to_mapper(type, value)
+         def value_to_mapper(type, value)
             if (type.name == 'String' || type.name == 'Spider::DataTypes::Text')
                 enc = nil
-                enc = @configuration['encoding'] unless @configuration['encoding']
-                enc ||= value.encoding if !value.blank? && value.respond_to?(:encoding)
-                enc ||= Encoding::UTF_8
-                
+                enc = @configuration['encoding'] if @configuration['encoding']
+                enc ||= value.encoding if value.respond_to?(:encoding)
+                enc ||= "UTF-8"
+
                 if RUBY_VERSION =~ /1.8/
                     begin
-                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.blank?
+                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.nil?
                     rescue Iconv::InvalidCharacter
                         value = ''
                     end
-                elsif RUBY_VERSION >= '1.9' 
-                    if enc != Encoding::BINARY
-                        begin
-                            value = (value.to_s).encode(Encoding::UTF_8, enc) unless value.blank?
-                        rescue Encoding::UndefinedConversionError
-                            begin
-                                value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                            rescue Encoding::UndefinedConversionError
-                                value = ''
-                            end
-                        end
-                    else
-                        begin
-                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank?  
-                        rescue Encoding::UndefinedConversionError
-                            value = ''
-                        end
+                elsif value.is_a?(String)
+                    orig_encoding = value.encoding
+                    value = value.force_encoding('UTF-8')
+                    unless value.valid_encoding?
+                        #Spider.logger.error "** ENCODING ORIGINALE: #{orig_encoding}" #ritorna sempre ASCII-8BIT,anche se ci sono caratteri latin1 e utf-8..
+                        value = value.force_encoding('ISO-8859-1').encode("UTF-8").force_encoding('UTF-8')
                     end
                 end
             end
             return value
         end
-        
+
+
         # Prepares a value that will be used on the DB.
         def prepare_value(type, value)
             case type.name
             when 'String', 'Spider::DataTypes::Text'
                 enc = nil
-                enc = @configuration['encoding'] unless @configuration['encoding']
-                enc ||= value.encoding if !value.blank? && value.respond_to?(:encoding)
-                enc ||= Encoding::UTF_8
+                enc = @configuration['encoding'] if @configuration['encoding']
+                enc ||= value.encoding if value.respond_to?(:encoding)
+                enc ||= 'UTF-8'
 
                 if RUBY_VERSION =~ /1.8/
                     begin
-                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.blank?
+                        value = Iconv.conv('utf-8//IGNORE//TRANSLIT', enc, value.to_s+' ')[0..-2] unless value.nil?
                     rescue Iconv::InvalidCharacter
                         value = ''
                     end
-                elsif RUBY_VERSION >= '1.9' 
-                    if enc != Encoding::BINARY
-                        begin
-                            value = (value.to_s).encode(enc, Encoding::UTF_8) unless value.blank? 
-                        rescue Encoding::UndefinedConversionError
-                            begin
-                                value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                            rescue Encoding::UndefinedConversionError => exc
-                                Spider.logger.error("Encoding error: #{exc.message}, reset params to blank")
-                                value = ''
-                            end
-                        end
-                    else
-                        begin
-                            value = (value.to_s).force_encoding('UTF-8').encode('UTF-8') unless value.blank? 
-                        rescue Encoding::UndefinedConversionError => exc
-                            Spider.logger.error("Encoding error: #{exc.message}, reset params to blank")
-                            value = ''
-                        end
+                elsif value.is_a?(String) && !value.frozen?
+                    value = (value.to_s).force_encoding(enc)
+                    unless value.valid_encoding?
+                        value = value.force_encoding(enc).encode(enc, 'UTF-8')
                     end
                 end
             when 'BigDecimal'

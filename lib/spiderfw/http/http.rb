@@ -231,50 +231,110 @@ module Spider
         #   parms
         # end
         
-        ###########NEW VERSION ###########
+        # ###########VERSIONE MERB VECCHIA RIVISTA ###########
+        # def self.normalize_params(parms, name, val=nil)
+        #   name =~ %r([\[\]]*([^\[\]]+)\]*)
+        #   key = $1 || ''
+        #   after = $' || ''
+        #   new_val = val.dup unless val.nil?
+        #   if after == ""
+        #     if RUBY_VERSION >= '1.9'
+        #         #Versione fabiano 
+        #         # if new_val.is_a?(String)
+        #         #     orig_encoding = new_val.encoding
+        #         #     new_val = new_val.force_encoding('UTF-8')
+        #         #     unless new_val.valid_encoding?
+        #         #         #Spider.logger.error "** ENCODING ORIGINALE: #{orig_encoding}" #ritorna sempre ASCII-8BIT,anche se ci sono caratteri latin1 e utf-8..
+        #         #         new_val = new_val.force_encoding("ISO-8859-1").encode("UTF-8").force_encoding('UTF-8')
+        #         #     end
+        #         # end
+        #         if !val.nil? && val.is_a?(String)
+        #             begin
+        #                  new_val = val.encode(Encoding::UTF_8, val.encoding)
+        #             rescue => exc
+        #                 begin
+        #                 new_val = val.force_encoding('UTF-8')
+        #                 rescue => exc
+        #                     Spider.logger.error("Encoding error from http data: #{exc.message}")
+        #                 end
+        #             end
+        #         end
+        #     end
+        #     parms[key] = new_val
+        #   elsif after == "[]"
+        #     if RUBY_VERSION >= '1.9'
+        #         #Versione fabiano 
+        #         # if new_val.is_a?(String)
+        #         #     orig_encoding = new_val.encoding
+        #         #     new_val = new_val.force_encoding('UTF-8')
+        #         #     unless new_val.valid_encoding?
+        #         #         #Spider.logger.error "** ENCODING ORIGINALE: #{orig_encoding}" #ritorna sempre ASCII-8BIT,anche se ci sono caratteri latin1 e utf-8..
+        #         #         new_val = new_val.force_encoding("ISO-8859-1").encode("UTF-8").force_encoding('UTF-8')
+        #         #     end
+        #         # end
+        #         if !val.nil? && val.is_a?(String)
+        #              begin
+        #                  new_val = val.encode(Encoding::UTF_8, val.encoding)
+        #              rescue => exc
+        #                  begin
+        #                  new_val = val.force_encoding('UTF-8')
+        #                   rescue => exc
+        #                      Spider.logger.error("Encoding error from http data: #{exc.message}")
+        #                  end
+        #              end
+        #          end
+        #     end
+        #     (parms[key] ||= []) << new_val
+        #   elsif after =~ %r(^\[\])
+        #     parms[key] ||= []
+        #     parms[key] << normalize_params({}, after, val)
+        #   else
+        #     parms[key] ||= {}
+        #     parms[key] = normalize_params(parms[key], after, val)
+        #   end
+        #   parms
+        # end
+
+        # Converts a query string snippet to a hash and adds it to existing
+        # parameters.
+        #
+        # @note On encoding-aware Ruby VMs, this assumes that either
+        #   `Encoding.default_internal` is set or that query parameters are
+        #   UTF-8.
+        #
+        # @param [Hash] parms Parameters to add the normalized parameters to.
+        # @param [String] name The key of the parameter to normalize.
+        # @param [String] val The value of the parameter.
+        #
+        # @return [Hash] Normalized parameters.
+        #
+        # @api private
         def self.normalize_params(parms, name, val=nil)
-          name =~ %r([\[\]]*([^\[\]]+)\]*)
-          key = $1 || ''
-          after = $' || ''
-          new_val = val.dup unless val.nil?
-          if after == ""
-            if RUBY_VERSION >= '1.9'
-                if !val.blank? && val.is_a?(String)
-                    begin
-                        new_val = val.encode(Encoding::UTF_8, val.encoding)
-                    rescue Encoding::UndefinedConversionError
-                        begin
-                        new_val = val.force_encoding('UTF-8').encode('UTF-8')
-                        rescue Encoding::UndefinedConversionError => exc
-                            Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
-                        end
-                    end
-                end
+            name =~ %r([\[\]]*([^\[\]]+)\]*)
+            key = $1 || ''
+            after = $' || ''
+
+            if val.respond_to?(:force_encoding)
+                val.force_encoding(Encoding.default_internal || 'utf-8')
             end
-            parms[key] = new_val
-          elsif after == "[]"
-            if RUBY_VERSION >= '1.9'
-                if !val.blank? && val.is_a?(String)
-                    begin
-                        new_val = val.encode(Encoding::UTF_8, val.encoding)
-                    rescue Encoding::UndefinedConversionError
-                        begin
-                        new_val << val.force_encoding('UTF-8').encode('UTF-8')
-                         rescue Encoding::UndefinedConversionError => exc
-                            Spider.logger.error("Encoding error from http data: #{exc.message}, reset params to blank")
-                        end
-                    end
+
+            if after == ""
+                parms[key] = val
+            elsif after == "[]"
+                (parms[key] ||= []) << val
+            elsif after =~ %r(^\[\]\[([^\[\]]+)\]$)
+                child_key = $1
+                parms[key] ||= []
+                if parms[key].last.is_a?(Hash) && !parms[key].last.key?(child_key)
+                  parms[key].last.update(child_key => val)
+                else
+                  parms[key] << { child_key => val }
                 end
+            else
+                parms[key] ||= {}
+                parms[key] = normalize_params(parms[key], after, val)
             end
-            (parms[key] ||= []) << new_val
-          elsif after =~ %r(^\[\])
-            parms[key] ||= []
-            parms[key] << normalize_params({}, after, val)
-          else
-            parms[key] ||= {}
-            parms[key] = normalize_params(parms[key], after, val)
-          end
-          parms
+            parms
         end
 
         # ==== Parameters
