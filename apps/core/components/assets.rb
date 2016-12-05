@@ -312,6 +312,13 @@ Spider::Template.define_named_asset 'mmenu_js', [
 ]
 
 #
+# JAVASCRIPT PER FORMATTARE HTML/XML, usato da code in editor tinymce
+#
+Spider::Template.define_named_asset 'tidy_html5', [
+    [:js, 'js/tidy_html5.js', Spider::Components]
+]
+
+#
 # ASSETS PER EDITOR TINYMCE
 #
 Spider::Template.define_named_asset 'tinymce_js', [

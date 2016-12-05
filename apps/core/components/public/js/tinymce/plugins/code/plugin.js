@@ -12,6 +12,7 @@
 
 tinymce.PluginManager.add('code', function(editor) {
 	function showDialog() {
+
 		var win = editor.windowManager.open({
 			title: "Source code",
 			body: {
@@ -24,6 +25,7 @@ tinymce.PluginManager.add('code', function(editor) {
 				style: 'direction: ltr; text-align: left'
 			},
 			onSubmit: function(e) {
+				
 				// We get a lovely "Wrong document" error in IE 11 if we
 				// don't move the focus to the editor before creating an undo
 				// transation since it tries to make a bookmark for the current selection
@@ -40,7 +42,27 @@ tinymce.PluginManager.add('code', function(editor) {
 
 		// Gecko has a major performance issue with textarea
 		// contents so we need to set it when all reflows are done
-		win.find('#code').value(editor.getContent({source_view: true}));
+		var options = {
+		  "indent":"auto",
+		  "indent-spaces":2,
+		  "wrap":80,
+		  "markup":true,
+		  "output-xml":false,
+		  "numeric-entities":true,
+		  "quote-marks":true,
+		  "quote-nbsp":false,
+		  "show-body-only":false,
+		  "quote-ampersand":false,
+		  "break-before-br":true,
+		  "uppercase-tags":false,
+		  "uppercase-attributes":false,
+		  "drop-font-tags":false,
+		  "tidy-mark":true,
+		  "output-html": true
+		}
+		var result = tidy_html5(editor.getContent({source_view: true}), options);
+		var result_pulito = result.replace("<form>", "").replace("</form>","");
+		win.find('#code').value(result_pulito);
 	}
 
 	editor.addCommand("mceCodeEditor", showDialog);

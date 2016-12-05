@@ -1,6 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <tpl:asset name="jquery" />
+    <tpl:asset name="tidy_html5" />
     <tpl:asset name="tinymce_js" />
     <tpl:asset name="bootstrap-3-dropdown" /> <!-- per paginatore -->
     <tpl:asset name="bootstrap-sass" />
