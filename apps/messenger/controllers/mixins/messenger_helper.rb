@@ -31,7 +31,8 @@ module Spider; module Messenger
             to = "+39"+to if (!to.include?("+") && (to.length == 10 || to.length == 9) )
             if (to.length == 13 || to.length == 12)
                 msg = Spider::Messenger.sms(to, text, params)
-                sent_sms(msg.ticket)
+                #tolto per invio di 3 sms quando si inviano sms per rilevazione presenze 
+                #sent_sms(msg.ticket)
                 return msg
             else
                 Spider.logger.error "Number #{to} not valid"
