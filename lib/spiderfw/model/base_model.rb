@@ -1876,8 +1876,28 @@ module Spider; module Model
             end
             ivar = nil
             ivar = instance_variable_get(:"@#{element.name}") if instance_variable_defined?(:"@#{element.name}")
-            #return nil == ivar ? false : true   -> DA PROBLEMI CON :required => true, le stringhe vuote sono viste come valori ammessi
-            return (nil == ivar || "" == ivar) ? false : true 
+            return nil == ivar ? false : true 
+            # FIXME: is this needed?
+            # if (!mapper.mapped?(element)
+            #     return send("#{element_name}?") if (respond_to?("#{element_name}?"))
+            #     return get(element) == nil ? false : true if (!mapper.mapped?(element))
+            # end
+        end
+
+        #METODO AGGIUNTO SOLO PER ATTRIBUTO :REQUIRED => true 
+        def element_empty?(element)
+            element = self.class.get_element(element)
+            if (element.integrated?)
+                return false unless obj = instance_variable_get(:"@#{element.integrated_from.name}")
+                return obj.element_has_value?(element.integrated_from_element)
+            end
+            if (element.attributes[:computed_from])
+                element.attributes[:computed_from].each{ |el| return false unless element_has_value?(el) }
+                return true
+            end
+            ivar = nil
+            ivar = instance_variable_get(:"@#{element.name}") if instance_variable_defined?(:"@#{element.name}")
+            return ( "" == ivar ? true : false ) 
             # FIXME: is this needed?
             # if (!mapper.mapped?(element)
             #     return send("#{element_name}?") if (respond_to?("#{element_name}?"))

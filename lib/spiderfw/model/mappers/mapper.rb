@@ -168,7 +168,8 @@ module Spider; module Model
                         obj.set(el, set_data)
                     end
                 end
-                if !el.integrated? && el.required? && (mode == :insert || obj.element_modified?(el)) && !obj.element_has_value?(el)
+                #aggiunto metodo element_empty? per problemi causati da modifica a element_has_value? che mandava in loop una ricorsione
+                if !el.integrated? && el.required? && (mode == :insert || obj.element_modified?(el)) && !obj.element_has_value?(el) && !obj.element_empty?(el)
                     raise RequiredError.new(el)
                 end
                 if el.unique? && !el.integrated? && obj.element_modified?(el) && curr_val = obj.get(el)
