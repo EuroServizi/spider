@@ -22,7 +22,8 @@ module Spider; module Messenger
             klass ||= self.class.app if self.class.respond_to?(:app)
             klass ||= Spider.home
             msg = Spider::Messenger::MessengerHelper.send_email(klass, template, scene, from, to, headers, attachments, params)
-            sent_email(msg.ticket)
+            #tolto per invio di 3 mail in copia
+            #sent_email(msg.ticket)
             msg
         end
 
