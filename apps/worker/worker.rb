@@ -64,7 +64,7 @@ module Spider
         end
         
         def self.start_runner
-            start = lambda do
+            start = Proc.new do
                 if @mutex.try_lock
                     return false if File.exist?(@pid_file)
                     FileUtils.mkdir_p(File.dirname(@pid_file))
