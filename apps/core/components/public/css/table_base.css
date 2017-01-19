@@ -13,7 +13,6 @@
 	font-size: 120%;
 	font-weight: 700;
     cursor: default;
-    padding: 4px 12px;
 }
 
 .spider.components.table .pagination li:first-child a, .spider.components.table .spider.components.table .pagination li:last-child a {
