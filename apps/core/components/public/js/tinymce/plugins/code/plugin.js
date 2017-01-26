@@ -61,7 +61,7 @@ tinymce.PluginManager.add('code', function(editor) {
 		  "output-html": true
 		}
 		var result = tidy_html5(editor.getContent({source_view: true}), options);
-		var result_pulito = result.replace("<form>", "").replace("</form>","");
+		var result_pulito = result.replace(/<form>/gi, "").replace(/<\/form>/gi,"");
 		win.find('#code').value(result_pulito);
 	}
 
