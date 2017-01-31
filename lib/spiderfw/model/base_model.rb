@@ -2477,7 +2477,7 @@ module Spider; module Model
                     if (el.type == String || el.type == Text)
                         if RUBY_VERSION =~ /1.8/
                             val = ic.iconv(val + ' ')[0..-2] if val
-                        elsif val.encoding == "ASCII-8BIT" && val.is_a?(String)
+                        elsif val.is_a?(String) && val.encoding == "ASCII-8BIT" 
                                 begin
                                     val = ((val+' ').force_encoding("UTF-8").encode('UTF-8', :invalid => :replace, :undef => :replace))[0..-2] if val
                                 rescue
