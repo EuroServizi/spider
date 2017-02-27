@@ -12,7 +12,7 @@ module Spider
     
     # Web server
     config_option 'http.server', _("The internal server to use"), {
-        :default => lambda{
+        :default => Proc.new{
             begin
                 require 'rubygems'
                 require 'mongrel'
@@ -64,13 +64,13 @@ module Spider
     config_option 'storage.pool.timeout', _("Timout in seconds to obtain a connection"), :type => Fixnum, :default => 5
     config_option 'storage.pool.retry', _("How many times to retry acquiring a connection"), :type => Fixnum, :default => 5
     config_option 'storage.shared_connection', _("Use one connection for all threads; use this only when testing!"), 
-        :type => Spider::Bool, :default => lambda{ Spider.runmode == 'test' ? true : false}
+        :type => Spider::Bool, :default => Proc.new{ Spider.runmode == 'test' ? true : false}
         
     config_option 'storage.db.replace_debug_vars', _("Replace bound variables in debug sql"), :type => Spider::DataTypes::Bool,
         :default => Proc.new{ Spider.config.get('runmode') == 'devel' ? true : false }
         
     config_option 'db.mysql.default_engine', _("The engine to use when creating tables"),
-        :default => lambda{ Spider.runmode == 'test' ? 'InnoDB' : 'MyISAM' }
+        :default => Proc.new{ Spider.runmode == 'test' ? 'InnoDB' : 'MyISAM' }
     
     config_option 'storages', _("A list of named storages"), :type => :conf
     config_option 'storages.x.url', _("Connection url to the storage"), :type => String, :required => true
@@ -79,16 +79,16 @@ module Spider
     config_option 'storage.versioning.use_document', _("Use given document storage for versioning if available"), :default => 'document'
     
     config_option 'debugger.start', _("Start the debugger"), :type => Spider::DataTypes::Bool,
-        :default => lambda{ ['test', 'devel'].include?(Spider.runmode) ? true : false }
+        :default => Proc.new{ ['test', 'devel'].include?(Spider.runmode) ? true : false }
     config_option 'debugger.pry', _("User Pry for debugging"), :type => Spider::Bool, :default => false 
     config_option 'profiling.enable', _("Enable on-request profiling"), :type => Spider::DataTypes::Bool
     config_option 'request.mutex', _("Respond to requests sequentially"), :default => false
     
-    config_option 'locale', _("The locale to use"), :process => lambda{ |val|
+    config_option 'locale', _("The locale to use"), :process => Proc.new{ |val|
         Spider.locale = val
         val
     }
-    config_option 'i18n.rails_path', _("Path where rails-style locales are found"), :default => lambda{ Spider.paths[:root]+'/locales' }
+    config_option 'i18n.rails_path', _("Path where rails-style locales are found"), :default => Proc.new{ Spider.paths[:root]+'/locales' }
     config_option 'i18n.default_locale', _("Fallback locale"), :default => 'it'
  
     config_option 'runner.sleep', _("Sleep time for the periodic runner"), :default => 10
@@ -96,7 +96,7 @@ module Spider
     config_option 'session.store', _("Where to store the session"), :default => 'file', :choices => ['memory', 'file', 'memcached']
     config_option 'session.life', _("Lifetime in seconds of the sessions"), :default => 3600, :type => Fixnum
     config_option 'session.purge_check', _("Number of seconds to wait before session purge check"), :default => 10, :type => Fixnum
-    config_option 'session.file.path', _("The folder where to store file sessions"), :default => lambda{ return Spider.paths[:var]+'/sessions' }
+    config_option 'session.file.path', _("The folder where to store file sessions"), :default => Proc.new{ Spider.paths[:var]+'/sessions' }
     
     config_option 'shared_store.type', _("Which shared store to use"), :default => 'memory'
     
@@ -111,30 +111,27 @@ module Spider
     
     config_option 'log.console', _("Level of debug output to console"), 
         :default => Proc.new{ Spider.runmode == 'devel' ? :DEBUG : false },
-        :process => lambda{ |opt| opt && opt != 'false' ? opt.to_s.upcase.to_sym : false },
+        :process => Proc.new{ |opt| opt && opt != 'false' ? opt.to_s.upcase.to_sym : false },
         :choices => [false, :DEBUG, :WARN, :INFO, :ERROR]
     config_option 'log.errors', _("Log errors to errors.log file"), :type => Spider::DataTypes::Bool, :default => true
     config_option 'log.level', _("Log level to use for main log file (false for no logging)"),
         :default => Proc.new{ Spider.runmode == 'devel' ? :DEBUG : :INFO },
         :choices => [false, :DEBUG, :WARN, :INFO, :ERROR],
-        :process => lambda{ |opt| opt && opt != 'false' ? opt.to_s.upcase.to_sym : false }
+        :process => Proc.new{ |opt| opt && opt != 'false' ? opt.to_s.upcase.to_sym : false }
     config_option 'log.file_name', _("Name of the main log file"), :default => 'site.log'
     config_option 'log.rotate.age', _("Number of old log files to keep, OR frequency of rotation (daily, weekly or monthly)"), :default => 'daily'
     config_option 'log.rotate.size', _("Maximum logfile size (only applies when log.rotate.age is a number)"), :default => 1048576
     config_option 'log.memory', _("Log memory usage"), :type => Spider::DataTypes::Bool, :default => false
-    config_option 'log.keep', _("Maximum number of rotated log files to keep"), :type => Fixnum, :default => 10
+    config_option 'log.keep', _("Maximum number of rotated log files to keep"), :type => Fixnum, :default => 4
     config_option 'log.gzip', _("Whether to compress rotated log files"), :type => Spider::DataTypes::Bool, :default => true
     config_option 'log.apache_commons', _("Under JRuby, Use Apache Commons Logging if available"), :default => true
-    config_option 'log.static_extensions', 
-        _('Log level for static files'),
-        :process => lambda{ |opt| opt && opt != 'false' ? opt.to_s.upcase.to_sym : false },
+    config_option 'log.static_extensions', _('Log level for static files'),
+        :process => Proc.new{ |opt| opt && opt != 'false' ? opt.to_s.upcase.to_sym : false },
         :default => :ERROR,
         :choices => [false, :DEBUG, :WARN, :INFO, :ERROR]
     config_option 'log.non_static_extensions_list', _('Allow logging for some file extensions'), 
         :type => Array, :default => ['html', 'xml', 'json']
     
-
-
     config_option 'orgs', _("A list of organizations"), :type => :conf
     config_option 'orgs.x.name', _("Descriptive name of the organization")
     config_option 'orgs.x.country_code', _("Country code of the organization")
@@ -143,14 +140,14 @@ module Spider
     config_option 'orgs.x.common_name', _("Common name (e.g. domain) of the organization")
     config_option 'orgs.x.email', _("Main e-mail address of the organization")
     config_option 'orgs.x.auto_from_email', _("Email address used as 'From' for automatic e-mails"),
-        :default => lambda{ |name| Spider.conf.get("orgs.#{name}.email") }
+        :default => Proc.new{ |name| Spider.conf.get("orgs.#{name}.email") }
     config_option 'orgs.x.organizational_unit', _("Organizational Unit (e.g. department)")
     config_option 'orgs.x.pub_key', _("Path to the public key (defaults to config/certs/org_name/public.pem)"),
-        :default => lambda{ |name| Spider.paths[:certs]+'/'+name+'/public.pem'}
+        :default => Proc.new{ |name| Spider.paths[:certs]+'/'+name+'/public.pem'}
     config_option 'orgs.x.cert', _("Path to the certificate (defaults to config/certs/org_name/cert.pem)"),
-        :default => lambda{ |name| Spider.paths[:certs]+'/'+name+'/cert.pem'}
+        :default => Proc.new{ |name| Spider.paths[:certs]+'/'+name+'/cert.pem'}
     config_option 'orgs.x.private_key', _("Path to the private key (defaults to config/certs/org_name/private/key.pem)"),
-        :default => lambda{ |name| Spider.paths[:certs]+'/'+name+'/private/key.pem'}
+        :default => Proc.new{ |name| Spider.paths[:certs]+'/'+name+'/private/key.pem'}
 
     conf_alias 'it_IT' => {
         'orgs' => 'organizzazioni',
@@ -164,7 +161,7 @@ module Spider
     config_option 'site.admin.name', _("Name of the site administrator")
     config_option 'site.admin.email', _("Email of the site administrator"), :default => 'errori@soluzionipa.it'
     config_option 'site.tech_admin.email', _("Email of the site technical administrator"),
-        :default => lambda{ Spider.conf.get('site.admin.email') }
+        :default => Proc.new{ Spider.conf.get('site.admin.email') }
     config_option 'site.domain', _("Main domain name used to access the site")
     config_option 'site.port', _("Main port used to access the site"), :default => 80
     config_option 'site.ssl', _("Whether this site can be accessed using SSL"), :type => Spider::DataTypes::Bool
@@ -172,30 +169,30 @@ module Spider
        
         
     config_option 'errors.send_email', _("Send an e-mail to the technical administrator when errors occur"), :type => Spider::DataTypes::Bool,
-         :default => lambda{ Spider.runmode == 'production' ? true : false }
+         :default => Proc.new{ Spider.runmode == 'production' ? true : false }
     
-    config_option 'devel.trace.extended', _("Use ruby-debug to provide extended traces"), :default => lambda{
+    config_option 'devel.trace.extended', _("Use ruby-debug to provide extended traces"), :default => Proc.new{
         RUBY_VERSION_PARTS[1] == '8'
     }
     config_option 'devel.trace.show_locals', _("Show locals in debug traces"), :default => true
     config_option 'devel.trace.show_instance_variables', _("Show locals in debug traces"), :default => true
     
     config_option 'javascript.compress', _("Compress JavaScript files"), 
-        :default => lambda{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
+        :default => Proc.new{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
     config_option 'css.compress', _("Combine CSS files"), 
-        :default => lambda{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
+        :default => Proc.new{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
     config_option 'css.compile', _('Compile CSS files'),
-        :default => lambda{ Spider.runmode == 'production' ? false : true }, :type => Spider::Bool
+        :default => Proc.new{ Spider.runmode == 'production' ? false : true }, :type => Spider::Bool
     config_option 'css.compile_less', _('Compile CSS LESS files'),
-        :default => lambda{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
+        :default => Proc.new{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
     config_option 'css.sass.use_compass', _('Use Compass SASS framework if available'), :default => true
     config_option 'css.cachebuster', _("Use cache busters for CSS urls"), :type => Symbol,
         :default => :soft, :choices => [false, :soft, :hard, :hardcopy]
     config_option 'assets.use_cdn', _("Use a Content Delivery Network for assets if defined"), :type => Spider::Bool,
-        :default => lambda{ Spider.runmode == 'production' ? true : false }
+        :default => Proc.new{ Spider.runmode == 'production' ? true : false }
     
     config_option 'http_proxy', _("Proxy to use for http clients (http://user:pass@host:port)"), :type => String,
-        :do => lambda{ |val| ENV['http_proxy'] = val }
+        :do => Proc.new{ |val| ENV['http_proxy'] = val }
         
     config_option 'resources.disable_custom', _("Disable resource overriding in home"), :type => Spider::Bool, :default => false
     
