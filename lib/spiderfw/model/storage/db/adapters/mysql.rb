@@ -199,10 +199,11 @@ module Spider; module Model; module Storage; module Db
                             result << h
                         end
                     end
-                    if (curr[:last_query_type] == :select)
-                        rows_res = connection.query("select FOUND_ROWS()")
-                        curr[:total_rows] = rows_res.fetch_row[0].to_i
-                    end
+                    #Modificata per problema Commands out of sync; you can't run this command now: Fabiano
+                    # if (curr[:last_query_type] == :select)
+                    #     rows_res = connection.query("select FOUND_ROWS()")
+                    #     curr[:total_rows] = rows_res.fetch_row[0].to_i
+                    # end
                 end
                 curr[:last_insert_id] = connection.insert_id
                 curr[:last_query_type] = nil
