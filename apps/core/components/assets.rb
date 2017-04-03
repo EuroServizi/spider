@@ -9,8 +9,9 @@ Spider::Template.define_named_asset 'jquery', [
 Spider::Template.define_named_asset 'spider', [
     [:js, 'js/inheritance.js', Spider::Components],
     [:js, 'js/spider.js', Spider::Components],
-    [:js, 'js/paginatore.js', Spider::Components],
     [:js, 'js/spin.js', Spider::Components],
+    [:js, 'js/paginatore.js', Spider::Components],
+    [:js, 'js/paginatore_ajax.js', Spider::Components],
     [:js, 'bootstrap_3/js/dropdown.js', Spider::Components],  #per far funzionare paginatore con select
     [:js, 'js/jquery/plugins/jquery.query-2.1.6.js', Spider::Components],
     [:js, 'js/jquery/plugins/jquery.form.js', Spider::Components],

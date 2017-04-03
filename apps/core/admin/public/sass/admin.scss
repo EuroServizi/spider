@@ -158,7 +158,10 @@ $sidebar_color: #DFDFDF;
             display: inline-block;
             margin-bottom: 5px;
             margin-left: 20px;
-        
+            .active_page{
+                font-size: 120%;
+                font-weight: 700;
+            }
             ul.lista_pagine{
                 list-style: none;
                 overflow: hidden;
