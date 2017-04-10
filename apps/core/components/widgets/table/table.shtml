@@ -14,7 +14,7 @@
         <tbody>
             <tpl:pass sp:each_index="@rows |row_i|">
                 <tr class="{ (row_i%2==0) ? 'odd' : 'even' }">
-                        <td sp:each="@elements |element|">
+                        <td sp:each="@elements |element|" class="{ element.to_s }">
                             <a sp:if="((!@link_el.blank? && element == @link_el) && @link.blank?)" href="{ Spider::HTTP.urlencode(@data[row_i][@link_id]) }?current_page={ @page }">
                                 { URI.decode(@rows[row_i][element]) }
                             </a>   
@@ -29,6 +29,7 @@
             </tpl:pass>
         </tbody>
     </table>
+    
     <ul sp:if="!@pages.blank? && @pages > 1" class="pagination">
         
         <!-- versione con file po, da ricreare file per traduzioni
@@ -90,7 +91,6 @@
                 <a class="next disabled"> >> </a>
             </li>
     </ul>
-    
     <!-- select con pagine per navigatore -->
     <div class="btn-group dropup sel_pagine" sp:if="!@page.blank? && @pages > 1">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
