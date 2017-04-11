@@ -130,7 +130,7 @@ function last_page_ajax(scope){
     var show_per_page = parseInt($(scope).find("#items_per_page").val());
     var number_of_items = parseInt($(scope).find('#number_of_items').val());
     /*calculate the number of pages we are going to have*/
-    var number_of_pages = (Math.ceil(number_of_items/show_per_page)-1);
+    var number_of_pages = Math.ceil(number_of_items/show_per_page);
     go_to_page_ajax(number_of_pages, scope);
 
 };
@@ -142,7 +142,7 @@ function popola_select_ajax(scope){
     /*getting the amount of elements inside pagination_content div*/
     var number_of_items = parseInt($(scope).find('#number_of_items').val());
     /*calculate the number of pages we are going to have*/
-    var number_of_pages = (Math.ceil(number_of_items/show_per_page)-1);
+    var number_of_pages = Math.ceil(number_of_items/show_per_page);
 
     for(pag=1; pag<=number_of_pages; pag++){
         $(".sel_pagine ul").append("<li><a href=\"javascript:go_to_page_ajax("+(pag)+",'"+scope+"')\">"+(pag)+"</a></li>");
@@ -210,7 +210,7 @@ function go_to_page_ajax(page_num, scope){
     var number_of_items = parseInt($(scope).find('#number_of_items').val());
 
     /*calculate the number of pages we are going to have*/
-    var number_of_pages = (Math.ceil(number_of_items/show_per_page)-1);
+    var number_of_pages = Math.ceil(number_of_items/show_per_page);
 
     /*update the current page input field*/
     $(scope).find('#current_page').val(page_num);
@@ -287,7 +287,7 @@ function init_paginatore_ajax(scope){
     /*getting the amount of elements inside pagination_content div*/
     var number_of_items = parseInt($(scope).find('#number_of_items').val());
     /*calculate the number of pages we are going to have*/
-    var number_of_pages = (Math.ceil(number_of_items/show_per_page)-1);
+    var number_of_pages = Math.ceil(number_of_items/show_per_page);
 
     /*set the value of our hidden input fields*/
     $(scope).find('#current_page').val(1);
