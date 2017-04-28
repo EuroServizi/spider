@@ -178,9 +178,9 @@ function go_to_page_ajax(page_num, scope){
             html_risultato = $.parseHTML(res)
             var tabella_sostitutiva = $(html_risultato).find("table.pagination_content");
             if(tabella_sostitutiva.length > 0){
-                $("table.pagination_content").replaceWith(tabella_sostitutiva);
+                $(scope).find("table.pagination_content").replaceWith(tabella_sostitutiva);
             }else{
-                $("table.pagination_content").empty();
+                $(scope).find("table.pagination_content").empty();
             }
             
             modal_view.modal('hide');
@@ -191,7 +191,7 @@ function go_to_page_ajax(page_num, scope){
     
     }else{
         html_risultato = $.parseHTML(cache_pagine[(page_num+1)])
-        $("table.pagination_content").replaceWith($(html_risultato).find("table.pagination_content"));
+        $(scope).find("table.pagination_content").replaceWith($(html_risultato).find("table.pagination_content"));
     }
 
 
@@ -289,8 +289,13 @@ function init_paginatore_ajax(scope){
     /*calculate the number of pages we are going to have*/
     var number_of_pages = Math.ceil(number_of_items/show_per_page);
 
-    /*set the value of our hidden input fields*/
-    $(scope).find('#current_page').val(1);
+    
+    var page_num = 0;
+    if( $("#current_page").val() == "" ){
+        $(scope).find('#current_page').val(page_num);
+    }else{
+        var page_num =  $(scope).find('#current_page').val();
+    }
     $(scope).find('#show_per_page').val(show_per_page);
     popola_select_ajax(scope)
 
