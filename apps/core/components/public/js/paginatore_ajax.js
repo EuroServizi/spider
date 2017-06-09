@@ -176,10 +176,8 @@ function go_to_page_ajax(page_num, scope){
     var action = $(scope).find('#action_path').val();
     
     if(cache_pagine[(page_num+1)] == null){
-        var dialog = bootbox.dialog({
-        message: '<br/><h3>Caricamento in corso...</h3><br/>',
-        closeButton: false
-    });
+        var dialog = create_modal_dialog("Caricamento in corso...");
+
     // do something in the background
     
        
@@ -194,7 +192,7 @@ function go_to_page_ajax(page_num, scope){
                 $(scope).find("table.pagination_content").empty();
             }
             
-            //dialog.modal('hide');
+            close_modal_dialog(dialog);
             $('html, body').animate({
                 scrollTop: scroll_top_table()
             }, 500);

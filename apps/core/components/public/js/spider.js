@@ -816,3 +816,30 @@ if($("#spider-admin #container #sidebar #menu").length > 0){
 		$("#spider-admin #container").css("min-height",(h_menu_sidebar_admin+30).toString() +"px");
 	}
 }
+
+/* crea un dialog con lib bootbox 4.4 con il messaggio che viene passato e ritorna il dialog per poterlo chiudere 
+	http://bootboxjs.com/examples.html#bb-custom-dialog
+*/
+
+function create_modal_dialog(messaggio){
+	var dialog = bootbox.dialog({
+                    message: "<br/><h3><i class=\"fa fa-spinner fa-pulse fa-fw\"></i> "+messaggio+"</h3><br/>",
+                    closeButton: false
+                });
+    dialog.find('.modal-content').css({
+        'margin-top': function (){
+            var w = $( window ).height();
+            var b = $(".modal-dialog").height();
+            // should not be (w-h)/2
+            var h = (((w-b)/2)-150);
+            return h+"px";
+        }
+    });
+    return dialog;
+}
+
+/* chiude un dialog */
+
+function close_modal_dialog(dialog){
+	dialog.modal('hide');
+}
