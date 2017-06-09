@@ -1,10 +1,16 @@
 /* PAGINATORE JS V 2 AJAX */
 /*  campi hidden da avere nella pagina dove si vuole usare il paginatore
+        Numero di righe totali
+        <input type='hidden' id='number_of_items' value="{ @totale_righe }" /> 
+        
         Imposto il numero di righe per pagina che viene passato al js
         <input type='hidden' id='items_per_page' value="10" />  
 
         Imposto il numero di link di pagine da mostrare nella navbar 
         <input type='hidden' id='max_page_in_navbar' value="14"/>
+        
+        Nome del metodo che viene chiamato tramite ajax
+        <input type='hidden' id='action_path' value="{ @action_path }"/>
 
         Campi usati dalle funzioni del paginatore
         <input type='hidden' id='current_page' />
@@ -93,7 +99,7 @@ function first_page_ajax(scope){
     if (scope === undefined) {
           scope = 'body';
     } 
-    go_to_page_ajax(1, scope);
+    go_to_page_ajax(0, scope);
 };
 
 function previous_ajax(scope){
@@ -131,7 +137,7 @@ function last_page_ajax(scope){
     var number_of_items = parseInt($(scope).find('#number_of_items').val());
     /*calculate the number of pages we are going to have*/
     var number_of_pages = Math.ceil(number_of_items/show_per_page);
-    go_to_page_ajax(number_of_pages, scope);
+    go_to_page_ajax(number_of_pages-1, scope);
 
 };
 
@@ -170,8 +176,13 @@ function go_to_page_ajax(page_num, scope){
     var action = $(scope).find('#action_path').val();
     
     if(cache_pagine[(page_num+1)] == null){
-        modal_view = bootbox.modal("<br/><br/><h3>Caricamento in corso...</h3><br/><br/>");
-            
+        var dialog = bootbox.dialog({
+        message: '<br/><h3>Caricamento in corso...</h3><br/>',
+        closeButton: false
+    });
+    // do something in the background
+    
+       
         $C.remote(action, {'qs': 'p', 'pn': page_num+1}, function(res){
             //se non ho la pagina la salvo
             cache_pagine[(page_num+1)] = res;
@@ -183,7 +194,7 @@ function go_to_page_ajax(page_num, scope){
                 $(scope).find("table.pagination_content").empty();
             }
             
-            modal_view.modal('hide');
+            //dialog.modal('hide');
             $('html, body').animate({
                 scrollTop: scroll_top_table()
             }, 500);
@@ -234,9 +245,9 @@ function go_to_page_ajax(page_num, scope){
             if(page_num>=(Math.floor(parseInt(max_page_in_navbar)/2)+1) ){
                 navigation_html += "<li class=\"page_link\" longdesc=\"...\"><a href=\"javascript:go_to_page_ajax("+( (number_of_pages-max_page_in_navbar)-1 )+", '" + scope + "')\">...</a></li>";
             }
-            for (i=number_of_pages-max_page_in_navbar; i<=number_of_pages; i++){
+            for (i=number_of_pages-max_page_in_navbar; i<number_of_pages; i++){
 
-                navigation_html += "<li class=\"page_link\" longdesc=\"" + i +"\"><a href=\"javascript:go_to_page_ajax(" + i +", '" + scope + "')\" >"+ (i) +"</a></li>";
+                navigation_html += "<li class=\"page_link\" longdesc=\"" + i +"\"><a href=\"javascript:go_to_page_ajax(" + i +", '" + scope + "')\" >"+ (i+1) +"</a></li>";
             }
             navigation_html += "<li><a href=\"javascript:next_ajax('"+scope+"');\"> > </a></li>";
             navigation_html += "<li class=\"next_link\"><a href=\"javascript:last_page('"+scope+"');\"> >> </a></li>";
@@ -247,8 +258,8 @@ function go_to_page_ajax(page_num, scope){
         /* traslo le pagine */
         {
             var current_link = (page_num-Math.floor(max_page_in_navbar/2));
-            if(current_link<=1){
-               current_link = 1; 
+            if(current_link<1){
+               current_link = 0; 
             }
             /* svuoto la lista di pagine */ 
             $(scope).find(".page_navigation").empty();
@@ -257,8 +268,8 @@ function go_to_page_ajax(page_num, scope){
             if(page_num>=(Math.floor(parseInt(max_page_in_navbar)/2)+1) ){
                 navigation_html += "<li class=\"page_link\" longdesc=\"...\"><a href=\"javascript:go_to_page_ajax("+( page_num-(Math.floor(parseInt(max_page_in_navbar)/2)+1) )+", '" + scope + "')\">...</a></li>";
             }
-            for (i=current_link; i<=(current_link+max_page_in_navbar); i++){
-                navigation_html += "<li class=\"page_link\" longdesc=\"" + i +"\"><a href=\"javascript:go_to_page_ajax(" + i +", '" + scope + "')\" >"+ (i) +"</a></li>";
+            for (i=current_link; i<(current_link+max_page_in_navbar); i++){
+                navigation_html += "<li class=\"page_link\" longdesc=\"" + i +"\"><a href=\"javascript:go_to_page_ajax(" + i +", '" + scope + "')\" >"+ (i + 1) +"</a></li>";
             }
             navigation_html += "<li class=\"page_link\" longdesc=\"...\"><a href=\"javascript:go_to_page_ajax("+i+", '" + scope + "')\">...</a></li>";
             navigation_html += "<li><a href=\"javascript:next_ajax('"+scope+"');\"> > </a></li>";
@@ -268,7 +279,7 @@ function go_to_page_ajax(page_num, scope){
          }
     }
 
-    $(scope).find('.sel_pagine').append("<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">Pag <strong>"+(page_num)+"</strong> <span class=\"caret\"></span></button><ul class=\"dropdown-menu lista_pagine\"></ul>");    
+    $(scope).find('.sel_pagine').append("<button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">Pag <strong>"+(page_num+1)+"</strong> <span class=\"caret\"></span></button><ul class=\"dropdown-menu lista_pagine\"></ul>");    
     popola_select_ajax(scope);
 
     $(scope).find(".page_link[longdesc='"+page_num+"']").addClass('active_page');
@@ -307,22 +318,22 @@ function init_paginatore_ajax(scope){
         classi_selettore += " btn-group-lg";
     }
 
-    if(number_of_pages>1){
+    if(number_of_pages>0){
 
         var navigation_html = "<ul class='"+classi_paginatore+"'><li class=\"previous_link\"><a href=\"javascript:first_page_ajax('"+scope+"');\"> << </a></li>";
         navigation_html += "<li><a href=\"javascript:previous_ajax('"+scope+"');\"> < </a></li>";
-        var current_link = 1;
+        var current_link = 0;
         if(number_of_pages<max_page_in_navbar)
         {
-            while(number_of_pages >= current_link){
-                navigation_html += "<li class=\"page_link\" longdesc=\"" + current_link +"\"><a href=\"javascript:go_to_page_ajax(" + current_link +", '" + scope + "')\" >"+ (current_link) +"</a></li>";
+            while(number_of_pages > current_link){
+                navigation_html += "<li class=\"page_link\" longdesc=\"" + current_link +"\"><a href=\"javascript:go_to_page_ajax(" + current_link +", '" + scope + "')\" >"+ (current_link + 1) +"</a></li>";
                 //navigation_html += '<li class="page_link" longdesc="' + current_link +'"><a href="javascript:go_to_page(' + current_link +', \"' + scope + '\")" >'+ (current_link + 1) +'</a></li></ul>';
                 current_link++;
             }
         }
         else{
-            while(current_link<=max_page_in_navbar){
-                navigation_html += "<li class=\"page_link\" longdesc=\"" + current_link +"\"><a href=\"javascript:go_to_page_ajax(" + current_link +", '" + scope + "')\" >"+ (current_link) +"</a></li>";
+            while(current_link<max_page_in_navbar){
+                navigation_html += "<li class=\"page_link\" longdesc=\"" + current_link +"\"><a href=\"javascript:go_to_page_ajax(" + current_link +", '" + scope + "')\" >"+ (current_link + 1) +"</a></li>";
                 current_link++;
             }
             navigation_html += "<li class=\"page_link\" longdesc=\"...\"><a href=\"javascript:go_to_page_ajax("+current_link+", '" + scope + "')\">...</a></li>";
@@ -333,7 +344,7 @@ function init_paginatore_ajax(scope){
         $(scope).find('.page_navigation').html(navigation_html);
 
         /*add active_page class to the first page link*/
-        $(scope).find('.page_navigation .page_link:first').addClass('active_page');
+        $(scope).find(".page_link[longdesc='"+page_num+"']").addClass('active_page');
 
         $(scope).find('.page_navigation').after("<div class=\""+classi_selettore+" dropup sel_pagine\"><button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">Pag <strong>1</strong> <span class=\"caret\"></span></button><ul class=\"dropdown-menu lista_pagine\"></ul></div>");
         popola_select_ajax(scope);

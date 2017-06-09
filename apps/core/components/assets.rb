@@ -242,10 +242,10 @@ Spider::Template.define_named_asset 'bootstrap-3-js', [
     [:js, 'bootstrap_3/js/collapse.js', Spider::Components],
     [:js, 'bootstrap_3/js/dropdown.js', Spider::Components],
     [:js, 'bootstrap_3/js/modal.js', Spider::Components],
+    [:js, 'bootstrap_3/js/tooltip.js', Spider::Components],
     [:js, 'bootstrap_3/js/popover.js', Spider::Components],
     [:js, 'bootstrap_3/js/scrollspy.js', Spider::Components],
     [:js, 'bootstrap_3/js/tab.js', Spider::Components],
-    [:js, 'bootstrap_3/js/tooltip.js', Spider::Components],
     [:js, 'bootstrap_3/js/transition.js', Spider::Components]
 ]
 
@@ -350,4 +350,11 @@ Spider::Template.define_named_asset 'tinymce_css', [
 #
 Spider::Template.define_named_asset 'bootbox_2', [
     [:js, 'js/bootbox_2/bootbox.js', Spider::Components]
+]
+
+#
+# ASSET PER BOOTBOX 4.4 da usare con bootstrap 3 
+#
+Spider::Template.define_named_asset 'bootbox_4', [
+    [:js, 'js/bootbox_4/bootbox_4_4.js', Spider::Components]
 ]
