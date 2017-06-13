@@ -14,50 +14,49 @@
 .page_navigation {
   display: inline-block;
   margin-bottom: 5px;
-  margin-left: 20px;
 }
-/* line 18, ../../sass/spider.scss */
+/* line 15, ../../sass/spider.scss */
 .page_navigation ul.lista_pagine {
   list-style: none;
   overflow: hidden;
   display: none;
 }
-/* line 24, ../../sass/spider.scss */
+/* line 21, ../../sass/spider.scss */
 .page_navigation .active a {
   font-weight: 800;
   cursor: default;
 }
-/* line 29, ../../sass/spider.scss */
+/* line 26, ../../sass/spider.scss */
 .page_navigation li.previous_link, .page_navigation li.next_link {
   border-left-width: 1px;
   border-radius: 3px 0 0 3px;
 }
 
 /* selettore delle pagine, fatto con dropup bootstrap 3 */
-/* line 39, ../../sass/spider.scss */
+/* line 36, ../../sass/spider.scss */
 .sel_pagine.dropup {
   margin-bottom: 20px;
   margin-left: 20px;
 }
-/* line 40, ../../sass/spider.scss */
+/* line 37, ../../sass/spider.scss */
 .sel_pagine.dropup.btn-group {
   vertical-align: baseline;
 }
-/* line 45, ../../sass/spider.scss */
+/* line 42, ../../sass/spider.scss */
 .sel_pagine.dropup button {
   color: #049cdb;
 }
-/* line 49, ../../sass/spider.scss */
+/* line 46, ../../sass/spider.scss */
 .sel_pagine.dropup .dropdown-menu {
   min-width: 30px;
 }
-/* line 51, ../../sass/spider.scss */
+/* line 48, ../../sass/spider.scss */
 .sel_pagine.dropup .dropdown-menu.lista_pagine {
   max-height: 300px;
   overflow-y: scroll;
 }
 @media (max-width: 768px) {
-  /* line 51, ../../sass/spider.scss */
+  /* line 48, ../../sass/spider.scss */
   .sel_pagine.dropup .dropdown-menu.lista_pagine {
     font-size: 18px;
   }

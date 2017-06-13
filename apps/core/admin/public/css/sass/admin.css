@@ -49,7 +49,7 @@ body:after {
 /* line 38, ../../sass/admin.scss */
 #header {
   padding-bottom: 10px;
-  background: url('../../img/css/header_bg.png?1446829179') repeat-x scroll center top;
+  background: url('../../img/css/header_bg.png?1447840002') repeat-x scroll center top;
   background-color: #417690;
   position: relative;
   border-bottom: 2px solid #555555;
@@ -180,62 +180,61 @@ body:after {
 #spider-admin .page_navigation.pagination {
   display: inline-block;
   margin-bottom: 5px;
-  margin-left: 20px;
 }
-/* line 161, ../../sass/admin.scss */
+/* line 160, ../../sass/admin.scss */
 #spider-admin .page_navigation.pagination .active_page {
   font-size: 120%;
   font-weight: 700;
 }
-/* line 165, ../../sass/admin.scss */
+/* line 164, ../../sass/admin.scss */
 #spider-admin .page_navigation.pagination ul.lista_pagine {
   list-style: none;
   overflow: hidden;
   display: none;
 }
-/* line 171, ../../sass/admin.scss */
+/* line 170, ../../sass/admin.scss */
 #spider-admin .page_navigation.pagination .active a {
   font-weight: 800;
   cursor: default;
 }
-/* line 176, ../../sass/admin.scss */
+/* line 175, ../../sass/admin.scss */
 #spider-admin .page_navigation.pagination li.previous_link, #spider-admin .page_navigation.pagination li.next_link {
   border-left-width: 1px;
   border-radius: 3px 0 0 3px;
 }
-/* line 186, ../../sass/admin.scss */
+/* line 185, ../../sass/admin.scss */
 #spider-admin .sel_pagine.dropup {
   margin-bottom: 5px;
   margin-left: 20px;
 }
-/* line 187, ../../sass/admin.scss */
+/* line 186, ../../sass/admin.scss */
 #spider-admin .sel_pagine.dropup.btn-group {
   vertical-align: baseline;
   display: inline-block;
 }
-/* line 193, ../../sass/admin.scss */
+/* line 192, ../../sass/admin.scss */
 #spider-admin .sel_pagine.dropup button {
   color: #049cdb;
 }
-/* line 197, ../../sass/admin.scss */
+/* line 196, ../../sass/admin.scss */
 #spider-admin .sel_pagine.dropup .dropdown-menu {
   min-width: 30px;
 }
-/* line 199, ../../sass/admin.scss */
+/* line 198, ../../sass/admin.scss */
 #spider-admin .sel_pagine.dropup .dropdown-menu.lista_pagine {
   max-height: 300px;
   overflow-y: scroll;
 }
 @media (max-width: 768px) {
-  /* line 199, ../../sass/admin.scss */
+  /* line 198, ../../sass/admin.scss */
   #spider-admin .sel_pagine.dropup .dropdown-menu.lista_pagine {
     font-size: 18px;
   }
 }
 
-/* line 215, ../../sass/admin.scss */
+/* line 214, ../../sass/admin.scss */
 #container, .spider-admin-container {
-  background: url('../../img/css/side_bg.png?1446829179') repeat-y;
+  background: url('../../img/css/side_bg.png?1447840002') repeat-y;
   position: relative;
   min-width: 940px;
   padding-left: 20px;
@@ -245,7 +244,7 @@ body:after {
   /* tolto il clearfix di compass perchè non fa comparire la barra orizzontale quando ridimensiono la pag di admin */
   /* @include clearfix(); */
 }
-/* line 226, ../../sass/admin.scss */
+/* line 225, ../../sass/admin.scss */
 #container #sidebar, #container > .spider-admin-sidebar, .spider-admin-container #sidebar, .spider-admin-container > .spider-admin-sidebar {
   position: absolute;
   top: 0;
@@ -253,27 +252,27 @@ body:after {
   width: 220px;
   padding: 20px 10px;
 }
-/* line 233, ../../sass/admin.scss */
+/* line 232, ../../sass/admin.scss */
 #container #sidebar li.active a, #container > .spider-admin-sidebar li.active a, .spider-admin-container #sidebar li.active a, .spider-admin-container > .spider-admin-sidebar li.active a {
   text-decoration: underline;
 }
-/* line 237, ../../sass/admin.scss */
+/* line 236, ../../sass/admin.scss */
 #container #sidebar li, #container > .spider-admin-sidebar li, .spider-admin-container #sidebar li, .spider-admin-container > .spider-admin-sidebar li {
   margin-bottom: 1px;
 }
-/* line 242, ../../sass/admin.scss */
+/* line 241, ../../sass/admin.scss */
 #container #content, #container > .spider-admin-content, .spider-admin-container #content, .spider-admin-container > .spider-admin-content {
   margin-left: 240px;
 }
 
-/* line 247, ../../sass/admin.scss */
+/* line 246, ../../sass/admin.scss */
 .crud .table {
   width: auto;
   min-width: 400px;
 }
 
 @media screen and (max-width: 500px) {
-  /* line 256, ../../sass/admin.scss */
+  /* line 255, ../../sass/admin.scss */
   #header #main_title {
     font-size: 10px;
   }

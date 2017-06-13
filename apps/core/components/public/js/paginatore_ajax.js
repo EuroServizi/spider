@@ -151,7 +151,7 @@ function popola_select_ajax(scope){
     var number_of_pages = Math.ceil(number_of_items/show_per_page);
 
     for(pag=1; pag<=number_of_pages; pag++){
-        $(".sel_pagine ul").append("<li><a href=\"javascript:go_to_page_ajax("+(pag)+",'"+scope+"')\">"+(pag)+"</a></li>");
+        $(".sel_pagine ul").append("<li><a href=\"javascript:go_to_page_ajax("+(pag-1)+",'"+scope+"')\">"+(pag)+"</a></li>");
     }
     
 }
