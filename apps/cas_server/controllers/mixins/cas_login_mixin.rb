@@ -114,6 +114,15 @@ module Spider; module CASServer
         def cas_user_authenticated(user)
             extra_attributes = cas_user_attributes(user)
             tgt = generate_ticket_granting_ticket(user.identifier, extra_attributes)
+            #Aggiungo attributo extra spid code se autenticato con SPID
+            if (!@request.session[:auth].blank? && !@request.session[:auth]["Portal::UtenteSpidAgid"].blank?)
+                spid_id = @request.session[:auth]["Portal::UtenteSpidAgid"][:id]
+                user_agid = Portal::UtenteSpidAgid.load(:id => spid_id)
+                unless user_agid.blank?
+                    spid_code = user_agid.spid_code
+                    extra_attributes[:spid_code] = spid_code
+                end   
+            end
             if Spider.conf.get('cas.expire_sessions')
                 expires = Time.now + Spider.conf.get('cas.ticket_granting_ticket_expiry')
                 expiry_info = " It will expire on #{expires}."
