@@ -77,11 +77,12 @@ module Spider
                  unless precision
                      precision = object.class <= Fixnum ? 0 : 2
                  end
-                rounded_number = (Float(object) * (10 ** precision)).round.to_f / 10 ** precision
+                #rounded_number = (Float(object) * (10 ** precision)).round.to_f / 10 ** precision
+                rounded_number = "%.#{precision}f" % object
                 parts = rounded_number.to_s.split('.')
                 parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1#{delimiter}")
                 return parts[0] if precision == 0
-                parts[1] += "0"*(precision-parts[1].length)
+                #parts[1] += "0"*(precision-parts[1].length)
                 parts.join(separator)
             end
             
