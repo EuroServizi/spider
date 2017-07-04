@@ -1,4 +1,4 @@
-require 'spiderfw/model/storage/db/db_storage'
+    require 'spiderfw/model/storage/db/db_storage'
 require 'spiderfw/model/storage/db/dialects/no_total_rows'
 
 module Spider; module Model; module Storage; module Db
@@ -43,7 +43,7 @@ module Spider; module Model; module Storage; module Db
             query[:keys] = ['COUNT(*) AS N']
             query[:order] = []
             sql, bind_vars = sql_select(query)
-            return execute("#{sql} AS CountResult", *bind_vars)[0]['N'].to_i
+            return execute("#{sql}", *bind_vars)[0]['N'].to_i
         end
         
         def sql_select(query)
