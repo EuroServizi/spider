@@ -64,6 +64,32 @@ class Object
         end
     end
 
+    #converto una stringa dalla tabella http://www.i18nqa.com/debug/utf8-debug.html
+    def convert_from_mapped
+        if self.is_a?(String)
+            unless self.frozen?
+                self.replace(self.gsub("Ã¨","è"))
+                self.replace(self.gsub("Ã","à"))
+                self.replace(self.gsub("â€œ","\""))
+                self.replace(self.gsub("â€","\""))
+                self.replace(self.gsub("â€™","'"))
+                self.replace(self.gsub("â€˜","'"))
+                self.replace(self.gsub("â€“","-"))
+                self.replace(self.gsub("â€”","-"))
+                self.replace(self.gsub("â‚¬","€"))
+                self.replace(self.gsub("Ã¹","ù"))
+                self.replace(self.gsub("à¹","ù"))
+                self.replace(self.gsub("Ã©","é"))
+                self.replace(self.gsub("à©","é"))
+                self.replace(self.gsub("Ã¬","ì"))
+                self.replace(self.gsub("à¬","ì"))
+                self.replace(self.gsub("Ã²","ò"))
+                self.replace(self.gsub("à²","ò"))
+                self.replace(self.gsub("Â",""))
+                self
+            end
+        end
 
+    end
     
 end
