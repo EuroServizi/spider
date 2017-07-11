@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 major, minor, patch = RUBY_VERSION.split('.').map{ |v| v.to_i }
 if major <= 1 && minor <= 8
 
