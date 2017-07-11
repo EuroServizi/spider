@@ -237,7 +237,7 @@ module Spider; module Forms
                     widget_type = Text
                     input_attributes = {:size => 5} if (el.type == Fixnum)
                 #aggiunto controllo su type ::Decimal per override metodi Decimal su Moduli per problemi con spazi ogni due cifre
-                elsif (el.type == Float || el.type == BigDecimal || el.type == Spider::DataTypes::Decimal || ( el.type.respond_to?(to_s) && !(el.type.to_s =~ /::Decimal$/).nil? ) )
+                elsif (el.type == Float || el.type == BigDecimal || el.type == Spider::DataTypes::Decimal || ( el.type.respond_to?(:to_s) && !(el.type.to_s =~ /::Decimal$/).nil? ) )
                     widget_type = Text
                     input_attributes = {:size => 10}
                 elsif (el.type == Spider::DataTypes::Text)
