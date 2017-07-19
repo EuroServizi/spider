@@ -8,6 +8,7 @@ Spider.defineWidget('Spider.Forms.DateTime', {
 	    if (this.el.is('.change-month')) conf.changeMonth = true;
 	    if (this.el.is('.change-year')) conf.changeYear = true;
         var classes = this.el.attr('class').split(' ');
+
         for (var i=0; i<classes.length; i++){
             var cl = classes[i];
             if (cl.substr(0, 10) == 'year-range'){
@@ -15,7 +16,10 @@ Spider.defineWidget('Spider.Forms.DateTime', {
                 conf.yearRange = range[0].replace("m", "-")+":"+range[1].replace('p', '+');
             }
             if (cl.substr(0, 10) == 'past-dates'){
-                conf.maxDate = "0"
+                conf.maxDate = "0";
+            }
+            if (cl.substr(0, 12) == 'future-dates'){
+                conf.minDate = "0";
             }
         }
 		if (this.input.is('.date')) this.input.datepicker(conf);

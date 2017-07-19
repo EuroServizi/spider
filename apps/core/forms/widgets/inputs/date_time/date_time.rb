@@ -9,6 +9,7 @@ module Spider; module Forms
         attribute :"change-month", :type => Spider::Bool, :default => false
         attribute :"change-year", :type => Spider::Bool, :default => false
         attribute :"past-dates", :type => Spider::Bool, :default => false
+        attribute :"future-dates", :type => Spider::Bool, :default => false
         attribute :"year-range", :type => String, :default => "m150:p10"
         
         def prepare_value(val)
@@ -41,6 +42,7 @@ module Spider; module Forms
             @additional_classes << 'change-month' if @attributes[:"change-month"]
             @additional_classes << 'change-year' if @attributes[:"change-year"]
             @additional_classes << 'past-dates' if @attributes[:"past-dates"]
+            @additional_classes << 'future-dates' if @attributes[:"future-dates"]
             yr = @attributes[:"year-range"].sub('-', 'm').sub('+', 'p').sub(':', '-') if @attributes[:"change-year"]
             @additional_classes << "year-range-#{yr}" if yr 
             @scene.additional_classes = @additional_classes
