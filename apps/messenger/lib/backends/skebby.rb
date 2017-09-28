@@ -40,9 +40,8 @@ module Spider::Messenger
           end
                
           #@parameters.each {|key, value| puts "#{key} is #{value}" }    
-               
               @response = Net::HTTP.post_form(URI(@url), @parameters)
-              if @response.message == "OK"
+              if @response.code == "200" #@response.message == "OK"
                   true
               else
                   false
@@ -52,10 +51,9 @@ module Spider::Messenger
            
           def getCredit()
              
-          @parameters['method']   = 'get_credit'
-           
+              @parameters['method']   = 'get_credit'
               @response = Net::HTTP.post_form(URI(@url), @parameters)
-              if @response.message == "OK"
+              if @response.code == "200"
                   true
               else
                   false
