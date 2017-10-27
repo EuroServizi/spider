@@ -223,7 +223,7 @@ module Spider; module Components
             elsif type <= Float || type <= BigDecimal
                 if !attributes[:scale].blank? && attributes[:scale] > 2
                     #numero con n decimali dati dalla scale
-                    str = value
+                    str = value.is_a?(String) ? value : value.to_s
                 else
                     #considero che viene passato un importo, uso il locale
                     str = Spider::I18n.localize_number(@request.locale, value)
