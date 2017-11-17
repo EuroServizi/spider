@@ -221,7 +221,13 @@ module Spider; module Components
             elsif type <= Date || type <= Time
                 return Spider::I18n.localize_date_time(@request.locale, value, :short)
             elsif type <= Float || type <= BigDecimal
-                str = Spider::I18n.localize_number(@request.locale, value)
+                if !attributes[:scale].blank? && attributes[:scale] > 2
+                    #numero con n decimali dati dalla scale
+                    str = value.is_a?(String) ? value : value.to_s
+                else
+                    #considero che viene passato un importo, uso il locale
+                    str = Spider::I18n.localize_number(@request.locale, value)
+                end
                 if attributes[:currency]
                     str = "&#{attributes[:currency]}; #{str}"
                 end
