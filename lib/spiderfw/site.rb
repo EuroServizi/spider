@@ -47,6 +47,7 @@ module Spider
         def ssl_to_s
             s = "https://#{@domain}"
             s += ":#{@ssl_port}" if @ssl_port != 443
+            s += Spider::ControllerMixins::HTTPMixin.reverse_proxy_mapping('')
             s
         end
         
