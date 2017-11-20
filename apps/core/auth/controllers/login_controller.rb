@@ -31,7 +31,10 @@ module Spider; module Auth
         __.html
         def index
             exception = @request.session.flash[:unauthorized_exception]
-            @scene.redirect = @request.params['redirect'] if (@request.params['redirect'])
+            if (@request.params['redirect'])
+                @request.params['redirect'].gsub!(Spider::ControllerMixins::HTTPMixin.reverse_proxy_mapping(''),'')
+                @scene.redirect = @request.params['redirect']
+            end
             @scene.unauthorized_msg = exception[:message] if exception && exception[:message] != 'Spider::Auth::Unauthorized'
             @scene.message = @request.session.flash[:login_message] if @request.session.flash[:login_message]
             render('login')
