@@ -58,10 +58,9 @@ module Spider
                     @uploaded_files = multipart_files
                 end
             end
-
             @request.http_method = @request.env['REQUEST_METHOD'].upcase.to_sym
             @request.http_host = @request.env['HTTP_HOST']
-            @request.ssl = true if @request.env['HTTPS'] == 'on'
+            @request.ssl = true if @request.env['HTTPS'] == 'on' || Spider.conf.get('site.ssl')
             if @request.http_host =~ /(.+)\:(\d+)/
                 @request.domain = $1
                 @request.port = $2.to_i
@@ -71,16 +70,16 @@ module Spider
             end
             
             unless Spider.site
-                port = @request.ssl? ? nil : @request.port
+                 port = (@request.ssl? || Spider.conf.get('site.ssl')) ? nil : @request.port
                 Spider.site = Spider::Site.new(@request.domain, port)
                 Spider.site._auto = true
                 Spider.site.save_cache
             end
-            if @request.ssl? && Spider.site.auto? && !Spider.site.ssl_port
+             if (@request.ssl? || Spider.conf.get('site.ssl')) && Spider.site.auto? && !Spider.site.ssl_port
                 Spider.site.ssl_port = @request.port
                 Spider.site.save_cache
             end
-            if !@request.ssl? && Spider.site.auto? && !Spider.site.port
+            if !@request.ssl? && !Spider.conf.get('site.ssl') && Spider.site.auto? && !Spider.site.port
                 Spider.site.port = @request.port
                 Spider.site.save_cache
             end

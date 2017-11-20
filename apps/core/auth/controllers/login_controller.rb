@@ -75,7 +75,7 @@ module Spider; module Auth
         def success_redirect
             
             if (@request.params['redirect'] && !@request.params['redirect'].empty?)
-                redir_to = ((Spider.site && Spider.site.ssl?) ? Spider.site.http_s_url : '')+@request.params['redirect']
+                redir_to = ((Spider.site && Spider.site.ssl?) || Spider.conf.get("site.ssl") ? Spider.site.http_s_url : '')+@request.params['redirect']
                 redirect(redir_to, Spider::HTTP::SEE_OTHER)
                 return true
             elsif(self.default_redirect)
