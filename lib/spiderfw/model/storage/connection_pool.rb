@@ -118,6 +118,9 @@ module Spider; module Model; module Storage
                     # Spider.logger.debug("DB Pool (#{Thread.current}): had free connection")
                 end
                 conn = @free_connections.pop
+                #Aggiunta da loris per ovviare ai problemi di interruzione di rete inaspettato
+                #effettua il logoff della connessione se il ping non risponde
+                conn.logoff if conn && !conn.ping
                 while conn && !@provider.connection_alive?(conn)
                     Spider.logger.warn("Storage #{storage_type} Pool (#{Thread.current}): connection #{conn} dead")
                     remove_connection(conn)

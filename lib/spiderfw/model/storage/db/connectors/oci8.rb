@@ -11,6 +11,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
         module ClassMethods
             
             def new_connection(user, pass, dbname, role)
+                ::OCI8.properties[:tcp_keepalive] = true
                 conn ||= ::OCI8.new(user, pass, dbname, role)
                 conn.autocommit = true
                 conn.non_blocking = true
