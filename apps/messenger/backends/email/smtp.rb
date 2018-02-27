@@ -15,13 +15,15 @@ module Spider; module Messenger; module Backends; module Email
             mail = prepare_mail(msg)
             mail.delivery_method :smtp, {
                 :address => Spider.conf.get('messenger.smtp.address'),
-                :port => Spider.conf.get('messenger.smpt.port'),
+                :port => Spider.conf.get('messenger.smtp.port'),
                 :domain => Spider.conf.get('messenger.smtp.domain'),
                 :user_name => Spider.conf.get('messenger.smtp.username'),
                 :password => Spider.conf.get('messenger.smtp.password'),
                 :authentication => Spider.conf.get('messenger.smtp.auth_scheme'),
                 :enable_starttls_auto => Spider.conf.get('messenger.smtp.enable_starttls_auto'),
-                :openssl_verify_mode => Spider.conf.get('messenger.smtp.openssl_verify_mode')
+                :openssl_verify_mode => Spider.conf.get('messenger.smtp.openssl_verify_mode'),
+                :ssl => Spider.conf.get('messenger.smtp.ssl'),
+                :tls => Spider.conf.get('messenger.smtp.tls')
             }
             mail.deliver
             return true

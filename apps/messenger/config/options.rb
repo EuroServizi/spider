@@ -9,6 +9,8 @@ module Spider
         :choices => [nil, :plain, :login, :cram_md5]
     config_option 'messenger.smtp.enable_starttls_auto', _("Automatically start TLS for SMTP"), :default => false, :type => Spider::Bool
     config_option 'messenger.smtp.openssl_verify_mode', _("Openssl verification"), :default => 'none', :type => String
+    config_option 'messenger.smtp.ssl', _("ssl"), :default => nil, :type => String
+    config_option 'messenger.smtp.tls', _("tls"), :default => nil, :type => String
     config_option 'messenger.smtp.log_path', _("Smtp logfile (e.g. /var/log/mail.log)"), :default => nil
         
     config_option 'messenger.email.retries', _("How many times to retry sending an e-mail"), :type => Fixnum, :default => 5
