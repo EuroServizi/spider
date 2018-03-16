@@ -10,7 +10,7 @@ module Spider; module Auth
         # element :simplified_username, String, :default => lambda{ |obj| obj.class.simplify_username(obj.username) }
         element :password, Password
 
-        element :start_user, Stringl, :label => 'Login Auth Unica'
+        element :start_user, String, :label => 'Login Auth Unica'
 
         def identifier
             username
