@@ -17,12 +17,13 @@
             <sp:yield />
         </div>
 		<div id="footer">
-			<div id="contact" sp:if="!@admin_email.blank?">
-				_(If you need to contact the administrator to provide additional information, you may send an e-mail to) 
-				<a href="mailto:{ @admin_email }?subject={ @email_subject }">{ @admin_email }</a>.
-			</div>
 			<div id="exc_uuid" sp:if="@exception_uuid">
-				_(The identifier of this error is %s. Please refer to it when requesting assistance.) % @exception_uuid
+				<!-- _(The identifier of this error is %s. Please refer to it when requesting assistance.) % @exception_uuid -->
+				Spiacente, si è verificato l' errore con identificativo <strong>{ @exception_uuid }</strong>. Riprova più tardi.
+			</div>
+			<div id="contact" sp:if="!@admin_email.blank?">
+				<!-- _(If you need to contact the administrator to provide additional information, you may send an e-mail to) -->
+				Se il problema persiste puoi scrivere a <a href="mailto:{ @admin_email }?subject={ @email_subject }">{ @admin_email }</a> specificando nome dell'ente sul quale stavi lavorando ed una breve descrizione del contesto in cui si è presentato l'errore.
 			</div>
 		</div>
 		<hr id="bottom_break">
