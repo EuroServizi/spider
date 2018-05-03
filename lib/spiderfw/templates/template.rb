@@ -360,8 +360,7 @@ module Spider
             # end
             #
             #rendo univoco all'inizio l'array per non caricare piu' volte lo stesso asset
-            assets_univoci = @assets.uniq!
-            @assets = ( assets_univoci.nil? ? @assets : assets_univoci )
+            @assets = @assets.uniq
             @assets.each do |ass|
                 ass[:profiles] = ((ass[:profiles] || []) + @asset_profiles).uniq if @asset_profiles
                 next if seen[ass.inspect]
