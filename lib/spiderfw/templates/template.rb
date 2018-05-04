@@ -286,7 +286,7 @@ module Spider
             res =  root.children ? root.children_of_type('tpl:asset') : []
             res_init = ""
             res.each do |r|
-                #se ho l'attributo runtime carico il file se il runtime coincide o non viene specificato
+                #se ho l'attributo runmode carico il file se il runmode coincide o non viene specificato
                 @assets << Spider::Template.parse_asset_element(r) if (r.get_attribute("runmode") == Spider.runmode || r.get_attribute("runmode").nil?)
                 r.set_attribute('class', 'to_delete')
             end

@@ -159,8 +159,8 @@ module Spider
     }
     
     config_option 'site.admin.name', _("Name of the site administrator")
-    config_option 'site.admin.email', _("Email of the site administrator"), :default => 'errori@soluzionipa.it'
-    config_option 'site.tech_admin.email', _("Email of the site technical administrator"), :default => 'errori@soluzionipa.it' #:default => Proc.new{ Spider.conf.get('site.admin.email') }
+    config_option 'site.admin.email', _("Email of the site administrator"), :default => 'down@soluzionipa.it'
+    config_option 'site.tech_admin.email', _("Email of the site technical administrator"), :default => 'down@soluzionipa.it' #:default => Proc.new{ Spider.conf.get('site.admin.email') }
     config_option 'site.domain', _("Main domain name used to access the site")
     config_option 'site.port', _("Main port used to access the site"), :default => 80
     config_option 'site.ssl', _("Whether this site can be accessed using SSL"), :type => Spider::DataTypes::Bool
