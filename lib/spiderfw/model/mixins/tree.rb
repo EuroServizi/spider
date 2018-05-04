@@ -261,9 +261,7 @@ module Spider; module Model
             
             # def after_save(obj, mode)
             #     super
-            #     debugger
             #     @model.elements_array.select{ |el| el.attributes[:association] == :tree }.each do |el|
-            #         debugger
             #         left_el = el.attributes[:tree_left]
             #         left = obj.get(left_el)
             #         if (!left)

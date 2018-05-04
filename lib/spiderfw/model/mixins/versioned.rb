@@ -285,10 +285,7 @@ module Spider; module Model
                 ve = mod.version_element
                 current_sha1 = object.get(ve)
                 new_sha1 = object.version_sha1
-                # debugger
-                # debugger
                 return if current_sha1 == new_sha1
-                # debugger
                 object.v_sha1 = new_sha1
                 vobj = Spider::Model.get(vmod, :v_sha1 => new_sha1)
                 vobj.autoload(false)
@@ -471,7 +468,6 @@ module Spider; module Model
                 is_embedded = el.attributes[:embedded] && vmod.storage.supports?(:embedding)
                 next if el.multiple? && el.model.respond_to?(:version_element) && !is_embedded
                 is_version_content = version_contents.include?(el)
-                #debugger if el.name == :news_list
                 el_val = self.get(el)
                 if self.respond_to?(:prepare_version_object)
                     el_val = self.prepare_version_object(el.name, el_val) 

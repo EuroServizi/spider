@@ -12,8 +12,9 @@ module Spider; module HTTP
         def options(opts)
             opts = super(opts)
             defaults = {
-                :Host   => '0.0.0.0',
-                :app    => 'spider'
+                :Host       => '0.0.0.0',
+                :app        => 'spider',
+                :threaded   => true
             }
             return defaults.merge(opts)
         end
@@ -24,6 +25,7 @@ module Spider; module HTTP
             options = {
                 :Port           => opts[:Port],
                 :BindAddress    => opts[:Host]
+
             }
             @server = ::Thin::Server.start(opts[:Host], opts[:Port].to_i, Spider::HTTP::RackApplication.new) do 
                 use Rack::CommonLogger

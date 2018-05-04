@@ -248,7 +248,6 @@ module Spider; module Components
         
         __.json
         def tree_sort(id, parent_id, prev_id=nil)
-            #debugger
             raise "List #{@id} is not a tree" unless @tree
             raise "List #{@id} is not sortable" unless @sortable
             obj = @model.new(id)

@@ -208,7 +208,6 @@ module Spider; module Model; module Mappers
             end
             embedded = {}
             embedded_keys = model.elements_array.select{ |el| embed?(el) && !el.attributes[:extended_model] }.map{ |el| el.name }
-            # debugger
             # embed?(:civilia_open_persona) if $DO_DEBUG
             embedded_keys.each do |k|
                 embedded[k] = result.delete(k)

@@ -45,7 +45,6 @@ module Spider; module Model
         #     tasks.each do |task|
         #         res = model_server.all(model.name)
         #         res.each do |obj|
-        #             debugger
         #             model.mapper.insert(obj)
         #         end
         #     end

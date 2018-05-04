@@ -104,7 +104,6 @@ module Spider; module Model
                     hidden = [:obj_created, :obj_modified]
                     options[:hidden] = true if hidden.include?(name)
                     next if skip
-#                    debugger if name == :parent_id
                     @ar_schema[:columns][name] = col.name
                     next unless type
                     self.element(name, type, options)

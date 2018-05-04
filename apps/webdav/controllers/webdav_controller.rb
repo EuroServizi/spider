@@ -437,7 +437,6 @@ module Spider; module WebDAV
     	end
     	
     	def get_rec_prop(path, r_uri, props, depth = 5000)
-#    	    debugger
     	    debug "get prop file='#{path}' depth=#{depth}"
     		ret_set = []
     		depth -= 1
@@ -510,7 +509,6 @@ module Spider; module WebDAV
     		rescue Exception => e
     		    debug("EXCEPTION!")
     		    debug(e)
-#    		    debugger
     			propstat.elements << elem_status(Spider::HTTP::INTERNAL_SERVER_ERROR)
     		end
             Spider.logger.debug("PROPSTATS:")

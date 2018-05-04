@@ -35,8 +35,6 @@ module Spider
         end
         
         def self.update_pofiles(textdomain, files, app_version, options = {})
-            require 'debugger'
-            debugger
             puts options.inspect if options[:verbose]
         
             #write found messages to tmp.pot

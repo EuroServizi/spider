@@ -13,9 +13,9 @@ module Spider
         end
         
         def save_cache
-            File.open(self.class.cache_file, 'w') do |f|
-                f.puts(Marshal.dump(self.to_s))
-            end
+            #File.open(self.class.cache_file, 'w') do |f|
+            #    f.puts(Marshal.dump(self.to_s))
+            #end
         end
         
         def self.load_cache
@@ -27,7 +27,7 @@ module Spider
         end
         
         def self.cache_file
-            @cache_file ||= File.join(Spider.paths[:var], 'site')
+            @cache_file #||= File.join(Spider.paths[:var], 'site')
         end
         
         def ssl?

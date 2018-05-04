@@ -142,7 +142,6 @@ module Annotations
                 annotate(name, key, *args)
             end
             @annotator.clear_pending
-            # debugger
             # self.method(name).annotations = @annotations[name]
             super
         end

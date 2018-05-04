@@ -642,13 +642,9 @@ module Spider
             #     mod = self.class.plugin(name)
             #     next unless mod
             #     (class <<self; self; end).instance_eval do
-            #         debugger
             #         include mod
             #     end
             #     shadow = (class <<self; self; end)
-            #     
-            #     debugger
-            #     a = 3
             # end
             doc.search('sp:runtime-content').each do |cont|
                 w = cont.get_attribute('widget')
