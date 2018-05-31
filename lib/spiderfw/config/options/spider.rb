@@ -184,7 +184,7 @@ module Spider
         :default => Proc.new{ Spider.runmode == 'production' ? false : true }, :type => Spider::Bool
     config_option 'css.compile_less', _('Compile CSS LESS files'),
         :default => Proc.new{ Spider.runmode == 'production' ? true : false }, :type => Spider::DataTypes::Bool
-    config_option 'css.sass.use_compass', _('Use Compass SASS framework if available'), :default => true
+    config_option 'css.sass.use_compass', _('Use Compass SASS framework if available'), :type => Spider::DataTypes::Bool, :default => true
     config_option 'css.cachebuster', _("Use cache busters for CSS urls"), :type => Symbol,
         :default => :soft, :choices => [false, :soft, :hard, :hardcopy]
     config_option 'assets.use_cdn', _("Use a Content Delivery Network for assets if defined"), :type => Spider::Bool,
