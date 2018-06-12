@@ -1,4 +1,8 @@
 require 'apps/core/auth/lib/login_authenticator'
+if Spider.conf.get('auth.enable_auth_hub')
+    require 'jwt'
+end
+
 
 module Spider; module Auth
     
@@ -13,7 +17,11 @@ module Spider; module Auth
         end
         
         def self.logout_redirect
-            self.http_s_url
+            if Spider.conf.get('auth.enable_auth_hub')
+                self.http_s_url('no_login')
+            else
+                self.http_s_url
+            end
         end
         
         def self.users=(val)
@@ -37,7 +45,16 @@ module Spider; module Auth
             end
             @scene.unauthorized_msg = exception[:message] if exception && exception[:message] != 'Spider::Auth::Unauthorized'
             @scene.message = @request.session.flash[:login_message] if @request.session.flash[:login_message]
-            render('login')
+            if Spider.conf.get('auth.enable_auth_hub')
+                token_up = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login','up')
+                @scene.login_url_up = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_up}"
+                token_aad = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login','aad')
+                @scene.login_url_aad = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_aad}"
+                @scene.login_title = "Autenticazione Necessaria"
+                render('no_login')
+            else
+                render('login') #non mostro questo con auth_hub
+            end
         end
         
         def authenticate(params={})
@@ -52,9 +69,63 @@ module Spider; module Auth
             return nil
         end
         
+        # Arriva un jwt con questi dati
+        # [{"iss"=>"soluzionipa.it",
+        #   "auth"=>"up",
+        #   "ext_session_id"=>"id_sessione",
+        #   "user"=>
+        #    {"user_id"=>3,
+        #     "name"=>"ciccio",
+        #     "first_name"=>"mario",
+        #     "last_name"=>"rossis",
+        #     "nickname"=>"ciccio",
+        #     "email"=>"ciccio@test.it",
+        #     "admin"=>true}},
+        #  {"typ"=>"JWT", "alg"=>"HS256"}]
+
         __.html
         def do_login
-            user = authenticate
+            #se arriva un parametro jwt controllo i dati, autenticazione da auth_hub
+            #metto i dati nel request params
+            unless @request.params['jwt'].blank?
+                begin
+                    hash_jwt = JWT.decode @request.params['jwt'], "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
+                    #se la sessione non corrisponde non mostro la login
+                    if hash_jwt[0]['ext_session_id'] != @request.session.sid
+                        @request.session.flash['unauthorized_msg'] = "Sessione non valida!"
+                        redirect self.class.http_s_url('no_login')
+                    elsif !hash_jwt[0]['user']['admin']
+                        @request.session.flash['unauthorized_msg'] = "Utente non amministratore!"
+                        redirect self.class.http_s_url('no_login')
+                    else
+                        #creo uno user per non perdere l'autenticazione, uso un id che non esiste
+                        auth_user = hash_jwt[0]['user']
+                        @request.session[:auth]= {}
+                        if auth_user['admin']
+                            user = Spider::Auth::SuperUser.new
+                            user.id = 9999999
+                            #metto in sessione l'username per ripristinarlo poi
+                            @request.session[:auth]['username_from_auth_hub'] = hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome']
+                        elsif auth_user['admin_servizi']
+                            #DEVO CERCARE UN ADMIN SERVIZI SU TABELLE LOCALI..
+                            user = Portal::Amministratore.new
+                            user.id = 9999999
+                            #metto in sessione l'username per ripristinarlo poi
+                            @request.session[:auth]['username_from_auth_hub'] = hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome']
+                        else
+                            #utente normale, logout
+                        end
+                    end
+                rescue Exception => exc
+                    Spider.logger.error "Errore login: #{exc.message}"
+                    @request.session.flash['failed_login'] = true
+                    redirect self.class.http_s_url('no_login')
+                    done
+                end
+                
+            else
+                user = authenticate
+            end
             if user
                 user.save_to_session(@request.session)
                 on_success(user)
@@ -72,11 +143,20 @@ module Spider; module Auth
             end
         end
         
+        __.html :template => 'no_login'
+        def no_login 
+            @scene.failed_login = @request.session.flash['failed_login']
+            @scene.unauthorized_msg = @request.session.flash['unauthorized_msg']
+            @scene.did_logout = @request.session.flash['effettuato_logout']
+            token = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login')
+            @scene.login_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
+        end
+
+
         def on_success(user)
         end
         
         def success_redirect
-            
             if (@request.params['redirect'] && !@request.params['redirect'].empty?)
                 redir_to = ((Spider.site && Spider.site.ssl?) || Spider.conf.get("site.ssl") ? Spider.site.http_s_url : '')+@request.params['redirect']
                 redirect(redir_to, Spider::HTTP::SEE_OTHER)
@@ -94,6 +174,12 @@ module Spider; module Auth
             @request.session[:auth] = nil
             @scene.did_logout = true
             red = self.class.logout_redirect
+            @request.session.flash['effettuato_logout'] = true
+            if Spider.conf.get('auth.enable_auth_hub')
+                token = get_jwt_token(@request.session.sid,self.class.http_s_url,'up')
+                redirect Spider.conf.get("auth.redirect_url_auth_hub")+"/ext_logout?jwt=#{token}"
+                done
+            end
             if red
                 redirect(red)
             else
@@ -101,6 +187,22 @@ module Spider; module Auth
             end
         end
         
+
+        def get_jwt_token(id_sessione,url_back,tip_auth)
+            payload = {
+                        iss: 'soluzionipa.it',
+                        auth: tip_auth,
+                        ub: url_back,
+                        ub_logout: url_back, #questa serve per tornare indietro dopo la logout
+                        idc: 'id_di_cosa', #id cliente...
+                        ext_session_id: id_sessione
+                    }
+            token = JWT.encode payload, "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
+
+        end
+
+
+
     end
     
     

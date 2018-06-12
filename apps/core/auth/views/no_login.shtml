@@ -1,0 +1,19 @@
+<div class="login-page">
+    <tpl:asset type="css" src="css/login.css" />
+    <h3 sp:if="@login_title">{ @login_title }</h3>
+    <div class='error' sp:if='@failed_login'>
+        Login errata
+    </div>
+    <div class='error' sp:if='@unauthorized_msg'>
+        { @unauthorized_msg }
+    </div>
+    <div class='logout' sp:if='@did_logout'>
+        Logout eseguito
+    </div>
+    <p>
+        <a href="{ @login_url_up }">Accedi con login unificato</a>
+    </p>
+    <p>
+        <a href="{ @login_url_aad }">Accedi con Civilia Next</a>
+    </p>
+</div>

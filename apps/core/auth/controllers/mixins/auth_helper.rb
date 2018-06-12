@@ -1,3 +1,7 @@
+if Spider.conf.get('auth.enable_auth_hub')
+    require 'jwt'
+end
+
 module Spider; module Auth
 
     module AuthHelper
@@ -67,6 +71,7 @@ module Spider; module Auth
                         end
                     end
                 end
+                #questo rimanda a fare login
                 unless user
                     msg = Spider::GetText.in_domain('spider_auth'){ _("Please login first") }
                     kl = unauthorized_exception ? unauthorized_exception : Unauthorized
@@ -78,13 +83,39 @@ module Spider; module Auth
         end
         
         def try_rescue(exc)
+            
             if (exc.is_a?(Unauthorized))
-                base = (@current_require && @current_require[:redirect]) ? @current_require[:redirect] : Spider::Auth.request_url+'/login/'
-                base = self.class.http_s_url+'/'+base unless base[0].chr == '/'
-                base += (base.include?("?") ? "&" : "?")
-                get_params = @request.params.map{|k,v| "#{k}=#{v}"}.join('&')+"&" || ""
-                redir_url = base + get_params +'redirect='+URI.escape(@request.path)
-                @request.session.flash[:unauthorized_exception] = {:class => exc.class.name, :message => exc.message}
+                conf = Spider.conf.get('auth.enable_auth_hub')
+                if conf
+                    #controllo se ho un jwt, se sono un admin, 
+                    #se nel jwt ho auth del tipo aad allora mostro la email nel messaggio, 
+                    #altrimenti nome e cognome o mail se vuoti
+
+                    #NON FA REDIRECT DIRETTO MA PASSA SEMPRE PER PAGINA CON SCELTA TIPOLOGIA ACCESSO SU AUTH HUB
+                    # str_redirect = "?&redirect=#{@request.action}" unless @request.action.blank? 
+                    # payload = {
+                    #     iss: 'soluzionipa.it',
+                    #     auth: 'aad',
+                    #     ub: Spider::Auth::LoginController.http_s_url+"/do_login#{str_redirect}",
+                    #     idc: 'id_di_cosa', #id cliente...
+                    #     ext_session_id: @request.session.sid
+                    # }
+                    # token = JWT.encode payload, "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
+                    # redir_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
+                    unless @request.params['jwt'].blank?
+                        redirect Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt'])
+                    else
+                        #pagina di login con i due link per le due modalità di accesso
+                        redirect Spider::Auth::LoginController.http_s_url
+                    end
+                else
+                    base = (@current_require && @current_require[:redirect]) ? @current_require[:redirect] : Spider::Auth.request_url+'/login/'
+                    base = self.class.http_s_url+'/'+base unless base[0].chr == '/'
+                    base += (base.include?("?") ? "&" : "?")
+                    get_params = @request.params.map{|k,v| "#{k}=#{v}"}.join('&')+"&" || ""
+                    redir_url = base + get_params +'redirect='+URI.escape(@request.path)
+                    @request.session.flash[:unauthorized_exception] = {:class => exc.class.name, :message => exc.message}
+                end
                 redirect(redir_url, Spider::HTTP::TEMPORARY_REDIRECT)
             else
                 super
