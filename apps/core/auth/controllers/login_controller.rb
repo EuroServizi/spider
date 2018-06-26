@@ -38,17 +38,21 @@ module Spider; module Auth
                 
         __.html
         def index
+            #controllo se ho in sessione @request.session[:auth]['username_from_auth_hub'], vuol dire che ho fatto la login
             exception = @request.session.flash[:unauthorized_exception]
             if (@request.params['redirect'])
                 @request.params['redirect'].gsub!(Spider::ControllerMixins::HTTPMixin.reverse_proxy_mapping(''),'')
                 @scene.redirect = @request.params['redirect']
             end
+            if !@request.session[:auth].blank? && !@request.session[:auth]['username_from_auth_hub'].blank?
+                redirect @request.params['redirect']
+            end
             @scene.unauthorized_msg = exception[:message] if exception && exception[:message] != 'Spider::Auth::Unauthorized'
             @scene.message = @request.session.flash[:login_message] if @request.session.flash[:login_message]
             if Spider.conf.get('auth.enable_auth_hub')
-                token_up = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login','up')
+                token_up = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login',@request.params['redirect'],'up')
                 @scene.login_url_up = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_up}"
-                token_aad = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login','aad')
+                token_aad = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login',@request.params['redirect'],'aad')
                 @scene.login_url_aad = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_aad}"
                 @scene.login_title = "Autenticazione Necessaria"
                 render('no_login')
@@ -73,6 +77,7 @@ module Spider; module Auth
         # [{"iss"=>"soluzionipa.it",
         #   "auth"=>"up",
         #   "ext_session_id"=>"id_sessione",
+        #   "dominio_ente_corrente"=>"http://piovene-new.soluzionipa.it"
         #   "user"=>
         #    {"user_id"=>3,
         #     "name"=>"ciccio",
@@ -90,8 +95,11 @@ module Spider; module Auth
             unless @request.params['jwt'].blank?
                 begin
                     hash_jwt = JWT.decode @request.params['jwt'], "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
-                    #se la sessione non corrisponde non mostro la login
-                    if hash_jwt[0]['ext_session_id'] != @request.session.sid
+                    #se la sessione non corrisponde non mostro la login. Tolto http o https dall'url
+                    if hash_jwt[0]['dominio_ente_corrente'].split("://").last != @request.env['HTTP_HOST']
+                        @request.session.flash['unauthorized_msg'] = "Dominio non valido!"
+                        redirect self.class.http_s_url('no_login')
+                    elsif hash_jwt[0]['dominio_ente_corrente'].blank? && hash_jwt[0]['ext_session_id'] != @request.session.sid
                         @request.session.flash['unauthorized_msg'] = "Sessione non valida!"
                         redirect self.class.http_s_url('no_login')
                     elsif !hash_jwt[0]['user']['admin']
@@ -148,8 +156,11 @@ module Spider; module Auth
             @scene.failed_login = @request.session.flash['failed_login']
             @scene.unauthorized_msg = @request.session.flash['unauthorized_msg']
             @scene.did_logout = @request.session.flash['effettuato_logout']
-            token = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login')
-            @scene.login_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
+            token_up = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login','up')
+            @scene.login_url_up = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_up}"
+            token_aad = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login','aad')
+            @scene.login_url_aad = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_aad}"
+            @scene.login_title = "Autenticazione Necessaria"
         end
 
 
@@ -176,7 +187,7 @@ module Spider; module Auth
             red = self.class.logout_redirect
             @request.session.flash['effettuato_logout'] = true
             if Spider.conf.get('auth.enable_auth_hub')
-                token = get_jwt_token(@request.session.sid,self.class.http_s_url,'up')
+                token = get_jwt_token(@request.session.sid,self.class.http_s_url)
                 redirect Spider.conf.get("auth.redirect_url_auth_hub")+"/ext_logout?jwt=#{token}"
                 done
             end
@@ -188,11 +199,12 @@ module Spider; module Auth
         end
         
 
-        def get_jwt_token(id_sessione,url_back,tip_auth)
+        def get_jwt_token(id_sessione,url_back, url_back_redirect=nil,tip_auth=nil)
             payload = {
                         iss: 'soluzionipa.it',
                         auth: tip_auth,
                         ub: url_back,
+                        ub_redirect: url_back_redirect,
                         ub_logout: url_back, #questa serve per tornare indietro dopo la logout
                         idc: 'id_di_cosa', #id cliente...
                         ext_session_id: id_sessione

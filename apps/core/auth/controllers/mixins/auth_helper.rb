@@ -102,11 +102,12 @@ module Spider; module Auth
                     # }
                     # token = JWT.encode payload, "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
                     # redir_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
+                    redirect_param = @request.env['REQUEST_PATH']
                     unless @request.params['jwt'].blank?
-                        redirect Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt'])
+                        redirect Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt']+"&redirect=#{redirect_param}")
                     else
                         #pagina di login con i due link per le due modalità di accesso
-                        redirect Spider::Auth::LoginController.http_s_url
+                        redirect Spider::Auth::LoginController.http_s_url+"?redirect=#{redirect_param}"
                     end
                 else
                     base = (@current_require && @current_require[:redirect]) ? @current_require[:redirect] : Spider::Auth.request_url+'/login/'
