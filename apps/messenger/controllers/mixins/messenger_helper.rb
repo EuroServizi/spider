@@ -61,70 +61,75 @@ module Spider; module Messenger
             path_txt = nil unless path_txt && File.exist?(path_txt)
             path_html = klass.find_resource_path(:email, template+'.html')
             path_html = nil unless path_html && File.exist?(path_html)
+            
+            begin
+                #converte l'intera scene con ricorsione in utf-8 per evitare problemi in invio mail           
+                scene.convert_object
+            rescue Exception => e
+                Spider.logger.error "Impossibile fare convert_object della scene per invio mail."
+            ensure
+                scene_binding = scene.instance_eval{ binding }
+                if (path_txt || path_html)
+                    text = ERB.new( IO.read(path_txt) ).result(scene_binding) if path_txt
+                    html = ERB.new( IO.read(path_html) ).result(scene_binding) if path_html
+                else
+                    path = klass.find_resource_path(:email, template)
+                    text = ERB.new( IO.read(path) ).result(scene_binding)
+                end
 
-            #converte l'intera scene con ricorsione in utf-8 per evitare problemi in invio mail             
-            scene.convert_object
+                mail = Mail.new
+                mail[:to] = to.convert_object 
+                mail[:from] = from.convert_object 
+                mail.charset = "UTF-8"
+                headers.each do |key, value|
+                    mail[key] = value.convert_object 
+                end
 
-            scene_binding = scene.instance_eval{ binding }
-            if (path_txt || path_html)
-                text = ERB.new( IO.read(path_txt) ).result(scene_binding) if path_txt
-                html = ERB.new( IO.read(path_html) ).result(scene_binding) if path_html
-            else
-                path = klass.find_resource_path(:email, template)
-                text = ERB.new( IO.read(path) ).result(scene_binding)
-            end
+                # if html
+                #     mail.html_part do
+                #         content_type 'text/html; charset=UTF-8'
+                #         body html
+                #     end 
+                # end  
+                # if attachments && !attachments.empty?
+                #     mail.text_part do
+                #         body text
+                #     end       
+                # else
+                #     mail.body = text
+                # end
+                #ritornato al vecchio metodo con piu controlli per problema con invio comunicazioni con immagini 5/2/2015
 
-            mail = Mail.new
-            mail[:to] = to.convert_object 
-            mail[:from] = from.convert_object 
-            mail.charset = "UTF-8"
-            headers.each do |key, value|
-                mail[key] = value.convert_object 
-            end
+                if html || text
+                    mail.text_part do
+                        body text
+                    end unless text.blank?
+                    mail.html_part do
+                        content_type 'text/html; charset=UTF-8'
+                        body html
+                    end unless html.blank?
+                else
+                    mail.body = text
+                end
 
-            # if html
-            #     mail.html_part do
-            #         content_type 'text/html; charset=UTF-8'
-            #         body html
-            #     end 
-            # end  
-            # if attachments && !attachments.empty?
-            #     mail.text_part do
-            #         body text
-            #     end       
-            # else
-            #     mail.body = text
-            # end
-            #ritornato al vecchio metodo con piu controlli per problema con invio comunicazioni con immagini 5/2/2015
-
-            if html || text
-                mail.text_part do
-                    body text
-                end unless text.blank?
-                mail.html_part do
-                    content_type 'text/html; charset=UTF-8'
-                    body html
-                end unless html.blank?
-            else
-                mail.body = text
-            end
-
-            if attachments && !attachments.empty?
-                attachments.each do |att|
-                    if att.is_a?(Hash)
-                        #filename = att.delete(:filename)
-                        filename = att[:filename].dup
-                        mime_type = att[:mime_type].dup
-                        content = att[:content].dup
-                        mail.attachments[filename] = { :mime_type => mime_type, :content => content }
-                    else
-                        mail.add_file(att)
+                if attachments && !attachments.empty?
+                    attachments.each do |att|
+                        if att.is_a?(Hash)
+                            #filename = att.delete(:filename)
+                            filename = att[:filename].dup
+                            mime_type = att[:mime_type].dup
+                            content = att[:content].dup
+                            mail.attachments[filename] = { :mime_type => mime_type, :content => content }
+                        else
+                            mail.add_file(att)
+                        end
                     end
                 end
+                mail_headers, mail_body = mail.to_s.split("\r\n\r\n", 2)
+                mail_headers += "\r\n"
+                Messenger.email(from, to, mail_headers, mail_body, params)
             end
-            mail_headers, mail_body = mail.to_s.split("\r\n\r\n", 2)
-            mail_headers += "\r\n"
-            Messenger.email(from, to, mail_headers, mail_body, params)
+            
         end
         
         def sent_email(ticket)

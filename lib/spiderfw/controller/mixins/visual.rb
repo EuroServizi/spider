@@ -355,6 +355,7 @@ module Spider; module ControllerMixins
         end
         
         def send_error_email(exc)
+
             scene = Spider::Scene.new
             scene.request = @request.env
             scene.exception = exc
@@ -366,9 +367,15 @@ module Spider; module ControllerMixins
             end
             headers = {'Subject' => subject}
             from = Spider.conf.get('orgs.default.auto_from_email') || Spider.conf.get('site.tech_admin.email')
-            Spider::Messenger::MessengerHelper.send_email(
-                self.class, 'error', scene, from, Spider.conf.get('site.tech_admin.email'), headers
-            )
+            path_txt = self.class.find_resource_path(:email, 'error.txt')
+            path_txt = nil unless path_txt && File.exist?(path_txt)
+            path_html = self.class.find_resource_path(:email, 'error.html')
+            path_html = nil unless path_html && File.exist?(path_html)
+            if path_txt || path_html
+                Spider::Messenger::MessengerHelper.send_email(
+                    self.class, 'error', scene, from, Spider.conf.get('site.tech_admin.email'), headers
+                )
+            end
         end
         
         def build_backtrace(exc)
