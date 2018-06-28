@@ -102,7 +102,7 @@ module Spider; module Auth
                     # }
                     # token = JWT.encode payload, "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
                     # redir_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
-                    redirect_param = @request.env['REQUEST_PATH']
+                    redirect_param = @request.action || @request.env['REQUEST_URI']
                     unless @request.params['jwt'].blank?
                         redirect Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt']+"&redirect=#{redirect_param}")
                     else
