@@ -1,1 +1,5 @@
-<div></div>
+<div>
+	<p>
+		<strong><div sp:if="!@messaggio_errore.blank?" class="alert alert-error">Applicazione non amministrabile.</div></strong>
+	</p>
+</div>

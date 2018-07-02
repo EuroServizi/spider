@@ -82,8 +82,26 @@ module Spider; module Auth
             
         end
         
+        def get_correct_action(request)
+            redirect_action = request.action || request.env['REQUEST_URI']
+            redirect_param = nil
+            if request.user.nil?
+                redirect_param = request.action || request.env['REQUEST_URI']
+            elsif request.user.is_a?(Portal::Amministratore)
+                #lo mando su /admin
+                redirect_param = "/admin"
+            elsif request.user.is_a?(Cms::Administrator)
+                # admin/cms ?
+                redirect_param = "/admin/cms"
+            else #superuser
+                redirect_param = request.action || request.env['REQUEST_URI']
+            end
+            @request.session.flash['admin_servizi_non_abilitato'] = "non_abilitato" if redirect_action != redirect_param
+            redirect_param
+                    
+        end
+
         def try_rescue(exc)
-            
             if (exc.is_a?(Unauthorized))
                 conf = Spider.conf.get('auth.enable_auth_hub')
                 if conf
@@ -102,7 +120,7 @@ module Spider; module Auth
                     # }
                     # token = JWT.encode payload, "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
                     # redir_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
-                    redirect_param = @request.action || @request.env['REQUEST_URI']
+                    redirect_param = get_correct_action(@request)
                     unless @request.params['jwt'].blank?
                         redirect Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt']+"&redirect=#{redirect_param}")
                     else

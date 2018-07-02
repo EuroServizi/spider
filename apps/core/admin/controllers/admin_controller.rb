@@ -73,6 +73,7 @@ module Spider; module Admin
 
         __.html :template => 'index'
         def index
+            @scene.messaggio_errore = @request.session.flash['admin_servizi_non_abilitato']
         end
         
     end
