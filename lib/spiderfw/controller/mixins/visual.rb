@@ -366,7 +366,7 @@ module Spider; module ControllerMixins
                 subject = "#{@request.env['HTTP_HOST']} - #{subject}" 
             end
             headers = {'Subject' => subject}
-            from = Spider.conf.get('orgs.default.auto_from_email') || Spider.conf.get('site.tech_admin.email')
+            from = Spider.conf.get('portal.email_from') || Spider.conf.get('site.tech_admin.email')
             path_txt = self.class.find_resource_path(:email, 'error.txt')
             path_txt = nil unless path_txt && File.exist?(path_txt)
             path_html = self.class.find_resource_path(:email, 'error.html')
