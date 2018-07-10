@@ -99,7 +99,8 @@ module Spider; module Auth
                     if !hash_jwt[0]['dominio_ente_corrente'].blank? && hash_jwt[0]['dominio_ente_corrente'].split("://").last != @request.env['HTTP_HOST']
                         @request.session.flash['unauthorized_msg'] = "Dominio non valido!"
                         redirect self.class.http_s_url('no_login')
-                    elsif hash_jwt[0]['dominio_ente_corrente'].blank? && hash_jwt[0]['ext_session_id'] != @request.session.sid
+                    #se arrivo da next non ho sessione in ext_session_id, evito questo controllo
+                    elsif hash_jwt[0]['dominio_ente_corrente'].blank? && !hash_jwt[0]['ext_session_id'].blank? && hash_jwt[0]['ext_session_id'] != @request.session.sid
                         @request.session.flash['unauthorized_msg'] = "Sessione non valida!"
                         redirect self.class.http_s_url('no_login')
                     elsif !hash_jwt[0]['user']['admin'] && !hash_jwt[0]['user']['admin_servizi']
