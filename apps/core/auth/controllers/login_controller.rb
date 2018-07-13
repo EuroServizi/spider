@@ -96,10 +96,11 @@ module Spider; module Auth
                 begin
                     hash_jwt = JWT.decode @request.params['jwt'], "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
                     #se la sessione non corrisponde non mostro la login. Tolto http o https dall'url
-                    if hash_jwt[0]['dominio_ente_corrente'].split("://").last != @request.env['HTTP_HOST']
+                    if !hash_jwt[0]['dominio_ente_corrente'].blank? && hash_jwt[0]['dominio_ente_corrente'].split("://").last != @request.env['HTTP_HOST']
                         @request.session.flash['unauthorized_msg'] = "Dominio non valido!"
                         redirect self.class.http_s_url('no_login')
-                    elsif hash_jwt[0]['dominio_ente_corrente'].blank? && hash_jwt[0]['ext_session_id'] != @request.session.sid
+                    #se arrivo da next non ho sessione in ext_session_id, evito questo controllo
+                    elsif hash_jwt[0]['dominio_ente_corrente'].blank? && !hash_jwt[0]['ext_session_id'].blank? && hash_jwt[0]['ext_session_id'] != @request.session.sid
                         @request.session.flash['unauthorized_msg'] = "Sessione non valida!"
                         redirect self.class.http_s_url('no_login')
                     elsif !hash_jwt[0]['user']['admin'] && !hash_jwt[0]['user']['admin_servizi']
