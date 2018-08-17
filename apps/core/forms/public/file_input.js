@@ -9,8 +9,8 @@ Spider.defineWidget('Spider.Forms.FileInput', 'Spider.Forms.Input', {
 			var changeLabel = $('.change-label', this.el.parent()).text();
 			var changeDiv = $('.change', this.el.parent());
 			changeDiv.hide();
-			clearCheckBox = $('.clear input:checkbox', this.el.parent());
-			fileInput = $('.change input', this.el.parent());
+			var clearCheckBox = $('.clear input:checkbox', this.el.parent());
+			var fileInput = $('.change input', this.el.parent());
 			
 			var link = $('<a href="#" class="js-change-link"/>');
 			link.text(changeLabel+'...').insertAfter(fileLink).click(function(e){
