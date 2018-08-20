@@ -84,7 +84,7 @@ module Spider; module CASServer::CAS
       #caso utente con accesso federa
       chiave_utente = username.strip.gsub('federa_emilia_romagana','')
       chiave_utente_maiuscolo = chiave_utente.upcase
-      utente_federa = UtenteFederaEmiliaRomagna.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
+      utente_federa = Portal::UtenteFederaEmiliaRomagna.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
       utente_portale = utente_federa.utente_portale
       #salvo la traccia sulla tabella del portale
       unless utente_portale.blank?
