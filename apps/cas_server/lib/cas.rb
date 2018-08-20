@@ -86,10 +86,10 @@ module Spider; module CASServer::CAS
       chiave_utente = username.strip.gsub('federa_emilia_romagana','')
       chiave_utente_maiuscolo = chiave_utente.upcase
       utente_federa = Portal::UtenteFederaEmiliaRomagna.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
-      utente_portale = utente_federa.utente_portale
+      utente_portale = utente_federa.last.utente_portale
       #salvo la traccia sulla tabella del portale
       unless utente_portale.blank?
-        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale.last , { 'servizio' => service, 'provider_accesso' => 'Federa Emilia Romagna' }.to_json , nil , 'cas', 'Accesso servizio esterno') 
+        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale , { 'servizio' => service, 'provider_accesso' => 'Federa Emilia Romagna' }.to_json , nil , 'cas', 'Accesso servizio esterno') 
       end
       
     elsif (username.strip =~ /^spid/) == 0
@@ -98,9 +98,9 @@ module Spider; module CASServer::CAS
       chiave_utente = username.strip.gsub('spid','')
       chiave_utente_maiuscolo = chiave_utente.upcase
       utente_spid = UtenteSpidAgid.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
-      utente_portale = utente_spid.utente_portale
+      utente_portale = utente_spid.last.utente_portale
       unless utente_portale.blank?
-        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale.last , { 'servizio' => service, 'provider_accesso' => 'SPID' }.to_json , nil , 'cas', 'Accesso servizio esterno')
+        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale , { 'servizio' => service, 'provider_accesso' => 'SPID' }.to_json , nil , 'cas', 'Accesso servizio esterno')
       end
       
     else
@@ -108,7 +108,7 @@ module Spider; module CASServer::CAS
       #utente con auth interna
       #controllo che non abbia uno degli altri auth_provider esterni
       username_utente = utente.strip
-      utente_portale = Portal::Utente.where{|ut| ut.utente_login.username == 'username_utente'}
+      utente_portale = Portal::Utente.where{|ut| ut.utente_login.username == username_utente}
       #cerco l'username in utente_login
       unless utente_portale.blank?
         Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale.last , { 'servizio' => service, 'provider_accesso' => 'Autenticazione interna' }.to_json , nil , 'cas', 'Accesso servizio esterno')
