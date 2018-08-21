@@ -79,7 +79,7 @@ module Spider; module CASServer::CAS
     st.client_hostname = @request.env['HTTP_X_FORWARDED_FOR'] || @request.env['REMOTE_HOST'] || @request.env['REMOTE_ADDR']
     st.save
 
-    servizio = CGI::parse(service.split('?')[1])['servizio'] unless service.blank?
+    servizio = CGI::parse(service.split('?')[1])['servizio'].to_s unless service.blank?
 
     #vedo se l'username viene da federa, ricavo il cf che uso per cercare l'id dell'utente portale
     if (username.strip =~ /^federa_emilia_/) == 0
