@@ -91,7 +91,7 @@ module Spider; module CASServer::CAS
       utente_portale = utente_federa.last.utente_portale
       #salvo la traccia sulla tabella del portale
       unless utente_portale.blank?
-        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale , { 'servizio' => servizio, 'provider_accesso' => 'Federa Emilia Romagna' }.to_json , nil , 'cas', 'Accesso servizio esterno') 
+        Portal::Traccia.salva_traccia(st.client_hostname, "servizio #{servizio}", utente_portale , { 'provider_accesso' => 'Federa Emilia Romagna' }.to_json , nil , 'cas', '') 
       end
       
     elsif (username.strip =~ /^spid/) == 0
@@ -102,7 +102,7 @@ module Spider; module CASServer::CAS
       utente_spid = UtenteSpidAgid.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
       utente_portale = utente_spid.last.utente_portale
       unless utente_portale.blank?
-        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale , { 'servizio' => servizio, 'provider_accesso' => 'SPID' }.to_json , nil , 'cas', 'Accesso servizio esterno')
+        Portal::Traccia.salva_traccia(st.client_hostname, "servizio #{servizio}", utente_portale , { 'provider_accesso' => 'SPID' }.to_json , nil , 'cas', '')
       end
       
     else
@@ -113,7 +113,7 @@ module Spider; module CASServer::CAS
       utente_portale = Portal::Utente.where{|ut| ut.utente_login.username == username_utente}
       #cerco l'username in utente_login
       unless utente_portale.blank?
-        Portal::Traccia.salva_traccia(st.client_hostname, 'accesso tramite cas', utente_portale.last , { 'servizio' => servizio, 'provider_accesso' => 'Autenticazione interna' }.to_json , nil , 'cas', 'Accesso servizio esterno')
+        Portal::Traccia.salva_traccia(st.client_hostname, "servizio #{servizio}", utente_portale.last , { 'provider_accesso' => 'Autenticazione interna' }.to_json , nil , 'cas', '')
       else
         #altro accesso...non fatto
       end
