@@ -109,7 +109,7 @@ module Spider; module CASServer::CAS
       $LOG.debug("Entrato con auth interna")
       #utente con auth interna
       #controllo che non abbia uno degli altri auth_provider esterni
-      username_utente = utente.strip
+      username_utente = username.strip
       utente_portale = Portal::Utente.where{|ut| ut.utente_login.username == username_utente}
       #cerco l'username in utente_login
       unless utente_portale.blank?
