@@ -44,7 +44,7 @@ module Spider
 
             @content[:yield_to] = @template
             #se sono nel layout del portale ho il :single_layout, se sono in un layout di un app faccio scaricare gli assets solo se ho single_layout a true
-            if  !/(admin|login|error|portal|simple|generic|cms|stampa|auth_box|missioni)/.match(cname).blank? || self.single_layout 
+            if  !/(admin|login|error|portal|simple|generic|cms|stampa|auth_box|missioni|prisma)/.match(cname).blank? || self.single_layout 
                 all_assets.each do |ass|
                     seen_check = ass[:runtime] || ass[:src]
                     next if ass[:src].blank? && !ass[:runtime]
@@ -494,7 +494,7 @@ module Spider
         
         def output_assets(type=nil, options={})
             types = type ? [type] : self.assets.keys
-            if types.include?(:js)
+            if types.include?(:js) && !self.assets.blank?
                 self.assets[:js].each do |ass|
                     ass = {:src => ass} if ass.is_a?(String)
                     src = ass[:src]
@@ -512,7 +512,7 @@ module Spider
                     $out << "</script>"
                 end
             end
-            if types.include?(:css)
+            if types.include?(:css) && !self.assets.blank?
                 self.assets[:css].each do |ass|
                     ass = {:src => ass} if ass.is_a?(String)
                     rel = ass[:rel] || 'stylesheet'
