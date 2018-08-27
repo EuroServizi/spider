@@ -344,7 +344,7 @@ module Spider; module ControllerMixins
             @scene.__is_error_page = true
             unless exc.is_a?(Spider::Controller::NotFound)
                 #non mando la mail anche se nel messaggio compare "Broken pipe"
-                if Spider.const_defined?(:Messenger) && Spider.conf.get('errors.send_email') && Spider.conf.get('site.tech_admin.email') && !exc.message.include?('Broken pipe')
+                if Spider.const_defined?(:Messenger) && Spider.conf.get('errors.send_email') && Spider.conf.get('site.tech_admin.email') && !exc.message.include?('Broken pipe') && !exc.message.include?('Pipe rotta')
                     begin
                         send_error_email(exc)
                     rescue => exc2
