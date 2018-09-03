@@ -87,10 +87,10 @@ module Spider; module Auth
             redirect_param = nil
             if request.user.nil?
                 redirect_param = request.action || request.env['REQUEST_URI']
-            elsif request.user.is_a?(Portal::Amministratore)
+            elsif request.user.is_a?(::Portal::Amministratore)
                 #lo mando su /admin
                 redirect_param = "/admin"
-            elsif request.user.is_a?(Cms::Administrator)
+            elsif request.user.is_a?(::Cms::Administrator)
                 # admin/cms ?
                 redirect_param = "/admin/cms"
             else #superuser

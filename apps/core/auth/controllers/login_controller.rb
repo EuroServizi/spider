@@ -118,7 +118,7 @@ module Spider; module Auth
                         elsif auth_user['admin_servizi']
                             
                             #DEVO CERCARE UN ADMIN SERVIZI SU TABELLE LOCALI, uso auth_user['email'] come valore per il campo start_user
-                            user = Portal::Amministratore.load(:start_user => auth_user['email'])
+                            user = ::Portal::Amministratore.load(:start_user => auth_user['email'])
                             unless user.blank?
                                 #admin servizi per portal
                                 #metto in sessione l'username per ripristinarlo poi

@@ -117,7 +117,7 @@ module Spider; module CASServer
             #Aggiungo attributo extra spid code se autenticato con SPID
             if (!@request.session[:auth].blank? && !@request.session[:auth]["Portal::UtenteSpidAgid"].blank?)
                 spid_id = @request.session[:auth]["Portal::UtenteSpidAgid"][:id]
-                user_agid = Portal::UtenteSpidAgid.load(:id => spid_id)
+                user_agid = ::Portal::UtenteSpidAgid.load(:id => spid_id)
                 unless user_agid.blank?
                     spid_code = user_agid.spid_code
                     extra_attributes[:spid_code] = spid_code
