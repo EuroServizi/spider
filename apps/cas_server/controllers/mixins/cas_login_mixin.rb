@@ -28,6 +28,7 @@ module Spider; module CASServer
 
         def before(action='', *arguments)
             is_saml = false
+            $LOG.debug("\n\n Parametri CAS su metodo before #{@request.params.inspect} \n\n")
             if @request.params['service']
                 @service = clean_service_url(@request.params['service'])
             elsif Spider.conf.get('cas.saml1_1_compatible') && @request.params['TARGET']
@@ -103,6 +104,7 @@ module Spider; module CASServer
             end
             user = super
             return nil unless user
+            $LOG.debug("\n\n Method authenticate con Service #{@service}")
             if @service && !@service.empty? && !cas_service_allowed?(@service, user)
                 @scene.message = {:type => 'error', :message => _("The user is not allowed to acces this service.")}
                 return nil
@@ -137,7 +139,10 @@ module Spider; module CASServer
             else
                 @response.cookies['tgt'] = tgt.to_s
             end
-            $LOG.debug("Ticket granting cookie '#{@response.cookies[:tgt].inspect}' granted to '#{user.identifier.inspect}'. #{expiry_info}")
+            
+            $LOG.debug("\n\n Ticket granting cookie '#{@response.cookies[:tgt].inspect}' granted to '#{user.identifier.inspect}'. #{expiry_info}")
+            $LOG.debug("\n\n Service #{ @service}")
+
             if @service.nil? || @service.empty?
                 $LOG.info("Successfully authenticated user '#{user.identifier}' at '#{tgt.client_hostname}'. No service param was given, so we will not redirect.")
                 @scene.cas_message = {:type => 'confirmation', :message => _("You have successfully logged in.")}
@@ -159,6 +164,7 @@ module Spider; module CASServer
         __.html
         def login
             @service = clean_service_url(@request.params['service'] || @request.params['destination'])
+            $LOG.debug("\n\n Login with service #{@service} for user '#{@request.user}'")
             if @request.user && !@request.params.key?('renew')
                 if !@service || @service.empty? || cas_service_allowed?(@service, @request.user)
                     return cas_user_authenticated(@request.user)
@@ -261,6 +267,7 @@ module Spider; module CASServer
         def validate
             @service = clean_service_url(@request.params['service'])
             @ticket = @request.params['ticket']
+            $LOG.debug("\n\n Method Validate: service #{@service} and ticket #{@ticket}")
             # optional
             @renew = @request.params['renew']
 
@@ -386,10 +393,10 @@ module Spider; module CASServer
         end
 
         def service_validate
-
             # required
             @service = clean_service_url(@request.params['service'])
             @ticket = @request.params['ticket']
+            $LOG.debug("\n\n Method Service Validate: service #{@service} for user '#{@ticket}'")
             # optional
             @pgt_url = @request.params['pgtUrl']
             @renew = @request.params['renew']
@@ -432,10 +439,10 @@ module Spider; module CASServer
 
         __.xml
         def proxy_validate
-
             # required
             @service = clean_service_url(@request.params['service'])
             @ticket = @request.params['ticket']
+            $LOG.debug("\n\n Method Proxy Validate: service #{@service}, ticket #{@ticket}")
             # optional
             @pgt_url = @request.params['pgtUrl']
             @renew = @request.params['renew']
@@ -494,10 +501,10 @@ module Spider; module CASServer
 
         __.xml
         def proxy
-
             # required
             @ticket = @request.params['pgt']
             @target_service = @request.params['targetService']
+            $LOG.debug("\n\n Method Proxy: target service #{@target_service}, ticket #{@ticket}")
 
             pgt, @error = validate_proxy_granting_ticket(@ticket)
             @success = pgt && !@error
