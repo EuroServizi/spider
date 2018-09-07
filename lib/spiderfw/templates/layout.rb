@@ -59,7 +59,10 @@ module Spider
                     assets[:js] += res[:js]
 
                 end
-                #ordino gli assets in base al parametro order
+                #ordino gli assets in base al parametro order 
+                #DA FARE: controllare per ruby 2.4 il sort_by che cambia ordine dei css da caricare
+                # require 'byebug'
+                # debugger
                 assets[:css] = assets[:css].sort_by { |hsh| hsh[:order].to_i }
                 assets[:js] = assets[:js].sort_by { |hsh| hsh[:order].to_i }
                 
