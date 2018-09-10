@@ -80,8 +80,11 @@ module Spider; module CASServer::CAS
     st.save
 
     unless service.blank?
-      servizio = CGI::parse(service.split('?')[1])['servizio']
-      servizio = servizio.first unless servizio.blank?
+      service_and_params = service.split('?')
+      if service_and_params.length > 1
+        servizio = CGI::parse(service_and_params[1])['servizio']
+        servizio = servizio.first unless servizio.blank?
+      end
     end
 
     #vedo se l'username viene da federa, ricavo il cf che uso per cercare l'id dell'utente portale
