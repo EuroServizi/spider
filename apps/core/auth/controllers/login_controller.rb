@@ -111,15 +111,16 @@ module Spider; module Auth
                         auth_user = hash_jwt[0]['user']
                         @request.session[:auth]= {}
                         if auth_user['admin']
+                            Spider.logger.debug "\n\n Login come admin PORTALE/CMS da auth_hub \n"
                             user = Spider::Auth::SuperUser.new
                             user.id = 9999999
                             #metto in sessione l'username per ripristinarlo poi
                             @request.session[:auth]['username_from_auth_hub'] = hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome']
                         elsif auth_user['admin_servizi']
-                            
                             #DEVO CERCARE UN ADMIN SERVIZI SU TABELLE LOCALI, uso auth_user['email'] come valore per il campo start_user
                             user = ::Portal::Amministratore.load(:start_user => auth_user['email'])
                             unless user.blank?
+                                Spider.logger.debug "\n\n Login come admin SERVIZI PER PORTAL da auth_hub \n"
                                 #admin servizi per portal
                                 #metto in sessione l'username per ripristinarlo poi
                                 @request.session[:auth]['username_from_auth_hub'] = hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome']
@@ -127,16 +128,19 @@ module Spider; module Auth
                                 #cerco negli admin del cms
                                 user = Cms::Administrator.load(:start_user => auth_user['email'])
                                 unless user.blank?
+                                    Spider.logger.debug "\n\n Login come admin SERVIZI PER CMS da auth_hub \n"
                                     #admin servizi per cms
                                     #metto in sessione l'username per ripristinarlo poi
                                     @request.session[:auth]['username_from_auth_hub'] = hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome']
                                 else
+                                    Spider.logger.debug "\n\n ADMIN NON TROVATO \n"
                                     #Non ho trovato l'admin servizi ne tra il portal ne tra il cms
                                     @request.session.flash['unauthorized_msg'] = "Utente #{auth_user['email']} non trovato!"
                                     redirect self.class.http_s_url('no_login')
                                 end
                             end
                         else
+                            Spider.logger.debug "\n\n Login come UTENTE NON ADMIN: NON SVILUPPATO! \n"
                             #utente normale, logout
                         end
                     end
