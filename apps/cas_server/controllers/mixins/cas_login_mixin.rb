@@ -238,7 +238,11 @@ module Spider; module CASServer
                     rescue Exception => exc
                         TicketGrantingTicket.storage.rollback
                         $LOG.error "** Errore logout cas"
-
+                        messaggio_log = exc.message
+                        exc.backtrace.each{|riga_errore| 
+                            messaggio_log += "\n\r#{riga_errore}" 
+                        } 
+                        $LOG.error messaggio_log
                     end
 
                 }
@@ -252,6 +256,11 @@ module Spider; module CASServer
                 rescue Exception => exc
                     TicketGrantingTicket.storage.rollback
                     Spider.logger.error "** Errore logout cas"
+                    messaggio_log = exc.message
+                    exc.backtrace.each{|riga_errore| 
+                        messaggio_log += "\n\r#{riga_errore}" 
+                    } 
+                    $LOG.error messaggio_log
                 end
                 @request.cookies['tgt'] = nil
 
