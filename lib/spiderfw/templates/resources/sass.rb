@@ -2,7 +2,7 @@ require 'sass/plugin/configuration'
 require 'sass/plugin'
 
 require 'sass'
-require 'byebug'
+#require 'byebug'
 require 'sassc' unless Spider.conf.get('css.sass.use_compass')
 
 
