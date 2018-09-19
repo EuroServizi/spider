@@ -216,7 +216,7 @@ module Spider
             if @no_asset_profiles
                 assets = assets.select{ |ass| !ass[:profiles] || (ass[:profiles] & @no_asset_profiles).empty? }
             end
-            assets
+            assets.uniq #aggiunto uniq per togliere asset doppi
         end
         
         COMPILED_FOLDER = '_c'
