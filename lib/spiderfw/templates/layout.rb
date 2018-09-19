@@ -64,8 +64,7 @@ module Spider
                 # require 'byebug'
                 # debugger
                 assets[:css] = assets[:css].sort_by { |hsh| hsh[:order].to_i }
-                assets[:js] = assets[:js].sort_by { |hsh| hsh[:order].to_i }
-                
+                #assets[:js] = assets[:js].sort_by { |hsh| hsh[:order].to_i } non serve e fa casini
                 if @compile_less == false
                     less = Spider::Template.get_named_asset('less')
                     less.each do |ass|
