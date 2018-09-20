@@ -30,20 +30,26 @@ Spider::Template.define_named_asset 'spider-utils', [
     [:js, 'js/utils.js', Spider::Components, {:gettext => true}]
 ], :depends => ['spider']
 
+
+
 # jQuery UI
 
 Spider::Template.define_runtime_asset 'jquery-ui-datepicker-locale' do |request, response, scene|
-    Spider::Components.pub_url+"/js/jquery/jquery-ui-1.9.2/ui/i18n/jquery.ui.datepicker-#{request.locale.language}-min.js"
+        Spider::Components.pub_url+"/js/jquery/jquery-ui-1.9.2/ui/i18n/jquery.ui.datepicker-#{request.locale.language}-min.js"
+    end
+
+if Spider.conf.get('assets.speedup_devel') == true
+    Spider::Template.define_named_asset 'jquery-ui', [
+        [:js, 'js/jquery/jquery-ui-1.9.2/ui/jquery.ui.all.min.js', Spider::Components, {:compressed => true}] #versione compilata, unico file
+    ], :depends => ['jquery']
+else
+    Spider::Template.define_named_asset 'jquery-ui', [
+    ], :depends => ['jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-resizable', 
+        'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-menu', 'jquery-ui-autocomplete', 
+        'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-slider', 'jquery-ui-tabs', 'jquery-ui-datepicker', 
+        'jquery-ui-progressbar', 'jquery-effects']
+
 end
-
-Spider::Template.define_named_asset 'jquery-ui', [
-], :depends => ['jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-resizable', 
-    'jquery-ui-selectable', 'jquery-ui-sortable', 'jquery-ui-accordion', 'jquery-ui-menu', 'jquery-ui-autocomplete', 
-    'jquery-ui-button', 'jquery-ui-dialog', 'jquery-ui-slider', 'jquery-ui-tabs', 'jquery-ui-datepicker', 
-    'jquery-ui-progressbar', 'jquery-effects']
-
-
-
 
 Spider::Template.define_named_asset 'jquery-ui-core', [
     [:js, 'js/jquery/jquery-ui-1.9.2/ui/jquery.ui.core.js', Spider::Components],
@@ -135,6 +141,7 @@ Spider::Template.define_named_asset 'jquery-effects', [
     [:js, 'js/jquery/jquery-ui-1.9.2/ui/jquery.ui.effect-transfer.js', Spider::Components]
 ], :depends => ['jquery-ui-core']
 
+
 # jQuery Tools (http://flowplayer.org/tools/)
 
 Spider::Template.define_named_asset 'jquery-tools-overlay', [
@@ -171,23 +178,25 @@ Spider::Template.define_named_asset 'bootstrap-sass', [
     [:css, 'bootstrap/scss/bootstrap.scss', Spider::Components]
 ]
 
-#versione compilata, da usare per velocizzare sviluppo in devel
-Spider::Template.define_named_asset 'bootstrap-css-compiled', [
-    [:css, 'bootstrap/scss/bootstrap.css', Spider::Components]
-]
 
-Spider::Template.define_named_asset 'bootstrap-2-js', [
-    [:js, 'bootstrap/js/bootstrap-alert.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-button.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-dropdown.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-modal.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-tooltip.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-popover.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-scrollspy.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-tab.js', Spider::Components],
-    [:js, 'bootstrap/js/bootstrap-transition.js', Spider::Components]
-    
-]
+if Spider.conf.get('assets.speedup_devel') == true
+    Spider::Template.define_named_asset 'bootstrap-2-js', [
+        [:js, 'bootstrap/js/bootstrap.all.js', Spider::Components]
+    ]
+else
+    Spider::Template.define_named_asset 'bootstrap-2-js', [
+        [:js, 'bootstrap/js/bootstrap-alert.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-button.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-dropdown.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-modal.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-tooltip.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-popover.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-scrollspy.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-tab.js', Spider::Components],
+        [:js, 'bootstrap/js/bootstrap-transition.js', Spider::Components]
+        
+    ]
+end
 
 Spider::Template.define_named_asset 'bootstrap-alerts', [
     [:js, 'bootstrap/js/bootstrap-alert.js', Spider::Components]
