@@ -171,6 +171,11 @@ Spider::Template.define_named_asset 'bootstrap-sass', [
     [:css, 'bootstrap/scss/bootstrap.scss', Spider::Components]
 ]
 
+#versione compilata, da usare per velocizzare sviluppo in devel
+Spider::Template.define_named_asset 'bootstrap-css-compiled', [
+    [:css, 'bootstrap/scss/bootstrap.css', Spider::Components]
+]
+
 Spider::Template.define_named_asset 'bootstrap-2-js', [
     [:js, 'bootstrap/js/bootstrap-alert.js', Spider::Components],
     [:js, 'bootstrap/js/bootstrap-button.js', Spider::Components],
@@ -359,3 +364,24 @@ Spider::Template.define_named_asset 'bootbox_2', [
 Spider::Template.define_named_asset 'bootbox_4', [
     [:js, 'js/bootbox_4/bootbox_4_4.js', Spider::Components]
 ]
+
+#Se uso compass uso admin.scss, se uso Sassc devo usare una versione di admin.scss senza compass
+if Spider.conf.get('css.sass.use_compass') == true
+    Spider::Template.define_named_asset 'admin', [
+        [:css, 'sass/admin.scss', Spider::Components]
+    ]
+else
+    Spider::Template.define_named_asset 'admin', [
+        [:css, 'sass/admin_sassc.scss', Spider::Components]
+    ]
+end
+
+if Spider.conf.get('assets.speedup_devel') == true
+    Spider::Template.define_named_asset 'bootstrap-sass', [
+        [:css, 'bootstrap/scss/bootstrap.css', Spider::Components] #versione compilata, unico file
+    ]
+else
+    Spider::Template.define_named_asset 'bootstrap-sass', [
+        [:css, 'bootstrap/scss/bootstrap.scss', Spider::Components]
+    ]
+end

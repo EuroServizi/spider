@@ -189,6 +189,8 @@ module Spider
         :default => :soft, :choices => [false, :soft, :hard, :hardcopy]
     config_option 'assets.use_cdn', _("Use a Content Delivery Network for assets if defined"), :type => Spider::Bool,
         :default => Proc.new{ Spider.runmode == 'production' ? true : false }
+
+    config_option 'assets.speedup_devel', "Permette di usare la versione compilata di librerie o plugin", :type => Spider::DataTypes::Bool, :default => true
     
     config_option 'http_proxy', _("Proxy to use for http clients (http://user:pass@host:port)"), :type => String,
         :do => Proc.new{ |val| ENV['http_proxy'] = val }

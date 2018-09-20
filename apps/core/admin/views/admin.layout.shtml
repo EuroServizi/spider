@@ -4,10 +4,11 @@
     <tpl:asset name="tidy_html5" compressed="true"/>
     <tpl:asset name="tinymce_js" />
     <tpl:asset name="bootstrap-3-dropdown" /> <!-- per paginatore -->
+
     <tpl:asset name="bootstrap-sass" />
 
     <tpl:asset name="tinymce_css" />
-    <tpl:asset type="css" src="sass/admin.scss" />
+    <tpl:asset name="admin" />
 
     <head>
         <title>_(Administration)
