@@ -145,7 +145,8 @@ module Spider
                             end
                             dst_dir = File.join(pub_dest, start)
                             unless File.dirname(start) == '.' || File.directory?(File.dirname(dst_dir))
-                                FileUtils.mkdir_p(File.join(pub_dest, File.dirname(dst_dir)))
+                                #FileUtils.mkdir_p(File.join(pub_dest, File.dirname(dst_dir))) duplica il path dove salvare il file
+                                FileUtils.mkdir_p(dst_dir)
                             end
                             unless File.directory?(dst_dir)
                                 FileUtils.cp_r(File.join(ass[:app].pub_path, start), dst_dir)
