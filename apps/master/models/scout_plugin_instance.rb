@@ -9,8 +9,8 @@ module Spider; module Master
         element :name, String
         element :server, Server, :add_multiple_reverse => :scout_plugins
         element :settings_json, Text
-        element :timeout, Fixnum, :default => 60
-        element :poll_interval, Fixnum, :default => 0
+        element :timeout, Integer, :default => 60
+        element :poll_interval, Integer, :default => 0
         many :triggers, ScoutPluginTrigger, :add_reverse => :plugin_instance, :delete_cascade => true
         multiple_choice :admins, Master::Admin, :add_multiple_reverse => :plugin_instances do
             element :receive_notifications, Bool, :default => true

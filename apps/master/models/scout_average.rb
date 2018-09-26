@@ -16,7 +16,7 @@ module Spider; module Master
         element :stdev, Decimal
         element :high, Decimal
         element :low, Decimal
-        element :cnt, Fixnum
+        element :cnt, Integer
         
     end
     

@@ -722,7 +722,7 @@ module Spider; module Model
 
         # Does a count query on the storage for given condition
         # @param [Condition]
-        # @return [Fixnum]
+        # @return [Integer]
         def count(condition)
             query = Query.new(condition)
             result = fetch(query)
@@ -828,7 +828,7 @@ module Spider; module Model
                 type = type.maps_back_to
             end
             case type.name
-            when 'Fixnum'
+            when 'Integer'
                 return value ? value.to_i : nil
             when 'Float'
                 return value ? value.to_f : nil
@@ -1029,7 +1029,7 @@ module Spider; module Model
             end
             @model.elements_array.select{ |el| el.attributes[:order] }.sort{ |a, b| 
                 a_order = a.attributes[:order]; b_order = b.attributes[:order]
-                (a_order.is_a?(Fixnum) ? a_order : 100) <=> (b_order.is_a?(Fixnum) ? b_order : 100)
+                (a_order.is_a?(Integer) ? a_order : 100) <=> (b_order.is_a?(Integer) ? b_order : 100)
             }.each{ |order_el| query.order_by(order_el.name) }
             query = @model.prepare_query(query)
             prepare_query_request(query.request, obj)
@@ -1317,7 +1317,7 @@ module Spider; module Model
         # @abstract
         # @param [Element|Symbol] element
         # @param [Condition]
-        # @return [Fixnum] The max value for an element   
+        # @return [Integer] The max value for an element   
         def max(element, condition=nil)
             raise "Unimplemented"
         end

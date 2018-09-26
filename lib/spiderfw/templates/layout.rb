@@ -138,7 +138,7 @@ module Spider
                         dir = File.dirname(ass[:compressed_rel_path])
                         if ass[:copy_dir] # Copies the source dir (which may contain resources used by the assets)
                             start = dir
-                            if ass[:copy_dir].is_a?(Fixnum) # How many levels to go up
+                            if ass[:copy_dir].is_a?(Integer) # How many levels to go up
                                 ass[:copy_dir].downto(0) do |i|
                                     start = File.dirname(start)
                                 end

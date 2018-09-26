@@ -186,7 +186,7 @@ module Spider; module Model
         # :add_multiple_reverse::     (symbol) Adds a multiple element on the other model, and sets it as the association reverse.
         # :element_position::         (number) inserts the element at the specified position in the elements order
         # :auto::                     (bool) Informative: the value is set automatically through some mechanism
-        # :autoincrement::            (bool) The value (which must be a Fixnum) will be autoincremented by the mapper 
+        # :autoincrement::            (bool) The value (which must be a Integer) will be autoincremented by the mapper 
         # :integrate::                (bool or symbol) type's elements will be available to this class
         #                             as if they were defined here (see #integrate)
         # :integrated_from::          (symbol) the name of the element from which this element is integrated
@@ -202,13 +202,13 @@ module Spider; module Model
         # :read_only::                (bool) hint to the UI that the element should not be user modifiable.
         # :owned::                    (bool) only this model holds references to type
         # :condition::                (hash or Condition) Restricts an association always adding the condition.
-        # :order::                    (true or Fixnum) When doing queries, sort by this element. More than one element can have the
-        #                             :order attribute; if it is a Fixnum, it will mean the position in the ordering.
+        # :order::                    (true or Integer) When doing queries, sort by this element. More than one element can have the
+        #                             :order attribute; if it is a Integer, it will mean the position in the ordering.
         # :default::                  (Proc or value) default value for the element. If it is a Proc, it will be passed
         #                             the object.
-        # :desc::                     (true or Fixnum) Use this element for the to_s string. Multiple elements
+        # :desc::                     (true or Integer) Use this element for the to_s string. Multiple elements
         #                             with the :desc attribute will be joined by spaces; order may be specified if 
-        #                             a Fixnum is used for the parameter
+        #                             a Integer is used for the parameter
         # 
         # Other attributes may be used by DataTypes (see #DataType::ClassMethods.take_attributes), and other code.
         # See also Element.
@@ -852,7 +852,7 @@ module Spider; module Model
             unless (params[:no_local_pk] || !elements_array.select{ |el| el.attributes[:local_pk] }.empty?)
                 # FIXME: check if :id is already defined
                 pk_name = @elements[:id] ? :"id_#{self.short_name.downcase}" : :id
-                element(pk_name, Fixnum, :autoincrement => true, :local_pk => true, :hidden => true)
+                element(pk_name, Integer, :autoincrement => true, :local_pk => true, :hidden => true)
             end
             model.polymorphic(self, :through => integrated_name)
         end
@@ -1629,7 +1629,7 @@ module Spider; module Model
                 when 'String'
                 when 'Spider::DataTypes::Text'
                     value = value.to_s
-                when 'Fixnum', 'Spider::DataTypes::PK'
+                when 'Integer', 'Spider::DataTypes::PK'
                     value = value.to_i
                 end
             end
@@ -2511,7 +2511,7 @@ module Spider; module Model
         # Arguments can be:
         # * a String, followed by a list of elements; the String will be sprintf'd with element values
         # or
-        # * a depth Fixnum; depth 0 means obj.to_s will be returned, depth 1 will return an hash containing the
+        # * a depth Integer; depth 0 means obj.to_s will be returned, depth 1 will return an hash containing the
         #   object's element values converted to string, and so on
         # or
         # * a Hash, whith element names as keys, and depths, or Hashes, or Procs as values; each element
@@ -2544,7 +2544,7 @@ module Spider; module Model
             h = {}
             if (params[0].is_a?(String))
                 return sprintf(params[0], *params[1..-1].map{ |el| get(el) })
-            elsif (params[0].is_a?(Fixnum))
+            elsif (params[0].is_a?(Integer))
                 p = params.shift
                 if (p < 1)
                     if (block_given?)

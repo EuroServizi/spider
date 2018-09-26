@@ -115,7 +115,7 @@ module Spider; module Model; module Storage; module Document
                     value = value.to_datetime
                 end
                 return value
-            elsif type.name == 'Fixnum'
+            elsif type.name == 'Integer'
                 return value.to_i
             end
             return super

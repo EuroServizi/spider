@@ -3,10 +3,10 @@ require 'apps/soap/_init.rb'
 module SoapTest
     
     class SoapTestController < Spider::SoapController
-        SumResponse = SoapStruct(:a => Finxum, :b => Fixnum, :res => Fixnum)
+        SumResponse = SoapStruct(:a => Finxum, :b => Integer, :res => Integer)
         FloatArray = SoapArray(Float)
         
-        soap :sum, :in => [[:a, Fixnum], [:b, Fixnum]], :return => SumResponse
+        soap :sum, :in => [[:a, Integer], [:b, Integer]], :return => SumResponse
         soap :random, :return => FloatArray
         
         def sum(a, b)

@@ -5,7 +5,7 @@ module Spider; module Model
     # The main superclass of non-legacy models.
     # Extends the BaseModel providing an autoincrementing id and creation/modification timestamps.
     # Defines the following elements:
-    #   element :id, Fixnum, :primary_key => true,:autoincrement => true, :read_only => true, :element_position => 0}
+    #   element :id, Integer, :primary_key => true,:autoincrement => true, :read_only => true, :element_position => 0}
     #   element :obj_created, DateTime, :hidden => true
     #   element :obj_modified, DateTime, :hidden => true
     # 

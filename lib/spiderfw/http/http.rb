@@ -340,7 +340,7 @@ module Spider
         # ==== Parameters
         # request<IO>:: The raw request.
         # boundary<String>:: The boundary string.
-        # content_length<Fixnum>:: The length of the content.
+        # content_length<Integer>:: The length of the content.
         #
         # ==== Raises
         # ControllerExceptions::MultiPartParseError:: Failed to parse request.

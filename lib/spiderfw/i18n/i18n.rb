@@ -75,7 +75,7 @@ module Spider
                      :use_delimiter => true
                  }).merge(options)
                  unless precision
-                     precision = object.class <= Fixnum ? 0 : 2
+                     precision = object.class <= Integer ? 0 : 2
                  end
                 #rounded_number = (Float(object) * (10 ** precision)).round.to_f / 10 ** precision
                 rounded_number = "%.#{precision}f" % object
@@ -113,9 +113,9 @@ module Spider
             def do_parse_number(string, delimiter, separator, options={})
                 parts = string.to_s.gsub(delimiter, "").split(separator)
                 unless options[:return]
-                    options[:return] = parts[1] ? Float : Fixnum
+                    options[:return] = parts[1] ? Float : Integer
                 end
-                if options[:return] <= Fixnum
+                if options[:return] <= Integer
                     return parts[0].to_i
                 elsif options[:return] <= Float
                     return "#{parts[0]}.#{parts[1]}".to_f

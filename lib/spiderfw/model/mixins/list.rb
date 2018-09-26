@@ -113,7 +113,7 @@ module Spider; module Model
             def list(name, attributes={})
                 attributes[:list] = true
                 attributes[:order] ||= true
-                element(name, Fixnum, attributes)
+                element(name, Integer, attributes)
                 observe_element(name) do |obj, el, new_val|
                     obj.save_mode do
                         obj.list_mixin_modified_elements[name] = obj.get(el)

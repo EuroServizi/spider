@@ -252,7 +252,7 @@ module Spider; module Model; module Storage; module Db
                 return value.strftime("%Y-%m-%dT%H:%M:%S")
             when 'Time'
                 return value.strftime("%H:%M:%S")
-            when 'Fixnum'
+            when 'Integer'
                 return value.to_i
             end
             return value
@@ -502,7 +502,7 @@ module Spider; module Model; module Storage; module Db
                  return 'TEXT' if (attributes[:length].blank? || (!attributes[:length].blank? && attributes[:length] < 65536)) 
                  return 'MEDIUMTEXT' if !attributes[:length].blank? && attributes[:length] >= 65536 && attributes[:length] < 16777216
                  return 'LONGTEXT' if !attributes[:length].blank? && attributes[:length] >= 16777216
-             when 'Fixnum'
+             when 'Integer'
                  'INT'
              when 'Float'
                  'FLOAT'
@@ -526,7 +526,7 @@ module Spider; module Model; module Storage; module Db
              case type.name
              when 'String'
                  db_attributes[:length] = attributes[:length] || 255
-             when 'Fixnum'
+             when 'Integer'
                  db_attributes[:length] = 11
              when 'Spider::DataTypes::Text'
                  db_attributes[:length] = nil

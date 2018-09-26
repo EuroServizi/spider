@@ -8,7 +8,7 @@ module Spider; module Master
         element :name, String
         element :last_check, DateTime, :read_only => true
         element :system_status, Text, :read_only => true
-        element :scout_poll_interval, Fixnum, :default => 5
+        element :scout_poll_interval, Integer, :default => 5
         # element :url, String
         many :commands, Master::Command, :add_reverse => :server
         element_query :pending_commands, :commands, :condition => Spider::Model::Condition.new{ |c| c.status == 'pending' }

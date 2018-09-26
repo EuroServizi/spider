@@ -3,8 +3,8 @@ module Spider; module Components
     class MonthCalendar < Spider::Widget
         tag 'month_calendar'
         
-        i_attr_accessor :start_month, :type => Fixnum
-        i_attr_accessor :start_year, :type => Fixnum
+        i_attr_accessor :start_month, :type => Integer
+        i_attr_accessor :start_year, :type => Integer
         is_attr_accessor :busy
         
         def prepare

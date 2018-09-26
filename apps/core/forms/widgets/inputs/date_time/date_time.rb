@@ -2,7 +2,7 @@ module Spider; module Forms
     
     class DateTime < Input
         tag 'datetime'
-        is_attr_accessor :size, :type => Fixnum, :default => nil
+        is_attr_accessor :size, :type => Integer, :default => nil
         is_attr_accessor :mode, :type => Symbol, :default => :date
         i_attr_accessor :format, :type => String
         i_attr_accessor :lformat, :type => Symbol, :default => :short

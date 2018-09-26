@@ -77,10 +77,10 @@ module Spider; module Model
                choice(attributes[:reverse], self, attributes[:reverse_attributes])
                element(name, self, attributes)
                order = attributes[:order] == false ? false : true
-               element(attributes[:tree_left], Fixnum, :hidden => true, :tree_element => name, :order => order)
-               element(attributes[:tree_right], Fixnum, :hidden => true, :tree_element => name)
-               element(attributes[:tree_depth], Fixnum, :unmapped => true, :hidden => true, :tree_element => name)
-               element(attributes[:tree_position], Fixnum, :unmapped => true, :hidden => true, :tree_element => name)
+               element(attributes[:tree_left], Integer, :hidden => true, :tree_element => name, :order => order)
+               element(attributes[:tree_right], Integer, :hidden => true, :tree_element => name)
+               element(attributes[:tree_depth], Integer, :unmapped => true, :hidden => true, :tree_element => name)
+               element(attributes[:tree_position], Integer, :unmapped => true, :hidden => true, :tree_element => name)
 #               sequence(name)
                qs_module ||= Module.new
                

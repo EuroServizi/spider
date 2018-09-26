@@ -11,10 +11,10 @@ module Spider; module Model
         # @return [Array]
         attr_accessor :order
         # Skip the first :offset objects
-        # @return [Fixnum]
+        # @return [Integer]
         attr_accessor :offset
         # Limit the returned results to :limit objects
-        # @return [Fixnum]
+        # @return [Integer]
         attr_accessor :limit
         # Requests subclasses of the queried model
         # @return [Array]
@@ -25,9 +25,9 @@ module Spider; module Model
         # The Request instance
         # @return [Request]
         attr_reader :request
-        # @return [Fixnum] number of rows per page, when using pagination
+        # @return [Integer] number of rows per page, when using pagination
         attr_reader :page_rows
-        # @return [Fixnum] current page, when using pagination
+        # @return [Integer] current page, when using pagination
         attr_reader :page
         # @return [Array] Elements the mapper has to group_by
         attr_accessor :group_by_elements
@@ -177,8 +177,8 @@ module Spider; module Model
        end
        
        # Pagination: request the given page, for given rows per page
-       # @param [Fixnum] page
-       # @param [Fixnum] rows
+       # @param [Integer] page
+       # @param [Integer] rows
        # @return [self]
        def page(page, rows)
            page = page.to_i

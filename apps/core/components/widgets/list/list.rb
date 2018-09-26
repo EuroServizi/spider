@@ -15,7 +15,7 @@ module Spider; module Components
         is_attr_accessor :actions
         is_attribute :sub_elements
         is_attribute :is_child
-        is_attribute :paginate, :type => Fixnum, :default => false
+        is_attribute :paginate, :type => Integer, :default => false
         is_attribute :searchable, :type => Spider::DataTypes::Bool
         # Display message if list is empty
         attribute :show_empty, :type => Spider::DataTypes::Bool

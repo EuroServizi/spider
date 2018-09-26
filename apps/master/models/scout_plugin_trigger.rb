@@ -17,7 +17,7 @@ module Spider; module Master
             :either => _('Either')
         }, :default => :up
         element :percentage_change, Decimal
-        element :duration, Fixnum
+        element :duration, Integer
         choice :window_reference, {
             :last_day => _("yesterday's average"),
             :last_week => _('previous 7-day average'),

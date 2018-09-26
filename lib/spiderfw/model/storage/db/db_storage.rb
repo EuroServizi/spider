@@ -127,7 +127,7 @@ module Spider; module Model; module Storage; module Db
                 'TEXT'
             when 'Text'
                 'LONGTEXT'
-            when 'Fixnum'
+            when 'Integer'
                 'INT'
             when 'Float'
                 'REAL'
@@ -836,7 +836,7 @@ module Spider; module Model; module Storage; module Db
                 if (column_attributes[:length] == 1)
                     el_type = Spider::DataTypes::Bool
                 else
-                    el_type = Fixnum
+                    el_type = Integer
                 end
             when 'REAL'
                 el_type = Float

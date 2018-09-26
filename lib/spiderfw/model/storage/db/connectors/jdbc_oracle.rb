@@ -10,7 +10,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
         end
         
         RUBY_CLASS_TO_SQL_TYPE = {
-          Fixnum => java.sql.Types::INTEGER,
+          Integer => java.sql.Types::INTEGER,
           Bignum => java.sql.Types::INTEGER,
           Integer => java.sql.Types::INTEGER,
           Float => java.sql.Types::FLOAT,
@@ -159,7 +159,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
                 return stmt.setNull(i, type)
             else
                 method = case val.class.name
-                when 'Fixnum', 'Float'
+                when 'Integer', 'Float'
                     :setInt
                 when 'Java::JavaMath::BigDecimal'
                     :setBigDecimal

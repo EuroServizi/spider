@@ -2,7 +2,7 @@ module Spider; module Forms
     
     class Password < Input
         tag 'password'
-        is_attr_accessor :size, :type => Fixnum, :default => 25
+        is_attr_accessor :size, :type => Integer, :default => 25
 
         def prepare
             super

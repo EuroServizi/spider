@@ -4,7 +4,7 @@ module Spider; module Auth
         
         def self.included(mod)
             mod.element :last_login, DateTime, :label => _('Last login'), :read_only => true
-            mod.element :login_count, Fixnum, :label => _('Login count'), :read_only => true
+            mod.element :login_count, Integer, :label => _('Login count'), :read_only => true
         end
         
         def authenticated(method)

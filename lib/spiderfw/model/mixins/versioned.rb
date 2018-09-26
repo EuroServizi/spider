@@ -36,7 +36,7 @@ module Spider; module Model
              end
             vmod.element(:v_sha1, String, :primary_key => true, :length => 40, :version_pk => true, :hidden => true) 
             local_pk = "id_versioned_#{model.short_name.downcase}"
-            vmod.element(local_pk, Fixnum, :autoincrement => true, :local_pk => true, :hidden => true)
+            vmod.element(local_pk, Integer, :autoincrement => true, :local_pk => true, :hidden => true)
             vmod
         end
         

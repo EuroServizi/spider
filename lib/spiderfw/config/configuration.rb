@@ -123,7 +123,7 @@ module Spider
                 val = val.to_s
             when 'Symbol'
                 val = val.to_sym
-            when 'Fixnum'
+            when 'Integer'
                 val = val.to_i
             when 'Float'
                 val = val.to_f

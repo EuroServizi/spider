@@ -233,9 +233,9 @@ module Spider; module Forms
                 widget_type = nil
                 if (@widget_types[el.name])
                     widget_type = @widget_types[el.name]
-                elsif (el.type == String || el.type == Fixnum)
+                elsif (el.type == String || el.type == Integer)
                     widget_type = Text
-                    input_attributes = {:size => 5} if (el.type == Fixnum)
+                    input_attributes = {:size => 5} if (el.type == Integer)
                 #aggiunto controllo su type ::Decimal per override metodi Decimal su Moduli per problemi con spazi ogni due cifre
                 elsif (el.type == Float || el.type == BigDecimal || el.type == Spider::DataTypes::Decimal || ( el.type.respond_to?(:to_s) && !(el.type.to_s =~ /::Decimal$/).nil? ) )
                     widget_type = Text

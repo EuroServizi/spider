@@ -60,7 +60,7 @@ module Spider; module Model
             def define_from_ar
                 ar = @ar
                 type_conversion = {
-                    :integer       => Fixnum,
+                    :integer       => Integer,
                     :float         => Float,
                     :decimal       => BigDecimal,
                     :datetime      => DateTime,
@@ -124,7 +124,7 @@ module Spider; module Model
                     end
                     options[:association] = association
                     if (reflection.options[:polymorphic])
-                        self.element(name, Fixnum, options)
+                        self.element(name, Integer, options)
                         @ar_schema[:columns][name] = reflection.primary_key_name.to_s
                         next
                     end

@@ -9,7 +9,7 @@ module Spider; module Master
         element :hostname, String
         element :configuration, Text, :hidden => true
         element :last_check, DateTime, :hidden => true
-        element :interval, Fixnum, :hidden => true
+        element :interval, Integer, :hidden => true
         
         def to_s
             str = self.name || self.uuid

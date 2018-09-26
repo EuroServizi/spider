@@ -68,7 +68,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
         def prepare_value(type, value)
             value = super
             type = type.primary_keys[0].type if type < Spider::Model::BaseModel
-            type = Fixnum if type == Spider::DataTypes::PK
+            type = Integer if type == Spider::DataTypes::PK
             return Oracle::OracleNilValue.new(Spider::Model.ruby_type(type)) if (value == nil)
             case type.name
             when 'Spider::DataTypes::Binary'
@@ -97,7 +97,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
                 end
                 query_start
                 cursor = connection.parse(sql)
-                return cursor if (!cursor || cursor.is_a?(Fixnum))
+                return cursor if (!cursor || cursor.is_a?(Integer))
                 bind_vars.each_index do |i|
                     var = bind_vars[i]
                     if (var.is_a?(Oracle::OracleNilValue))

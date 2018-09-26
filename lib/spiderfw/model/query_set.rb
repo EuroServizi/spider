@@ -35,17 +35,17 @@ module Spider; module Model
         # @return [Class<BaseModel]
         attr_accessor :model
         # Total number of objects present in the Storage for the Query
-        # @return [Fixnum]
+        # @return [Integer]
         attr_accessor :total_rows
         # Whether the QuerySet has been loaded
         # @return [bool]
         attr_reader :loaded
         # How many objects to load at a time. If nil, all the objects returned by the Query 
         # will be loaded.
-        # @return [Fixnum]
+        # @return [Integer]
         attr_accessor :fetch_window
         #  How many objects to keep in memory when advancing the window. If nil, all objects will be kept.
-        # @return [Fixnum]
+        # @return [Integer]
         attr_accessor :keep_window
         # If something that can't be converted to a @model instance is appended to the QuerySet,
         # and append_element is set, the appended value will be set on the element named append_element
@@ -227,7 +227,7 @@ module Spider; module Model
 
             
         # Accesses an object. Data will be loaded according to fetch_window.
-        # @param [Fixnum] index
+        # @param [Integer] index
         # @return [BaseModel]
         def [](index)
             if (index.is_a?(Range))
@@ -248,7 +248,7 @@ module Spider; module Model
         end
         
         # Sets an object
-        # @param [Fixnum] index
+        # @param [Integer] index
         # @param [BaseModel] val
         # @return [void]
         def []=(index, val)
@@ -294,7 +294,7 @@ module Spider; module Model
         end
         
         # Removes the object at the given index from the QuerySet
-        # @param [Fixnum] index
+        # @param [Integer] index
         # @return [BaseModel|nil] The removed object
         def delete_at(index)
             @objects.delete_at(index)
@@ -327,7 +327,7 @@ module Spider; module Model
         # Number of objects fetched. Will call load if not loaded yet.
         # Note: this is not the total number of objects responding to the Query; 
         # it may be equal to the fetch_window, or to the @query.limit.
-        # @return [Fixnum] length
+        # @return [Integer] length
         def length
             load unless @loaded || !autoload?
             @objects.length
@@ -354,13 +354,13 @@ module Spider; module Model
         end
         
         # Total number of objects that would be returned had the Query no limit.
-        # @return [Fixnum] The total number of rows corresponding to the Query (without limit).
+        # @return [Integer] The total number of rows corresponding to the Query (without limit).
         def total_rows
             return @total_rows ? @total_rows : (@total_rows = @model.mapper.count(@query.condition))
         end
         
         # Current number of objects fetched.
-        # @return [Fixnum]
+        # @return [Integer]
         def current_length
             @objects.length
         end
@@ -475,7 +475,7 @@ module Spider; module Model
         end
         
         # Iterates yielding the queryset index. Will load when needed.
-        # @yield [Fixnum]
+        # @yield [Integer]
         # @return [void]
         def each_index
             self.each_rolling_index do |i|
@@ -485,7 +485,7 @@ module Spider; module Model
         end
 
         # Iterates on indexes without loading.
-        # @yield [Fixnum]
+        # @yield [Integer]
         # @return [void]
         def each_current_index
             @objects.each_index do |i|
@@ -592,8 +592,8 @@ module Spider; module Model
             return self
         end
         
-        # @param [Fixnum] i 
-        # @return [Fixnum] The index to start with to get the page containing the i-th element
+        # @param [Integer] i 
+        # @return [Integer] The index to start with to get the page containing the i-th element
         def start_for_index(i) # :nodoc:
             return 1 unless @fetch_window
             page = i / @fetch_window + 1
@@ -601,7 +601,7 @@ module Spider; module Model
         end
         
         # Loads objects up to index i
-        # @param [Fixnum] i Index
+        # @param [Integer] i Index
         # @return [void]
         def load_to_index(i)
             return load unless @fetch_window
@@ -610,7 +610,7 @@ module Spider; module Model
         end
         
         # Loads the next batch of objects.
-        # @param [Fixnum] Page to load (defaults to next page)
+        # @param [Integer] Page to load (defaults to next page)
         # @return [self]
         def load_next(page=nil)
             if (@fetch_window)
@@ -629,9 +629,9 @@ module Spider; module Model
             return load
         end
         
-        # If a Fixnum is passed, will tell if the given index is loaded.
+        # If a Integer is passed, will tell if the given index is loaded.
         # With no argument, will tell if the QuerySet is fully loaded
-        # @param [Fixnum] index
+        # @param [Integer] index
         # @return [bool]
         def loaded?(index=nil)
             return @loaded if !@loaded || !index || !@fetch_window
@@ -969,7 +969,7 @@ module Spider; module Model
             self
         end
         
-        # @return [Fixnum|nil] Total number of available pages for current query (or nil if no limit is set)
+        # @return [Integer|nil] Total number of available pages for current query (or nil if no limit is set)
         def pages
             return nil unless @query.limit
             (self.total_rows.to_f / @query.limit).ceil

@@ -15,7 +15,7 @@ module Spider; module ControllerMixins
         # Sets the headers to redirect the browser to the given url, and calls
         # {Controller#done} to terminate the execution of the Controller chain
         # @param [String] url
-        # @param [Fixnum] code HTTP status to send
+        # @param [Integer] code HTTP status to send
         # @return void
         def redirect(url, code=Spider::HTTP::SEE_OTHER)
             debug "REDIRECTING TO #{url}"

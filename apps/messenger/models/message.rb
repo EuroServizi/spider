@@ -6,7 +6,7 @@ module Spider; module Messenger
         element :ticket, UUID, :label => _("Ticket")
         element :last_try, DateTime, :label => _("Last try")
         element :next_try, DateTime, :label => _("Next try")
-        element :attempts, Fixnum, :label => _("Attempts")
+        element :attempts, Integer, :label => _("Attempts")
         element :backend, String, :label => _("Backend")
         element :backend_id, String, :label => _("Backend id")
         element :backend_response, String, :label => _("Last status")

@@ -28,14 +28,14 @@ module Spider
     config_option 'webserver.reload_sources', _("Reload application and spider sources on each request"), 
         :type => Spider::DataTypes::Bool,
         :default => Proc.new{ Spider.config.get('runmode') == 'devel' ? true : false }
-    config_option 'webserver.host', _("Port to use for the http server"), :type => Fixnum, :default => '0.0.0.0'
-    config_option 'webserver.port', _("Port to use for the http server"), :type => Fixnum, :default => 8080
+    config_option 'webserver.host', _("Port to use for the http server"), :type => Integer, :default => '0.0.0.0'
+    config_option 'webserver.port', _("Port to use for the http server"), :type => Integer, :default => 8080
     config_option 'webserver.force_threads', _("Force threading on non-threaded adapters"), :type => Spider::DataTypes::Bool,
         :default => Proc.new{ Spider.runmode != 'test' && RUBY_VERSION_PARTS[1] == '8'}
-    config_option 'webserver.timeout', _("Time allowed for each request (in seconds)"), :type=> Fixnum, :default => nil
+    config_option 'webserver.timeout', _("Time allowed for each request (in seconds)"), :type=> Integer, :default => nil
     config_option 'webserver.respawn_on_change', _("Restart the webserver when application code changes"), :type => Spider::Bool,
         :default => Proc.new{ RUBY_PLATFORM !~ /win32|mingw32/ && Spider.config.get('runmode') == 'devel' ? true : false }
-    config_option 'process.shutdown_timeout', _("Number of seconds a process is given to end"), :type => Fixnum, :default => 60
+    config_option 'process.shutdown_timeout', _("Number of seconds a process is given to end"), :type => Integer, :default => 60
     config_option 'static_content.mode', _("Mode to use for serving static files"), :type => String,
         :choices => [nil, 'x-sendfile', 'x-accel-redirect', 'published'], :default => nil
     config_option 'static_content.auto_publish', _("Automatically publish content to the home's public folder"),
@@ -60,9 +60,9 @@ module Spider
     
     # Model
     
-    config_option 'storage.pool.size', _("How many connections to open to a storage"), :type => Fixnum, :default => 5
-    config_option 'storage.pool.timeout', _("Timout in seconds to obtain a connection"), :type => Fixnum, :default => 5
-    config_option 'storage.pool.retry', _("How many times to retry acquiring a connection"), :type => Fixnum, :default => 5
+    config_option 'storage.pool.size', _("How many connections to open to a storage"), :type => Integer, :default => 5
+    config_option 'storage.pool.timeout', _("Timout in seconds to obtain a connection"), :type => Integer, :default => 5
+    config_option 'storage.pool.retry', _("How many times to retry acquiring a connection"), :type => Integer, :default => 5
     config_option 'storage.shared_connection', _("Use one connection for all threads; use this only when testing!"), 
         :type => Spider::Bool, :default => Proc.new{ Spider.runmode == 'test' ? true : false}
         
@@ -94,13 +94,13 @@ module Spider
     config_option 'runner.sleep', _("Sleep time for the periodic runner"), :default => 10
     
     config_option 'session.store', _("Where to store the session"), :default => 'file', :choices => ['memory', 'file', 'memcached']
-    config_option 'session.life', _("Lifetime in seconds of the sessions"), :default => 3600, :type => Fixnum
-    config_option 'session.purge_check', _("Number of seconds to wait before session purge check"), :default => 10, :type => Fixnum
+    config_option 'session.life', _("Lifetime in seconds of the sessions"), :default => 3600, :type => Integer
+    config_option 'session.purge_check', _("Number of seconds to wait before session purge check"), :default => 10, :type => Integer
     config_option 'session.file.path', _("The folder where to store file sessions"), :default => Proc.new{ Spider.paths[:var]+'/sessions' }
     
     config_option 'shared_store.type', _("Which shared store to use"), :default => 'memory'
     
-    config_option 'http.nonce_life', _("Life in seconds of HTTP Digest Authentication nonces"), :type => Fixnum, :default => 60
+    config_option 'http.nonce_life', _("Life in seconds of HTTP Digest Authentication nonces"), :type => Integer, :default => 60
     # TODO: implement in webrick/others, check if has a performance gain
     config_option 'http.auto_headers', _("Automatically send headers on first output"), 
         :type => Spider::DataTypes::Bool, :default => true
@@ -122,7 +122,7 @@ module Spider
     config_option 'log.rotate.age', _("Number of old log files to keep, OR frequency of rotation (daily, weekly or monthly)"), :default => 'daily'
     config_option 'log.rotate.size', _("Maximum logfile size (only applies when log.rotate.age is a number)"), :default => 1048576
     config_option 'log.memory', _("Log memory usage"), :type => Spider::DataTypes::Bool, :default => false
-    config_option 'log.keep', _("Maximum number of rotated log files to keep"), :type => Fixnum, :default => 1
+    config_option 'log.keep', _("Maximum number of rotated log files to keep"), :type => Integer, :default => 1
     config_option 'log.gzip', _("Whether to compress rotated log files"), :type => Spider::DataTypes::Bool, :default => true
     config_option 'log.apache_commons', _("Under JRuby, Use Apache Commons Logging if available"), :default => true
     config_option 'log.static_extensions', _('Log level for static files'),

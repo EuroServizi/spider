@@ -4,7 +4,7 @@ module Spider; module Forms
         tag 'search-select'
         i_attr_accessor :model
         is_attr_accessor :blank_option, :type => TrueClass, :default => true
-        attribute :limit, :type => Fixnum, :default => 5
+        attribute :limit, :type => Integer, :default => 5
         
         def prepare_value(params)
             return nil

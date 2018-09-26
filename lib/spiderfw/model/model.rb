@@ -12,13 +12,13 @@ module Spider
     module Model
         
         @base_types = [
-            String, Spider::DataTypes::Text, Fixnum, Float, BigDecimal, Date, DateTime, Time,
+            String, Spider::DataTypes::Text, Integer, Float, BigDecimal, Date, DateTime, Time,
             Spider::DataTypes::Bool, Spider::DataTypes::PK
         ]
         
         # Returns a list of the base types, which must be handled by all mappers.
         # 
-        # String, Spider::DataTypes::Text, Fixnum, Float, BigDecimal, Date, DateTime, Spider::DataTypes::Bool.
+        # String, Spider::DataTypes::Text, Integer, Float, BigDecimal, Date, DateTime, Spider::DataTypes::Bool.
         #
         # These types must be handled by all mappers.
         # @return [Array] An array of base types

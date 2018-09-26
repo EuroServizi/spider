@@ -22,7 +22,7 @@ module Spider; module Model; module Mappers
         end
         
         def pk
-            [Fixnum, {:autoincrement => true}]
+            [Integer, {:autoincrement => true}]
         end
         
         # Checks if the schema has some key to reach element. 
@@ -937,7 +937,7 @@ module Spider; module Model; module Mappers
         # Returns a type accepted by the storage for type.
         def map_type(type)
             st = type
-            return Fixnum if st <= Spider::DataTypes::PK
+            return Integer if st <= Spider::DataTypes::PK
             while (st && !storage.class.base_types.include?(st))
                 st = Model.simplify_type(st)
             end
@@ -1122,7 +1122,7 @@ module Spider; module Model; module Mappers
         
         def base_type(type)
             if type <= Spider::DataTypes::PK
-                Fixnum
+                Integer
             else
                 super
             end

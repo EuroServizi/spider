@@ -13,10 +13,10 @@ module Spider
     config_option 'messenger.smtp.tls', _("tls"), :default => nil, :type => String
     config_option 'messenger.smtp.log_path', _("Smtp logfile (e.g. /var/log/mail.log)"), :default => nil
         
-    config_option 'messenger.email.retries', _("How many times to retry sending an e-mail"), :type => Fixnum, :default => 5
+    config_option 'messenger.email.retries', _("How many times to retry sending an e-mail"), :type => Integer, :default => 5
     config_option 'messenger.email.retry_time', _("Seconds to wait until retry (will be incremented at each retry)"), 
-        :type => Fixnum, :default => 10
-    config_option 'messenger.queue.run_every', _("Time in seconds between queue runs"), :type => Fixnum, :default => 60
+        :type => Integer, :default => 10
+    config_option 'messenger.queue.run_every', _("Time in seconds between queue runs"), :type => Integer, :default => 60
     
     config_option 'messenger.email.backends', _("The backends to use for sending mail (if more than one)"), :type => Array,
         :default => Proc.new{ Spider.conf.get('messenger.email.backend') ? [Spider.conf.get('messenger.email.backend')] : [] }
@@ -25,9 +25,9 @@ module Spider
     config_option 'messenger.sms.backends', _("The backends to use for sending sms (if more than one)"), :type => Array,
         :default => Proc.new{ Spider.conf.get('messenger.sms.backend') ? [Spider.conf.get('messenger.sms.backend')] : [] }
     config_option 'messenger.sms.backend', _("The backend to use for sending sms"), :type => String
-    config_option 'messenger.sms.retries', _("How many times to retry sending an sms"), :type => Fixnum, :default => 5
+    config_option 'messenger.sms.retries', _("How many times to retry sending an sms"), :type => Integer, :default => 5
     config_option 'messenger.sms.retry_time', _("Seconds to wait until retry (will be incremented at each retry)"), 
-        :type => Fixnum, :default => 10
+        :type => Integer, :default => 10
     config_option 'messenger.smstools.path_spool', _("The path to the smstools 'spool' folder"), :default => '/var/spool/sms'
     config_option 'messenger.smstools.path_outgoing', _("The path to the smstools 'outgoing' folder"), 
         :default => Proc.new{ File.join(Spider.conf.get('messenger.smstools.path_spool'), 'outgoing')}

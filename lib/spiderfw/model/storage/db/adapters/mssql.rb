@@ -22,7 +22,7 @@ module Spider; module Model; module Storage; module Db
                 'nvarchar'
             when 'Text'
                 'ntext'
-            when 'Fixnum'
+            when 'Integer'
                 'int'
             when 'Float'
                 'real'
@@ -108,7 +108,7 @@ module Spider; module Model; module Storage; module Db
             when 'text', 'ntext'
                 el_type = Spider::DataTypes::Text
             when 'int', 'smallint'
-                el_type = Fixnum
+                el_type = Integer
             when 'bit'
                 el_type = Spider::DataTypes::Bool
             when 'real'

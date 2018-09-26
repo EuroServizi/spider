@@ -2,9 +2,9 @@ require 'delegate'
 
 module Spider; module DataTypes
 
-    class TimeSpan < DelegateClass(Fixnum)
+    class TimeSpan < DelegateClass(Integer)
         include DataType
-        maps_to Fixnum
+        maps_to Integer
         
         def format(f=nil)
             if self % 3600 == 0

@@ -48,7 +48,7 @@ module Spider; module Model; module Storage
             end
 
             # @abstract
-            # @return [Fixnum|nil] Maximum number of connections possible for this backend (or nil if unlimited)
+            # @return [Integer|nil] Maximum number of connections possible for this backend (or nil if unlimited)
             def max_connections
                 nil
             end
@@ -416,8 +416,8 @@ module Spider; module Model; module Storage
         
         # Creates a new sequence
         # @param [String] name Sequence name
-        # @param [Fixnum] start
-        # @param [Fixnum] increment
+        # @param [Integer] start
+        # @param [Integer] increment
         # @return [void]
         def create_sequence(name, start=1, increment=1)
             sequence_next(name, start-1, increment)
@@ -430,8 +430,8 @@ module Spider; module Model; module Storage
             
         # Updates a sequence
         # @param [String] name Sequence name
-        # @param [Fixnum] val New value for the sequence
-        # @return [Fixnum] New value for the sequence
+        # @param [Integer] val New value for the sequence
+        # @return [Integer] New value for the sequence
         def update_sequence(name, val)
             # not an alias because the set value behaviour of next_sequence isn't expected in subclasses
             sequence_next(name, val)
@@ -439,9 +439,9 @@ module Spider; module Model; module Storage
         
         # Increments a named sequence and returns the new value
         # @param [String] name Sequence name
-        # @param [Fixnum] newval New value for the sequence
-        # @param [Fixnum] increment
-        # @return [Fixnum] New value for the sequence
+        # @param [Integer] newval New value for the sequence
+        # @param [Integer] increment
+        # @return [Integer] New value for the sequence
         def sequence_next(name, newval=nil, increment=1)
             path = sequence_file_path(name)
             FileUtils.mkpath(File.dirname(path))

@@ -11,10 +11,10 @@ module Spider; module Components
             return v.split(',') if v.is_a?(String)
             v
         }
-        i_attribute :num_elements, :default => 7, :type => Fixnum
-        attribute :row_limit, :type => Fixnum, :default => 15
+        i_attribute :num_elements, :default => 7, :type => Integer
+        attribute :row_limit, :type => Integer, :default => 15
         attribute :paginate, :type => TrueClass, :default => true
-        attribute :max_element_length, :type => Fixnum, :default => 80
+        attribute :max_element_length, :type => Integer, :default => 80
         attribute :link_el, :type => Symbol
         attribute :link_id, :type => Symbol
         attribute :link

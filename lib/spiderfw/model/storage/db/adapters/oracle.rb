@@ -441,7 +441,7 @@ module Spider; module Model; module Storage; module Db
                  'VARCHAR2'
              when 'Spider::DataTypes::Text'
                  'CLOB'
-             when 'Fixnum'
+             when 'Integer'
                  'NUMBER'
              when 'Float'
                  'FLOAT'
@@ -459,7 +459,7 @@ module Spider; module Model; module Storage; module Db
              case type.name
              when 'String'
                  db_attributes[:length] = attributes[:length] || 255
-             when 'Fixnum'
+             when 'Integer'
                  db_attributes[:precision] = attributes[:precision] || 38
                  db_attributes[:length] = nil
              when 'Float'
@@ -504,7 +504,7 @@ module Spider; module Model; module Storage; module Db
 
              def initialize(type)
                  @type = type
-                 @type = Fixnum if @type == TrueClass || @type == FalseClass
+                 @type = Integer if @type == TrueClass || @type == FalseClass
              end
 
              def to_s

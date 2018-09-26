@@ -5,7 +5,7 @@ module Spider; module Master
         element :data_series, String
         element :subject, Text
         element :body, Text
-        element :repeated, Fixnum
+        element :repeated, Integer
         element :active, Bool
 
         with_mapper do

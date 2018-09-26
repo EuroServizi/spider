@@ -447,7 +447,7 @@ module Spider; module ControllerMixins
                             else
                                 val_str = val.inspect
                             end
-                        elsif (val.is_a?(Symbol) || val.is_a?(Fixnum) || val.is_a?(Float) || val.is_a?(BigDecimal) || val.is_a?(Date) || val.is_a?(Time))
+                        elsif (val.is_a?(Symbol) || val.is_a?(Integer) || val.is_a?(Float) || val.is_a?(BigDecimal) || val.is_a?(Date) || val.is_a?(Time))
                             val_str = val.inspect
                         end
                         arg_str += "=#{val_str}" if val_str
