@@ -24,6 +24,8 @@ module Spider; module Model; module Storage; module Db
                 'ntext'
             when 'Integer'
                 'int'
+            when 'Fixnum'
+                'int'
             when 'Float'
                 'real'
             when 'BigDecimal', 'Spider::DataTypes::Decimal'

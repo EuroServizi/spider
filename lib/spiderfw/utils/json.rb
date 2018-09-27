@@ -32,6 +32,12 @@ class Float
   end
 end
 
+class Fixnum
+  def to_json(options = nil) #:nodoc:
+    to_s
+  end
+end
+
 class Integer
   def to_json(options = nil) #:nodoc:
     to_s

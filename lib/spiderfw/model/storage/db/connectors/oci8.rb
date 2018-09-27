@@ -97,7 +97,7 @@ module Spider; module Model; module Storage; module Db; module Connectors
                 end
                 query_start
                 cursor = connection.parse(sql)
-                return cursor if (!cursor || cursor.is_a?(Integer))
+                return cursor if (!cursor || cursor.is_a?(Integer) || cursor.is_a?(Fixnum))
                 bind_vars.each_index do |i|
                     var = bind_vars[i]
                     if (var.is_a?(Oracle::OracleNilValue))

@@ -12,7 +12,7 @@ module Spider
     module Model
         
         @base_types = [
-            String, Spider::DataTypes::Text, Integer, Float, BigDecimal, Date, DateTime, Time,
+            String, Spider::DataTypes::Text, Integer, Fixnum, Float, BigDecimal, Date, DateTime, Time,
             Spider::DataTypes::Bool, Spider::DataTypes::PK
         ]
         

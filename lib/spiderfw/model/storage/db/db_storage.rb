@@ -129,6 +129,8 @@ module Spider; module Model; module Storage; module Db
                 'LONGTEXT'
             when 'Integer'
                 'INT'
+            when 'Fixnum'
+                'INT'
             when 'Float'
                 'REAL'
             when 'BigDecimal', 'Spider::DataTypes::Decimal'

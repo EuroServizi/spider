@@ -1629,7 +1629,7 @@ module Spider; module Model
                 when 'String'
                 when 'Spider::DataTypes::Text'
                     value = value.to_s
-                when 'Integer', 'Spider::DataTypes::PK'
+                when 'Integer', 'Fixnum', 'Spider::DataTypes::PK'
                     value = value.to_i
                 end
             end
@@ -2544,7 +2544,7 @@ module Spider; module Model
             h = {}
             if (params[0].is_a?(String))
                 return sprintf(params[0], *params[1..-1].map{ |el| get(el) })
-            elsif (params[0].is_a?(Integer))
+            elsif (params[0].is_a?(Integer) || params[0].is_a?(Fixnum))
                 p = params.shift
                 if (p < 1)
                     if (block_given?)

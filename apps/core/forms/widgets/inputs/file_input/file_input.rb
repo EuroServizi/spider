@@ -25,8 +25,13 @@ module Spider; module Forms
         def prepare_value(val)
             return nil if !val || val.empty?
             if val['file'] && !val['file'].is_a?(String)
-                dest_path = @save_path+'/'+val['file'].filename
-                FileUtils.copy(val['file'].path, dest_path)
+                if val['file'].lstat.size > 0
+                    dest_path = @save_path+'/'+val['file'].filename
+                    FileUtils.copy(val['file'].path, dest_path)
+                else
+                    self.value = nil
+                    return 'file_vuoto'
+                end
             end
             #se clicco su pulisci cancello il file
             if val['clear'] == 'on'

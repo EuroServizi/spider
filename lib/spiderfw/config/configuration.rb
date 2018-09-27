@@ -125,6 +125,8 @@ module Spider
                 val = val.to_sym
             when 'Integer'
                 val = val.to_i
+            when 'Fixnum'
+                val = val.to_i
             when 'Float'
                 val = val.to_f
             end

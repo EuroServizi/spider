@@ -254,6 +254,8 @@ module Spider; module Model; module Storage; module Db
                 return value.strftime("%H:%M:%S")
             when 'Integer'
                 return value.to_i
+            when 'Fixnum'
+                return value.to_i
             end
             return value
          end
@@ -504,6 +506,8 @@ module Spider; module Model; module Storage; module Db
                  return 'LONGTEXT' if !attributes[:length].blank? && attributes[:length] >= 16777216
              when 'Integer'
                  'INT'
+             when 'Fixnum'
+                 'INT'
              when 'Float'
                  'FLOAT'
              when 'Date'
@@ -527,6 +531,8 @@ module Spider; module Model; module Storage; module Db
              when 'String'
                  db_attributes[:length] = attributes[:length] || 255
              when 'Integer'
+                 db_attributes[:length] = 11
+             when 'Fixnum'
                  db_attributes[:length] = 11
              when 'Spider::DataTypes::Text'
                  db_attributes[:length] = nil

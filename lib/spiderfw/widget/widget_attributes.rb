@@ -30,6 +30,8 @@ module Spider
                     v = (v.to_s == 'false' || v.to_s.empty?) ? false : true
                 when 'Integer'
                     v = v.to_i
+                when 'Fixnum'
+                    v = v.to_i
                 end
             end
             v = params[:process].call(v) if params[:process] && v

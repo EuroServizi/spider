@@ -443,6 +443,8 @@ module Spider; module Model; module Storage; module Db
                  'CLOB'
              when 'Integer'
                  'NUMBER'
+             when 'Fixnum'
+                 'NUMBER'
              when 'Float'
                  'FLOAT'
              when 'Date', 'DateTime'
@@ -460,6 +462,9 @@ module Spider; module Model; module Storage; module Db
              when 'String'
                  db_attributes[:length] = attributes[:length] || 255
              when 'Integer'
+                 db_attributes[:precision] = attributes[:precision] || 38
+                 db_attributes[:length] = nil
+             when 'Fixnum'
                  db_attributes[:precision] = attributes[:precision] || 38
                  db_attributes[:length] = nil
              when 'Float'
