@@ -87,10 +87,18 @@ class Object
                 self.replace(self.gsub("Ã²","ò"))
                 self.replace(self.gsub("à²","ò"))
                 self.replace(self.gsub("Â",""))
+                self.replace(self.gsub("\\xB0","°"))
                 self
             end
         end
 
     end
     
+    def remove_non_utf8_char
+        if self.is_a?(String)
+            return self.encode("UTF-8", :invalid => :replace, :undef => :replace, :replace => "")
+        end
+    end
+
+
 end
