@@ -174,9 +174,6 @@ Spider::Template.define_named_asset 'less', [
      [:js, 'js/less-1.1.3.min.js', Spider::Components, {:compressed => true}]
  ]
 
-Spider::Template.define_named_asset 'bootstrap-sass', [
-    [:css, 'bootstrap/scss/bootstrap.scss', Spider::Components]
-]
 
 
 if Spider.conf.get('assets.speedup_devel') == true
