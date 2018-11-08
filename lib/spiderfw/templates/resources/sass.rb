@@ -2,7 +2,6 @@ require 'sass/plugin/configuration'
 require 'sass/plugin'
 
 require 'sass'
-#require 'byebug'
 require 'sassc' unless Spider.conf.get('css.sass.use_compass')
 
 
@@ -76,8 +75,8 @@ module Spider
                     require 'compass'
                     use_compass = true
                 rescue LoadError => exc
-                    Spider.logger.debug(exc)
-                    Spider.logger.debug("Compass not found. Please install 'compass' gem")
+                    Spider.logger.error(exc)
+                    Spider.logger.error("Compass not found. Please install 'compass' gem")
                 end
             end
             if use_compass
@@ -118,12 +117,6 @@ module Spider
                 compiler.run
                 ##Compass.sass_compiler.compile! nuova versione da finire
             else 
-                require 'byebug'
-                
-                #VECCHIO
-                #engine = Sass::Engine.for_file(src, {})
-                #output = engine.render
-                #NUOVO
                 #vedi https://github.com/sass/sassc-ruby/blob/master
                 #mettere le options in self.options e passarle al Engine.new
                 Spider.app_paths.each do |path|
