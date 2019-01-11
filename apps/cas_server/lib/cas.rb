@@ -88,7 +88,7 @@ module Spider; module CASServer::CAS
     end
 
     #vedo se l'username viene da federa, ricavo il cf che uso per cercare l'id dell'utente portale
-    if (username.strip =~ /^federa_emilia_/) == 0
+    if (username.strip =~ /^federa_emilia_/) == 0 and !defined?(::Portal::UtenteFederaEmiliaRomagna).nil?
       $LOG.debug("Entrato con Federa")
       #caso utente con accesso federa
       chiave_utente = username.strip.gsub('federa_emilia_romagana','')
@@ -100,7 +100,7 @@ module Spider; module CASServer::CAS
         ::Portal::Traccia.salva_traccia(st.client_hostname, "#{servizio}", utente_portale , { 'provider_accesso' => 'Federa Emilia Romagna' }.to_json , nil , 'cas', nil) 
       end
       
-    elsif (username.strip =~ /^spid/) == 0
+    elsif (username.strip =~ /^spid_/) == 0 and !defined?(::Portal::UtenteSpidAgid).nil?
       $LOG.debug("Entrato con SPID")
       #caso utente con accesso spid
       chiave_utente = username.strip.gsub('spid','')
