@@ -256,6 +256,12 @@ module Spider
             (Spider.site.blank? ? "" : Spider.site.http_s_url) + route_path(action)
         end
 
+        # Metodo che forza https
+        def self.https_url(action=nil)
+            return self.http_s_url(action) if Spider.runmode == 'devel'
+            Spider.site.https_url + route_path(action)
+        end
+
         # The main controller's execution method. The Controller will dispatch
         # to another controller if a route is set; otherwise, it will call the 
         # method that should be executed according to action.
