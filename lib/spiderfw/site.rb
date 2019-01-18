@@ -55,6 +55,9 @@ module Spider
             ssl? ? ssl_to_s : to_s
         end
 
+        def https_url
+            ssl_to_s
+        end        
 
     end 
 
