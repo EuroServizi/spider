@@ -1,0 +1,14 @@
+<div>
+<legend>Esito invio sms</legend>
+	<div sp:if="!@esito_azione.nil?" class="alert alert-success">
+        { @esito_azione }   
+    </div>
+   
+	<div class="row form-actions">
+		<div class="span1 offset3">
+			<a href="{ Spider::Messenger::AdminController.http_s_url('invio_sms') }" class="btn">Indietro</button>
+		</div>
+	</div>
+		
+
+</div>

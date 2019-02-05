@@ -1,0 +1,53 @@
+<div id="invio_sms">
+<legend>Invio Sms</legend>
+	<div sp:if="!@esito_azione.nil?" class="alert alert-success">
+        { @esito_azione }   
+    </div>
+    <div sp:if="@errori" class="alert alert-error width_50">
+        <ul>
+            <li sp:each="@errori |errore|">{ errore }</li>
+        </ul>
+    </div>
+	<form id="form_invio_sms" class="form-horizontal" enctype="multipart/form-data" method="post">
+		<div class="control-group { @error_testo_sms }">
+			<label class="control-label" for="dati[testo_sms]">Testo</label>
+			<div class="controls error">
+				<textarea rows="5" class="input-xlarge" name="dati[testo_sms]" id="testo_sms">{ @dati['testo_sms'] }</textarea>
+				<span class="alert alert-warning" style="display:none" id="errore_numero_caratteri">Superato numero caratteri consentiti!</span>
+			</div>
+		</div>
+		<div class="control-group { @error_numero }">
+			<label class="control-label" for="dati[numero]">Numero destinatario</label>
+				<div class="controls">
+					<input type="text" id="numero" name="dati[numero]" value="{ @dati['numero'] }" placeholder="numero">
+				</div>
+		</div>
+		<div class="control-group { @error_file_destinatari }">
+			<label class="control-label" for="dati[file_destinatari]">File di destinatari <i data-content="Permette di caricare un semplice file con l'elenco dei numeri per inviare il testo del messaggio inserito oppure un elenco di numero e segnaposto per rendere il testo dinamico.<br />
+				Segnaposto: è possibile rendere dinamico il testo dell' SMS usando i segnaposto che vanno definiti nel testo del messaggio con il # e quindi #1 , #2 , #3 , #4 etc.<br />
+				Nel file csv sarà sufficiente inserire i valori dei segnaposto dopo il numero.<br />
+				Esempio di csv: 3401223347, bella, mela<br />
+				Esempio testo SMS: oggi è una #1 giornata, mi mangio una #2<br />
+				Il risultato sarà quello di inviare al numero 3401223347 il seguente SMS: 'oggi è una bella giornata, mi mangio una mela'" data-animation="true" title="File di destinatari" data-toggle="popover" class="icon-info-sign button_popover"></i></label>
+				<div class="controls">
+					<input type="file" name="dati[file_destinatari]" />
+				</div>
+
+
+		</div>
+		<em>Qualora siano stati specificati sia un file di destinatari che un numero nel campo 'Numero destinatario', gli SMS verranno inviati a tutti i numeri del file ed al numero indicato nel campo</em>
+		
+		<div class="row form-actions">
+			<div class="span1 offset3">	
+	        	<input type="submit" class="btn" id="invia" value="Invia">
+	    	</div>
+    	</div>
+		
+
+	</form>
+
+
+
+
+
+<div>

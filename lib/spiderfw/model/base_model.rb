@@ -1270,6 +1270,8 @@ module Spider; module Model
         def self.free_query_condition(q)
             c = Condition.or
             self.elements_array.each do |el|
+                #Se il campo viene computato salto la condizione su di esso
+                next unless el.attributes[:computed_from].nil?
                 if (el.type == String || el.type == Text)
                     c.set(el.name, 'ilike', '%'+q+'%')
                 end

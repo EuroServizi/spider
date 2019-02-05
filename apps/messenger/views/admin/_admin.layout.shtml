@@ -2,6 +2,9 @@
     <div class="spider-admin-sidebar">
          <tpl:include src="/core/admin/_app_info" />
          <ul>
+            <li sp:if="!Spider.conf.get('messenger.sms.backends').blank?">
+                <a href="{ Spider::Messenger::AdminController.http_s_url('invio_sms') }">Invio SMS</a>
+            </li>
             <li>
                 <a href="{ Spider::Messenger::AdminController.http_s_url }">_(Queues)</a>
                 <ul>
