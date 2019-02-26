@@ -141,14 +141,16 @@ module Spider; module Auth
 
                             #DEVO CERCARE UN ADMIN SERVIZI SU TABELLE LOCALI, uso auth_user['email'] come valore per il campo start_user
                             #admin servizi del cms
-                            user = ::Cms::Administrator.load(:start_user => auth_user['email'])
-                            unless user.blank?
-                                Spider.logger.debug "\n\n Login come admin SERVIZI PER CMS da auth_hub \n"
-                                #admin servizi per cms
-                                #metto in sessione l'username per ripristinarlo poi
-                                @request.session[:auth]['username_from_auth_hub'] = (hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome'])
-                                @request.session[:auth][:autenticazioni] ||= {}
-                                @request.session[:auth][:autenticazioni][:cms] = { :username => @request.session[:auth]['username_from_auth_hub']}
+                            if !defined?(::Cms).nil?
+                                user = ::Cms::Administrator.load(:start_user => auth_user['email'])
+                                unless user.blank?
+                                    Spider.logger.debug "\n\n Login come admin SERVIZI PER CMS da auth_hub \n"
+                                    #admin servizi per cms
+                                    #metto in sessione l'username per ripristinarlo poi
+                                    @request.session[:auth]['username_from_auth_hub'] = (hash_jwt[0]['auth'] == 'aad' || auth_user['nome_cognome'].blank? ? auth_user['email'] : auth_user['nome_cognome'])
+                                    @request.session[:auth][:autenticazioni] ||= {}
+                                    @request.session[:auth][:autenticazioni][:cms] = { :username => @request.session[:auth]['username_from_auth_hub']}
+                                end
                             end
                             #admin servizi del portale
                             user = ::Portal::Amministratore.load(:start_user => auth_user['email'])
