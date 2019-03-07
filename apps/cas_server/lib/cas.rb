@@ -106,7 +106,7 @@ module Spider; module CASServer::CAS
       chiave_utente = username.strip.gsub('spid','')
       chiave_utente_maiuscolo = chiave_utente.upcase
       utente_spid = ::Portal::UtenteSpidAgid.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
-      utente_portale = utente_spid.last.utente_portale
+      utente_portale = utente_spid.last.utente_portale unless utente_spid.last.blank?
       unless utente_portale.blank?
         ::Portal::Traccia.salva_traccia(st.client_hostname, "#{servizio}", utente_portale , { 'provider_accesso' => 'SPID' }.to_json , nil , 'cas', nil)
       end
