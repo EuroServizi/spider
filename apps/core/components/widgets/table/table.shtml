@@ -1,7 +1,19 @@
 <div class="{ @widget[:css_class] }">
     <tpl:asset type="js" src="widgets/table.js" />
     <tpl:asset type="css" src="css/table_base.css" />
-    <table sp:if="@rows && @rows.length > 0" class="table table-bordered table-striped table-hover row_linked width_auto">
+    <div sp:if="@tabelle_responsive" class="mobile-sorting">
+        <span sp:each="@elements |element|" >
+            <a sp:tag-if="@sortable[element]" href="{ @request[:path] }?_w{ @widget[:param] }[sort][{ element }]={ @sorted[element] == :asc ? 'desc' : 'asc' }" class="btn btn-default">
+                { @labels[element] }
+            </a>
+        </span>
+    </div>
+    
+    <div sp:if="@tabelle_responsive && !@pages.blank? && @pages > 1" class="pagination-mobile pagination-mobile-reset">
+          <a sp:if="@page > 1" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ 1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="btn btn-default btn-block">Torna all'inizio</a>
+    </div>
+    
+    <table sp:if="@rows && @rows.length > 0" class="table table-bordered table-striped table-hover row_linked width_auto { @tabelle_responsive ? 'table-responsive' : '' }">
         <thead>
             <tr class="heading_row">
                 <th sp:each="@elements |element|" class="{ @sortable[element] ? 'sortable' : '' }  { (@sorted[element] ? 'sorted-'+@sorted[element].to_s : '') }">
@@ -30,7 +42,11 @@
         </tbody>
     </table>
     
-    <ul sp:if="!@pages.blank? && @pages > 1" class="pagination">
+    <div sp:if="@tabelle_responsive && !@pages.blank? && @pages > 1" class="pagination-mobile pagination-mobile-loadmore">
+          <a sp:if="@has_more" href="{ @request[:path] }?_w{ @widget[:param] }[page]={ @page+1 }{ ( @query.blank? ? nil : '&_w'+@widget[:param]+'[q]='+@query ) }" class="btn btn-default btn-block">Carica altri</a>
+    </div>
+    
+    <ul sp:if="!@pages.blank? && @pages > 1" class="pagination { @tabelle_responsive ? 'pagination-desktop' : '' }">
         
         <!-- versione con file po, da ricreare file per traduzioni
             <li sp:if="@page > 1">
@@ -92,7 +108,7 @@
             </li>
     </ul>
     <!-- select con pagine per navigatore -->
-    <div class="btn-group dropup sel_pagine" sp:if="!@page.blank? && @pages > 1">
+    <div class="btn-group dropup sel_pagine { @tabelle_responsive ? 'sel_pagine-desktop' : '' }" sp:if="!@page.blank? && @pages > 1">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Pag <strong>{ @page }</strong> <span class="caret"></span>
         </button>

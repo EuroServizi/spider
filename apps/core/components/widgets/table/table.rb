@@ -73,6 +73,7 @@ module Spider; module Components
             @scene.current_page = @page
             @scene.link = @attributes[:link]
             @scene.link_id = @attributes[:link_id] || @attributes[:link_el]
+            @scene.tabelle_responsive = Spider.conf.get('widget_table_responsive')
             super
         end
         
