@@ -13,7 +13,7 @@ Spider.defineWidget('Spider.Components.Table', {
       this.ajaxify($('.heading_row a, .pagination a, .pagination-mobile-reset a, .mobile-sorting a', this.el));
       var $table = $('ul.table', this.el);
       
-      if(isResponsive) {
+      if(isResponsive && $table.length>0) {
         $loadMore = $('.pagination-mobile-loadmore', this.el);
         $loadMore.on('click', 'a', function(e) {
             e.preventDefault();
