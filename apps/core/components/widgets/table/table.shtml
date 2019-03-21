@@ -2,11 +2,12 @@
     <tpl:asset type="js" src="widgets/table.js" />
     <tpl:asset type="css" src="css/table_base.css" />
     <div sp:if="@tabelle_responsive" class="mobile-sorting">
-        <span sp:each="@elements |element|" >
+	<!-- commentato perchè causa problemi su demografici, da risolvere -->
+        <!--<span sp:each="@elements |element|" >
             <a sp:tag-if="@sortable[element]" href="{ @request[:path] }?_w{ @widget[:param] }[sort][{ element }]={ @sorted[element] == :asc ? 'desc' : 'asc' }" class="btn btn-default">
                 { @labels[element] }
             </a>
-        </span>
+	</span>-->
     </div>
     
     <div sp:if="@tabelle_responsive && !@pages.blank? && @pages > 1" class="pagination-mobile pagination-mobile-reset">
