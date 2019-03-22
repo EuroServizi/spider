@@ -41,9 +41,6 @@ Spider.defineWidget('Spider.Components.Table', {
                 } else {
                   $('.pagination-mobile-loadmore').addClass("muted").html("Non ci sono altri risultati.");
                 }
-                if($loadedTable.find('.mobile-sorting').length>0) {
-                  $('.mobile-sorting').html($loadedTable.find('.mobile-sorting').html());
-                }
               });
               return true;
           });
