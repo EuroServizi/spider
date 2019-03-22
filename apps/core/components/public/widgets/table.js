@@ -4,8 +4,8 @@ Spider.defineWidget('Spider.Components.Table', {
 	
 	ready: function(){
       if(typeof(this.el)!="undefined") {
-        if($('table.table:not(.no-responsive)', this.el).length>0 && $('table.table:not(.no-responsive)', this.el).parent().find(".pagination-mobile").length>0) {
-          tableToUl($('table.table:not(.no-responsive)', this.el));
+        if($('table.table:not(.no-responsive)', this.el).length>0 && $('table.table:not(.no-responsive)', this.el).hasClass("table-responsive")) {
+          tableToUl($('table.table-responsive:not(.no-responsive)', this.el));
         }        
         var isResponsive = $('ul.table:not(.no-responsive)', this.el).length>0;
         if(!isResponsive) {

@@ -19,6 +19,7 @@ module Spider; module Components
         attribute :link_id, :type => Symbol
         attribute :link
         attribute :sort
+        attribute :no_sorting, :type => TrueClass, :default => false #disabilita l'ordinamento
         #serve per i campi delle tabelle esterne che compaiono per il :reverse nel modello
         #metterlo a false nella view per nascondere i campi
         i_attribute :reverse_element, :type => TrueClass, :default => true
@@ -150,7 +151,11 @@ module Spider; module Components
         end
         
         def sortable?(el)
-            @model.mapper.sortable?(el) ? true : false
+            if(@attributes[:no_sorting]) 
+                false
+            else
+                @model.mapper.sortable?(el) ? true : false
+            end            
         end
        
         def prepare_queryset(qs)
