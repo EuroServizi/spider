@@ -103,9 +103,9 @@ module Spider; module CASServer::CAS
     elsif (username.strip =~ /^spid_/) == 0 and !defined?(::Portal::UtenteSpidAgid).nil?
       $LOG.debug("Entrato con SPID")
       #caso utente con accesso spid
-      chiave_utente = username.strip.gsub('spid','')
+      chiave_utente = username.strip.gsub('spid_','')
       chiave_utente_maiuscolo = chiave_utente.upcase
-      utente_spid = ::Portal::UtenteSpidAgid.where{ |ut_fed| (ut_fed.chiave == chiave_utente) | (ut_fed.chiave == chiave_utente_maiuscolo) }
+      utente_spid = ::Portal::UtenteSpidAgid.where{ |ut_spid| (ut_spid.chiave == chiave_utente) | (ut_spid.chiave == chiave_utente_maiuscolo) }
       utente_portale = utente_spid.last.utente_portale unless utente_spid.last.blank?
       unless utente_portale.blank?
         ::Portal::Traccia.salva_traccia(st.client_hostname, "#{servizio}", utente_portale , { 'provider_accesso' => 'SPID' }.to_json , nil , 'cas', nil)
