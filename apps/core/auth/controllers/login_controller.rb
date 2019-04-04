@@ -252,14 +252,14 @@ module Spider; module Auth
 
         def get_jwt_token(id_sessione,url_back, url_back_redirect=nil,tip_auth=nil)
             payload = {
-                        iss: 'soluzionipa.it',
-                        auth: tip_auth,
-                        ub: url_back,
-                        ub_redirect: url_back_redirect,
-                        ub_logout: url_back, #questa serve per tornare indietro dopo la logout
-                        idc: 'id_di_cosa', #id cliente...
-                        ext_session_id: id_sessione
-                    }
+                'iss' => 'soluzionipa.it',
+                'auth' => tip_auth,
+                'ub' => url_back,
+                'ub_redirect' => url_back_redirect,
+                'ub_logout' => url_back, #questa serve per tornare indietro dopo la logout
+                'idc' => 'id_di_cosa', #id cliente...
+                'ext_session_id' => id_sessione
+            }
             token = JWT.encode payload, "6rg1e8r6t1bv8rt1r7y7b86d8fsw8fe6bg1t61v8vsdfs8erer6c18168", 'HS256'
 
         end
