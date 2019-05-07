@@ -163,6 +163,8 @@ module Spider; module Model; module Storage; module Db
                 db_attributes[:length] = attributes[:length] if (attributes[:length])
             when 'Spider::DataTypes::Bool'
                 db_attributes[:length] = 1
+            when 'Spider::DataTypes::UUID'
+                db_attributes[:length] = 36
             end
             db_attributes[:autoincrement] = attributes[:autoincrement] if supports?(:autoincrement)
             return db_attributes
