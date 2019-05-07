@@ -522,6 +522,8 @@ module Spider; module Model; module Storage; module Db
                  'TINYINT'
              when 'BigDecimal', 'Spider::DataTypes::Decimal'
                  'DECIMAL'
+             when 'Spider::DataTypes::UUID'
+                 'VARCHAR'
              end
          end
          
@@ -536,6 +538,8 @@ module Spider; module Model; module Storage; module Db
                  db_attributes[:length] = 11
              when 'Spider::DataTypes::Text'
                  db_attributes[:length] = nil
+             when 'Spider::DataTypes::UUID'
+                 db_attributes[:length] = 36
              end
              db_attributes[:autoincrement] = false if attributes[:autoincrement] && !attributes[:primary_key]
              return db_attributes

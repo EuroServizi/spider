@@ -36,6 +36,16 @@ module Spider; module Model; module Storage; module Db
                 'varbinary'
             when 'Spider::DataTypes::Bool'
                 'bit'
+            when 'Spider::DataTypes::UUID'
+                'nvarchar'
+            end
+        end
+
+        def column_attributes(type, attributes)
+            db_attributes = super(type, attributes)
+            case type.name
+            when 'Spider::DataTypes::UUID'
+                db_attributes[:length] = 36
             end
         end
         

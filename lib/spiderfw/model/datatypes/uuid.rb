@@ -32,3 +32,5 @@ module Spider; module DataTypes
     
     
 end; end
+
+Spider::UUID = Spider::DataTypes::UUID

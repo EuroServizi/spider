@@ -13,7 +13,7 @@ module Spider
         
         @base_types = [
             String, Spider::DataTypes::Text, Integer, Fixnum, Float, BigDecimal, Date, DateTime, Time,
-            Spider::DataTypes::Bool, Spider::DataTypes::PK
+            Spider::DataTypes::Bool, Spider::DataTypes::PK, Spider::DataTypes::UUID
         ]
         
         # Returns a list of the base types, which must be handled by all mappers.

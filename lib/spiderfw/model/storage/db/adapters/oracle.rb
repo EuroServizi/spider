@@ -453,6 +453,8 @@ module Spider; module Model; module Storage; module Db
                  'BLOB'
              when 'Spider::DataTypes::Bool'
                  'NUMBER'
+             when 'Spider::DataTypes::UUID'
+                 'VARCHAR2'
              end
          end
          
@@ -473,6 +475,8 @@ module Spider; module Model; module Storage; module Db
              when 'Spider::DataTypes::Bool'
                  db_attributes[:precision] = 1
                  db_attributes[:length] = nil
+             when 'Spider::DataTypes::UUID'
+                 db_attributes[:length] = 36
              end
              return db_attributes
          end
