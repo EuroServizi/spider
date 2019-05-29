@@ -17,7 +17,8 @@ module Spider; module Messenger
             :failed => _('Failed'),
             :backend => _('Handed to backend'),
             :sent => _('Sent'),
-            :delivered => _('Delivered')
+            :delivered => _('Delivered'),
+            :archiviata => 'archiviata'
         }
         
         def self.sent_messages

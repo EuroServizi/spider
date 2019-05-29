@@ -62,6 +62,7 @@ Spider.defineWidget('Spider.Forms.SearchSelect', 'Spider.Forms.Input', {
         //          }
         //      });
         $('.add_box input[type=text]', this.el).attr('name', 'autocomplete-box').autocomplete({
+            minLength: 2,
             source: function(request, response){
                 var url = w.backend.urlForMethod('jquery_autocomplete');
                 var current = [];

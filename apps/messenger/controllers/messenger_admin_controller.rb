@@ -41,7 +41,7 @@ module Spider; module Messenger
 
         end
 
-        __.html :template => 'admin/queue'
+        __.html
         def queue(id=nil)
             q = Messenger.queues[@queue]
             model = Spider::Messenger.const_get(q[:model])
@@ -56,7 +56,8 @@ module Spider; module Messenger
             @scene.queued = model.queued_messages
             @scene.sent = model.sent_messages
             @scene.failed = model.failed_messages
-                      
+            render 'admin/queue'
+      
         end
 
         def view_message(queue, id)
