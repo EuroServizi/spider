@@ -9,7 +9,7 @@ module Spider::Messenger
       class SkebbyGatewaySendSMS
    
           def initialize(username = '', password = '')
-              @url = 'http://gateway.skebby.it/api/send/smseasy/advanced/http.php'
+              @url = 'https://gateway.skebby.it/api/send/smseasy/advanced/http.php'
        
               @parameters = {
                   'username'      => username,
@@ -40,8 +40,20 @@ module Spider::Messenger
           end
                
           #@parameters.each {|key, value| puts "#{key} is #{value}" }    
-              @response = Net::HTTP.post_form(URI(@url), @parameters)
-              if @response.code == "200" #@response.message == "OK"
+              #@response = Net::HTTP.post_form(URI(@url), @parameters)
+              uri = URI.parse(@url)
+                http = Net::HTTP.new(uri.host, uri.port)
+                http.use_ssl = true
+                #http.ssl_version = :TLSv1_2
+		#http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+		request = Net::HTTP::Post.new(uri.request_uri)
+                request.set_form_data(@parameters)
+
+                # Tweak headers, removing this will default to application/x-www-form-urlencoded
+                #request["Content-Type"] = "application/json"
+
+              @response = http.request(request)
+	      if @response.code == "200" #@response.message == "OK"
                   true
               else
                   false
