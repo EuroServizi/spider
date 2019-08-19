@@ -881,3 +881,110 @@ function create_modal_dialog(messaggio){
 function close_modal_dialog(dialog){
 	dialog.modal('hide');
 }
+
+/* Funzione che converte una tabella in un ul, visualizzazione responsive */
+function tableToUl(tabellaDaConvertire) {
+	if(tabellaDaConvertire.is("table")) {
+	  var ulObj = $('<ul>');
+	  var empty = tabellaDaConvertire.find("td").length<1;
+	  var balanceColumns = false;
+	  ulObj.addClass(tabellaDaConvertire.attr("class"));
+	  if(tabellaDaConvertire.find("[class^=cell-wide]").length==0) {
+		// se non ho impostato nessuna larghezza colonna, bilancio automaticamente la larghezza di tutte le colonne
+		tabellaDaConvertire.find("td").addClass("cell-wide");
+		balanceColumns = true;
+	  } else {
+		// ci sono delle larghezze colonna impostate nell'html, impedisco che ne vengano aggiunte automaticamente
+		ulObj.addClass("no-filler");
+	  }
+	  ulObj.attr("id",tabellaDaConvertire.attr("id"));
+	  if(ulObj.attr("id")=="" || typeof(ulObj.attr("id"))=="undefined") {
+		ulObj.attr("id", tabellaDaConvertire.find("tbody").attr("id"));
+	  }
+	  if(ulObj.attr("id")=="" || typeof(ulObj.attr("id"))=="undefined") {
+		var index = -1;
+		for(var i = 0; i<$allResponsiveTables.length; i++) {
+		  if(tabellaDaConvertire.is($allResponsiveTables[i])) {
+			index = i;
+		  }
+		}
+		if(index>-1) {
+		  ulObj.attr("id","table_"+index);
+		}
+	  }
+	  var columns = [];
+	  var htmlColumns = [];
+	  var allTableHeaders = tabellaDaConvertire.find("tr:has(th)");
+	  allTableHeaders.each(function(){
+		var liObj = $('<li>');
+		if($(this).find("th").length==1) {
+		  // titolo tabella
+		  liObj.addClass("table-caption");
+		  liObj.html($(this).find("th").html());
+		} else {
+		  // nomi colonne
+		  liObj.addClass("table-header");
+		  liObj.addClass($(this).attr("class"));
+		  $(this).find("th").each(function(){
+			var $div = $('<div>'+$(this).html()+'</div>');
+			columns.push($(this).text());
+			var liObjnk = $(this).find("a");
+			if(liObjnk.length>0){
+			  htmlColumns.push($(this).html());
+			  liObjnk.addClass("btn btn-default");
+			  tabellaDaConvertire.parent().find(".mobile-sorting").append(liObjnk);
+			}
+			liObj.append($div);
+		  });
+		  if(empty) {
+			// se la tabella è vuota aggiusto le larghezze della header perchè riempia tutto lo spazio orizzontale
+			liObj.find("div").css("width", ((100/columns.length)*1.1)+"%");
+		  }
+		}
+		liObj.appendTo(ulObj);
+	  });
+	  
+	  ulObj.insertBefore(tabellaDaConvertire);
+	  var $tbody = tabellaDaConvertire.find("tbody");
+	  tabellaDaConvertire.find("tfoot tr").each(function(){$(this).appendTo($tbody);});
+	  if(!empty) {
+		var largestCol = rowsToLi($tbody, ulObj, columns, balanceColumns);
+		setCellWidths(largestCol, columns, ulObj);
+	  }
+	  
+	  if(ulObj.find("li:not(.table-header)").find("a").length<1) { 
+		ulObj.removeClass("row_linked");     
+	  }
+	  
+	  if($(".page_navigation.pagination.pagination-desktop").length<1) {
+		// convertiamo il paginatore js
+		$(".page_navigation.pagination").addClass("pagination-desktop");
+		$(".sel_pagine").addClass("sel_pagine-desktop");
+		var $loadMore = $('<a class="btn btn-default btn-block">Carica altri</a>');
+		$loadMore.click(function(){
+		  $(this).hide();
+		  $(this).parent().append('<i class=\"fa fa-circle-o-notch fa-spin fa-3x fa-fw muted\"></i><span class=\"sr-only\">Caricamento...</span>');
+		  var $container = $(this).parent().parent();
+		  var hiddenRows = $container.find('.pagination_content .paginated_element:hidden');
+		  var show_per_page = parseInt($container.find("#items_per_page").val());
+		  
+		  $(this).parent().find(".fa-spin").remove();
+		  hiddenRows.slice(0, show_per_page).show();
+		  var hiddenRows = $container.find('.pagination_content .paginated_element:hidden');
+		  if(hiddenRows.length>0) {
+			$(this).show();
+		  }
+		});
+		if(ulObj.find('.paginated_element:hidden').length>0) {
+		  if($(".pagination-mobile-loadmore").length<1) {
+			$('<div class="pagination-mobile pagination-mobile-loadmore"></div>').insertAfter(ulObj);
+		  }
+		  $(".pagination-mobile-loadmore").append($loadMore);
+		}
+	  }    
+	  
+	  if(tabellaDaConvertire.is("table")){tabellaDaConvertire.remove();}
+	}
+  }
+
+  Spider.tableToUl = tableToUl;
