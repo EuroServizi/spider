@@ -883,108 +883,227 @@ function close_modal_dialog(dialog){
 }
 
 /* Funzione che converte una tabella in un ul, visualizzazione responsive */
-function tableToUl(tabellaDaConvertire) {
-	if(tabellaDaConvertire.is("table")) {
-	  var ulObj = $('<ul>');
-	  var empty = tabellaDaConvertire.find("td").length<1;
-	  var balanceColumns = false;
-	  ulObj.addClass(tabellaDaConvertire.attr("class"));
-	  if(tabellaDaConvertire.find("[class^=cell-wide]").length==0) {
+// i testi della tabella che superano questo limite verranno considerati testi lunghi.
+var caratteriTestoBreve = 40;
+
+function rowsToLi($tbody, $ul, columns, balanceColumns) {
+	if(typeof(balanceColumns)=="undefined") { balanceColumns = false; }
+	var largestCol = false;
+	var hasLongTexts = false;
+	var widecells = 0;
+	var columnsSizes = [];
+	for(var i in columns) { columnsSizes.push(0); }
+		$tbody.find('tr').each(function(){
+			var $li = $('<li>');
+			$li.attr("id",$(this).attr("id"));
+			$li.addClass($(this).attr("class"));
+			if($(this).get(0).style.display) {
+				$li.css('display',$(this).css('display'));
+			}    
+			var counter = 0;
+			var longtexts = 0;
+			widecells = $(this).find(".cell-wide").length;
+			$(this).find("td").each(function(){
+			var content = $(this).text().trim();
+			var $link = $(this).find("a");
+			var label = typeof(columns[counter])!="undefined"?"<label>"+columns[counter]+"</label>":"";
+			var $div = $('<div>'+label+$(this).html().trim()+'</div>');
+			if($(this).html().trim().length <1) { $div.addClass("empty"); }
+			if($div.find("label").html()==""){ $div.find("label").addClass("empty");}
+			$div.find("label").html($div.find("label").html()+":");
+			$div.attr("id",$(this).attr("id"));
+			$div.addClass($(this).attr("class"));
+			if($div.hasClass("cell-wide")) {
+				$div.addClass("cell-wide-"+widecells);
+			}
+			if(counter==columns.length-1) {
+		//         $div.css('width',"90vw"); // senza una larghezza impostata sull'ultima colonna le larghezze in percentuale non hanno effetto
+				$div.addClass('widthfixer');
+			}
+			if($(this).get(0).style.minWidth) {
+				$div.css('min-width',$(this).css('min-width'));
+			}
+			
+			if($(this).attr("align")=="center" || $(this).css('text-align') == 'center') {
+				$div.addClass("cell-center");
+			} else if($(this).attr("align")=="right" || $(this).css('text-align') == 'right') {
+				$div.addClass("cell-right");
+			}
+			
+			if(columnsSizes[counter]<content.length) {
+				columnsSizes[counter] = content.length;
+			}
+			
+			if( !largestCol || largestCol.content.length<content.length) {
+				largestCol = {"colIndex":counter, "colName":columns[counter], "content": content};
+			}
+			if(content.length>caratteriTestoBreve) {
+				longtexts++;
+			}
+			$li.append($div);
+			counter++;
+			});
+			if(longtexts>0) { hasLongTexts = true; }
+			
+			if($ul.hasClass("row_linked")) {
+			$ul.on('tap', 'tr, li', function(){
+				if(typeof($(this).find('a').attr('href'))!="undefined") {
+				console.log("TAP Going to "+$(this).find('a').first().attr('href'));
+				window.location = $(this).find('a').first().attr('href');
+				}
+			});
+			$ul.on('click', 'tr, li', function(){
+				if(typeof($(this).find('a').attr('href'))!="undefined") {
+				console.log("TAP Going to "+$(this).find('a').first().attr('href'));
+				window.location = $(this).find('a').first().attr('href');
+				} else {
+				console.log("no href");
+				}
+			});
+			}
+			$li.appendTo($ul);
+			$(this).remove();
+		});
+	if(widecells>0) { $ul.addClass("no-filler"); }
+	if(hasLongTexts) {largestCol.wrapTable = true;}
+	
+	if(hasLongTexts && balanceColumns) {
+		// è presente almeno una colonna molto larga, effettuo bilanciamento automatico in base ai contenuti
+		$ul.find("div").removeClass("cell-wide-"+widecells).removeClass("cell-wide");
+	
+		var totalSize = columnsSizes.reduce(function(a, b) { return a + b; }, 0);
+		
+		for(var columnIndex in columnsSizes) {
+		var bestWidth = columnsSizes[columnIndex]*100/totalSize;
+		if (bestWidth == 0) { bestWidth = 1; }
+		for(var n = 1; n < 10; n++) {
+			if(bestWidth<=100/n && bestWidth>100/(n+1)) {
+			$ul.find("li div:nth-child("+(parseInt(columnIndex)+1)+")").addClass("cell-wide-"+n);
+			}
+		}
+		}
+		
+	}
+	return largestCol;
+}
+
+function setCellWidths(largestCol, columns, $ul) {
+	if(!$ul.hasClass("no-filler")) {
+		if (largestCol) {
+		$ul.find("li div:nth-child("+(largestCol.colIndex+1)+")").addClass("cell-wide-1");
+		}
+	}
+
+	if(columns.length>8 && !$ul.hasClass("wrap-header")) {
+		$ul.parent().addClass("table-big");
+	} else if(columns.length>4) {
+		$ul.parent().addClass("table-medium");
+	}
+	if(largestCol.wrapTable) { $ul.addClass("table-wrap"); }
+}
+
+function tableToUl($table) {
+	if($table.is("table")) {
+		var $ul = $('<ul>');
+		var empty = $table.find("td").length<1;
+		var balanceColumns = false;
+		$ul.addClass($table.attr("class"));
+		if($table.find("[class^=cell-wide]").length==0) {
 		// se non ho impostato nessuna larghezza colonna, bilancio automaticamente la larghezza di tutte le colonne
-		tabellaDaConvertire.find("td").addClass("cell-wide");
+		$table.find("td").addClass("cell-wide");
 		balanceColumns = true;
-	  } else {
+		} else {
 		// ci sono delle larghezze colonna impostate nell'html, impedisco che ne vengano aggiunte automaticamente
-		ulObj.addClass("no-filler");
-	  }
-	  ulObj.attr("id",tabellaDaConvertire.attr("id"));
-	  if(ulObj.attr("id")=="" || typeof(ulObj.attr("id"))=="undefined") {
-		ulObj.attr("id", tabellaDaConvertire.find("tbody").attr("id"));
-	  }
-	  if(ulObj.attr("id")=="" || typeof(ulObj.attr("id"))=="undefined") {
+		$ul.addClass("no-filler");
+		}
+		$ul.attr("id",$table.attr("id"));
+		if($ul.attr("id")=="" || typeof($ul.attr("id"))=="undefined") {
+		$ul.attr("id", $table.find("tbody").attr("id"));
+		}
+		if($ul.attr("id")=="" || typeof($ul.attr("id"))=="undefined") {
 		var index = -1;
 		for(var i = 0; i<$allResponsiveTables.length; i++) {
-		  if(tabellaDaConvertire.is($allResponsiveTables[i])) {
+			if($table.is($allResponsiveTables[i])) {
 			index = i;
-		  }
+			}
 		}
 		if(index>-1) {
-		  ulObj.attr("id","table_"+index);
+			$ul.attr("id","table_"+index);
 		}
-	  }
-	  var columns = [];
-	  var htmlColumns = [];
-	  var allTableHeaders = tabellaDaConvertire.find("tr:has(th)");
-	  allTableHeaders.each(function(){
-		var liObj = $('<li>');
+		}
+		var columns = [];
+		var htmlColumns = [];
+		var $allTableHeaders = $table.find("tr:has(th)");
+		$allTableHeaders.each(function(){
+		var $li = $('<li>');
 		if($(this).find("th").length==1) {
-		  // titolo tabella
-		  liObj.addClass("table-caption");
-		  liObj.html($(this).find("th").html());
+			// titolo tabella
+			$li.addClass("table-caption");
+			$li.html($(this).find("th").html());
 		} else {
-		  // nomi colonne
-		  liObj.addClass("table-header");
-		  liObj.addClass($(this).attr("class"));
-		  $(this).find("th").each(function(){
+			// nomi colonne
+			$li.addClass("table-header");
+			$li.addClass($(this).attr("class"));
+			$(this).find("th").each(function(){
 			var $div = $('<div>'+$(this).html()+'</div>');
 			columns.push($(this).text());
-			var liObjnk = $(this).find("a");
-			if(liObjnk.length>0){
-			  htmlColumns.push($(this).html());
-			  liObjnk.addClass("btn btn-default");
-			  tabellaDaConvertire.parent().find(".mobile-sorting").append(liObjnk);
+			var $link = $(this).find("a");
+			if($link.length>0){
+				htmlColumns.push($(this).html());
+				$link.addClass("btn btn-default");
+				$table.parent().find(".mobile-sorting").append($link);
 			}
-			liObj.append($div);
-		  });
-		  if(empty) {
+			$li.append($div);
+			});
+			if(empty) {
 			// se la tabella è vuota aggiusto le larghezze della header perchè riempia tutto lo spazio orizzontale
-			liObj.find("div").css("width", ((100/columns.length)*1.1)+"%");
-		  }
+			$li.find("div").css("width", ((100/columns.length)*1.1)+"%");
+			}
 		}
-		liObj.appendTo(ulObj);
-	  });
-	  
-	  ulObj.insertBefore(tabellaDaConvertire);
-	  var $tbody = tabellaDaConvertire.find("tbody");
-	  tabellaDaConvertire.find("tfoot tr").each(function(){$(this).appendTo($tbody);});
-	  if(!empty) {
-		var largestCol = rowsToLi($tbody, ulObj, columns, balanceColumns);
-		setCellWidths(largestCol, columns, ulObj);
-	  }
-	  
-	  if(ulObj.find("li:not(.table-header)").find("a").length<1) { 
-		ulObj.removeClass("row_linked");     
-	  }
-	  
-	  if($(".page_navigation.pagination.pagination-desktop").length<1) {
+		$li.appendTo($ul);
+		});
+		
+		$ul.insertBefore($table);
+		var $tbody = $table.find("tbody");
+		$table.find("tfoot tr").each(function(){$(this).appendTo($tbody);});
+		if(!empty) {
+		var largestCol = rowsToLi($tbody, $ul, columns, balanceColumns);
+		setCellWidths(largestCol, columns, $ul);
+		}
+		
+		if($ul.find("li:not(.table-header)").find("a").length<1) { 
+		$ul.removeClass("row_linked");     
+		}
+		
+		if($(".page_navigation.pagination.pagination-desktop").length<1) {
 		// convertiamo il paginatore js
 		$(".page_navigation.pagination").addClass("pagination-desktop");
 		$(".sel_pagine").addClass("sel_pagine-desktop");
 		var $loadMore = $('<a class="btn btn-default btn-block">Carica altri</a>');
 		$loadMore.click(function(){
-		  $(this).hide();
-		  $(this).parent().append('<i class=\"fa fa-circle-o-notch fa-spin fa-3x fa-fw muted\"></i><span class=\"sr-only\">Caricamento...</span>');
-		  var $container = $(this).parent().parent();
-		  var hiddenRows = $container.find('.pagination_content .paginated_element:hidden');
-		  var show_per_page = parseInt($container.find("#items_per_page").val());
-		  
-		  $(this).parent().find(".fa-spin").remove();
-		  hiddenRows.slice(0, show_per_page).show();
-		  var hiddenRows = $container.find('.pagination_content .paginated_element:hidden');
-		  if(hiddenRows.length>0) {
+			$(this).hide();
+			$(this).parent().append('<i class=\"fa fa-circle-o-notch fa-spin fa-3x fa-fw muted\"></i><span class=\"sr-only\">Caricamento...</span>');
+			var $container = $(this).parent().parent();
+			var $hiddenRows = $container.find('.pagination_content .paginated_element:hidden');
+			var show_per_page = parseInt($container.find("#items_per_page").val());
+			
+			$(this).parent().find(".fa-spin").remove();
+			$hiddenRows.slice(0, show_per_page).show();
+			var $hiddenRows = $container.find('.pagination_content .paginated_element:hidden');
+			if($hiddenRows.length>0) {
 			$(this).show();
-		  }
+			}
 		});
-		if(ulObj.find('.paginated_element:hidden').length>0) {
-		  if($(".pagination-mobile-loadmore").length<1) {
-			$('<div class="pagination-mobile pagination-mobile-loadmore"></div>').insertAfter(ulObj);
-		  }
-		  $(".pagination-mobile-loadmore").append($loadMore);
+		if($ul.find('.paginated_element:hidden').length>0) {
+			if($(".pagination-mobile-loadmore").length<1) {
+			$('<div class="pagination-mobile pagination-mobile-loadmore"></div>').insertAfter($ul);
+			}
+			$(".pagination-mobile-loadmore").append($loadMore);
 		}
-	  }    
-	  
-	  if(tabellaDaConvertire.is("table")){tabellaDaConvertire.remove();}
+		}    
+		
+		if($table.is("table")){$table.remove();}
 	}
-  }
+}
 
-  Spider.tableToUl = tableToUl;
+Spider.tableToUl = tableToUl;
