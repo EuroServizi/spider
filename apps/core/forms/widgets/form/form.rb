@@ -1,4 +1,4 @@
-require 'action_view'
+require 'sanitize'
     
 
 module Spider; module Forms
@@ -56,12 +56,6 @@ module Spider; module Forms
         attr_reader :obj
         
         include Spider::EventSource
-        #helper che permette di usare sanitize
-        begin
-            include ActionView::Helpers::SanitizeHelper
-        rescue NameError
-            Spider.logger.error "\n\n Installare gemma actionview per usare sanitize in widget form"
-        end
         
 
         def init
@@ -361,7 +355,7 @@ module Spider; module Forms
                 next if read_only?(element_name)
                 #sanitize per sql injection e xss
                 begin
-                    @inputs[element_name].value = sanitize(@inputs[element_name].value)
+                    @inputs[element_name].value = Sanitize.fragment(@inputs[element_name].value)
                 rescue => exc
                     Spider.logger.error "Metodo sanitize non supportato da campo #{element_name}"
                 end

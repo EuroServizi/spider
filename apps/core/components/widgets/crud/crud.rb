@@ -1,4 +1,4 @@
-require 'action_view'
+require 'sanitize'
 
 module Spider; module Components
     
@@ -13,12 +13,6 @@ module Spider; module Components
         attribute :"new-link"
         attribute :"edit-link"
         attr_accessor :fixed
-
-        begin
-            include ::ActionView::Helpers::SanitizeHelper
-        rescue NameError
-            Spider.logger.error "\n\n Installare gemma actionview per usare sanitize in spider"
-        end
 
         def route_widget
             [@action, @_action]
@@ -114,7 +108,7 @@ module Spider; module Components
                     #arrivano parametri che vengono passati al db, uso sanitize                  
                     if @table_q
                         begin
-                            @table_q = sanitize(@table_q)
+                            @table_q = Sanitize.fragment(@table_q)
                         rescue => exc
                             Spider.logger.error "Metodo sanitize non supportato in query params su crud"
                         end
