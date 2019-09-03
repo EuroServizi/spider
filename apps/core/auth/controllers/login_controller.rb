@@ -40,19 +40,20 @@ module Spider; module Auth
         def index
             #controllo se ho in sessione @request.session[:auth]['username_from_auth_hub'], vuol dire che ho fatto la login
             exception = @request.session.flash[:unauthorized_exception]
-            if (@request.params['redirect'])
-                @request.params['redirect'].gsub!(Spider::ControllerMixins::HTTPMixin.reverse_proxy_mapping(''),'')
-                @scene.redirect = @request.params['redirect']
+            if (@request.params['rdr'])
+                @request.params['rdr'].gsub!(Spider::ControllerMixins::HTTPMixin.reverse_proxy_mapping(''),'')
+                @scene.redirect = @request.params['rdr']
             end
             if !@request.session[:auth].blank? && !@request.session[:auth]['username_from_auth_hub'].blank?
-                redirect @request.params['redirect']
+                #Spider.logger.error "\n\n Sto facendo il REDIRECT 3 \n\n"
+                redirect @request.params['rdr']
             end
             @scene.unauthorized_msg = exception[:message] if exception && exception[:message] != 'Spider::Auth::Unauthorized'
             @scene.message = @request.session.flash[:login_message] if @request.session.flash[:login_message]
             if Spider.conf.get('auth.enable_auth_hub')
-                token_up = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login',@request.params['redirect'],'up')
+                token_up = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login',@request.params['rdr'],'up')
                 @scene.login_url_up = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_up}"
-                token_aad = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login',@request.params['redirect'],'aad')
+                token_aad = get_jwt_token(@request.session.sid, self.class.http_s_url+'/do_login',@request.params['rdr'],'aad')
                 @scene.login_url_aad = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token_aad}"
                 @scene.login_title = "Autenticazione Necessaria"
                 render('no_login')

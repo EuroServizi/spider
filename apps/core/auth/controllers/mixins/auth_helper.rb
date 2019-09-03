@@ -122,19 +122,22 @@ module Spider; module Auth
                     # redir_url = Spider.conf.get("auth.redirect_url_auth_hub")+"/sign_in?jwt=#{token}"
                     redirect_param = get_correct_action(@request)
                     unless @request.params['jwt'].blank?
-                        redirect Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt']+"&redirect=#{redirect_param}")
+                        #Spider.logger.error "\n\n Sto facendo il REDIRECT 1 \n\n"
+                        redir_url = Spider::Auth::LoginController.http_s_url('do_login?jwt='+@request.params['jwt']+"&rdr=#{redirect_param}")
                     else
-                        #pagina di login con i due link per le due modalità di accesso
-                        redirect Spider::Auth::LoginController.http_s_url+"?redirect=#{redirect_param}"
+                        #pagina di login con i due link per le due modalita' di accesso
+                        #Spider.logger.error "\n\n Sto facendo il REDIRECT 2 \n\n"
+                        redir_url = Spider::Auth::LoginController.http_s_url+"?rdr=#{redirect_param}"
                     end
                 else
                     base = (@current_require && @current_require[:redirect]) ? @current_require[:redirect] : Spider::Auth.request_url+'/login/'
                     base = self.class.http_s_url+'/'+base unless base[0].chr == '/'
                     base += (base.include?("?") ? "&" : "?")
                     get_params = @request.params.map{|k,v| "#{k}=#{v}"}.join('&')+"&" || ""
-                    redir_url = base + get_params +'redirect='+URI.escape(@request.path)
+                    redir_url = base + get_params +'rdr='+URI.escape(@request.path)
                     @request.session.flash[:unauthorized_exception] = {:class => exc.class.name, :message => exc.message}
                 end
+                #Spider.logger.error "\n\n Sto facendo il REDIRECT GENERALE \n\n"
                 redirect(redir_url, Spider::HTTP::TEMPORARY_REDIRECT)
             else
                 super
