@@ -355,9 +355,15 @@ module Spider; module Forms
                 next if read_only?(element_name)
                 #sanitize per sql injection e xss
                 begin
-                    @inputs[element_name].value = Sanitize.fragment(@inputs[element_name].value)
+                    @inputs[element_name].value = Sanitize.fragment(@inputs[element_name].value) if !@inputs[element_name].nil? && @inputs[element_name].value.class == String
                 rescue => exc
                     Spider.logger.error "Metodo sanitize non supportato da campo #{element_name}"
+                    messaggio =  "#{exc.message}"
+                    messaggio_log = messaggio
+                    exc.backtrace.each{|riga_errore| 
+                        messaggio_log += "\n\r#{riga_errore}" 
+                    } 
+                    Spider.logger.error messaggio_log
                 end
                 input = @inputs[element_name]
                 next unless input

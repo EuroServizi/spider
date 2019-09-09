@@ -108,9 +108,15 @@ module Spider; module Components
                     #arrivano parametri che vengono passati al db, uso sanitize                  
                     if @table_q
                         begin
-                            @table_q = Sanitize.fragment(@table_q)
+                            @table_q = Sanitize.fragment(@table_q) unless @table_q.nil? 
                         rescue => exc
                             Spider.logger.error "Metodo sanitize non supportato in query params su crud"
+                            messaggio =  "#{exc.message}"
+                            messaggio_log = messaggio
+                            exc.backtrace.each{|riga_errore| 
+                                messaggio_log += "\n\r#{riga_errore}" 
+                            } 
+                            Spider.logger.error messaggio_log
                         end
                         @widgets[:table].add_condition(@model.free_query_condition(@table_q))
                     end
