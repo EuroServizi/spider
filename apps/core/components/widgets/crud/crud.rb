@@ -1,4 +1,5 @@
 require 'sanitize'
+require 'stoolie'
 
 module Spider; module Components
     
@@ -84,6 +85,7 @@ module Spider; module Components
             end
             
         end
+
         
         def prepare_widgets
             if @action == :table && @widgets[:table]
@@ -109,6 +111,7 @@ module Spider; module Components
                     if @table_q
                         begin
                             @table_q = Sanitize.fragment(@table_q) unless @table_q.nil? 
+                            @table_q = "" if (@table_q =~ /^[a-zA-Z0-9]+$/).nil?
                         rescue => exc
                             Spider.logger.error "Metodo sanitize non supportato in query params su crud"
                             messaggio =  "#{exc.message}"

@@ -38,6 +38,8 @@ module Spider; module Auth
                 
         __.html
         def index
+            #tolgo la parte del dominio dall'url
+            @request.params['rdr'] = URI.parse(@request.params['rdr']).path unless @request.params['rdr'].blank?
             #controllo se ho in sessione @request.session[:auth]['username_from_auth_hub'], vuol dire che ho fatto la login
             exception = @request.session.flash[:unauthorized_exception]
             if (@request.params['rdr'])
