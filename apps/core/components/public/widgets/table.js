@@ -3,12 +3,13 @@ Spider.defineWidget('Spider.Components.Table', {
 	autoInit: true,
 	
 	ready: function(){
+	  var isAdmin = $(this.el).closest('#spider-admin').length>0;
       if(typeof(this.el)!="undefined") {
-        if($('table.table:not(.no-responsive)', this.el).length>0 && $('table.table:not(.no-responsive)', this.el).hasClass("table-responsive")) {
+        if(!isAdmin && $('table.table:not(.no-responsive)', this.el).length>0 && $('table.table:not(.no-responsive)', this.el).hasClass("table-responsive")) {
           $allResponsiveTables = $( "table.table-responsive" );
           Spider.tableToUl($('table.table-responsive:not(.no-responsive)', this.el));
         }        
-        var isResponsive = $('ul.table:not(.no-responsive)', this.el).length>0;
+        var isResponsive = !isAdmin && $('ul.table:not(.no-responsive)', this.el).length>0;
         if(!isResponsive) {
           $('.pagination-mobile-loadmore', this.el).remove();
           $('.pagination-mobile-reset', this.el).remove();
