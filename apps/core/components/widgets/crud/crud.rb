@@ -1,5 +1,4 @@
 require 'sanitize'
-require 'stoolie'
 
 module Spider; module Components
     
