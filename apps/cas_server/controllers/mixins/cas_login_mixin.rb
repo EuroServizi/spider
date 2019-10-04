@@ -163,16 +163,25 @@ module Spider; module CASServer
 
         __.html
         def login
-            @service = clean_service_url(@request.params['service'] || @request.params['destination'])
-            $LOG.debug("\n\n Login with service #{@service} for user '#{@request.user}'")
-            if @request.user && !@request.params.key?('renew')
-                if !@service || @service.empty? || cas_service_allowed?(@service, @request.user)
-                    return cas_user_authenticated(@request.user)
-                else
-                    raise Forbidden
-                end
-            end 
-            index
+            #controllo su query string della pagina portal/autenticazione/login con attacco sql injection
+            unless (@request.env['QUERY_STRING'] =~ /(and)|(or).*[1].*[1]/i).nil? #trova un attacco
+                @response.status=401
+                @response.headers['Content-Type'] = 'text/html'
+                @response.body=["Query string non valida!"]
+                #raise Forbidden.new "Query string non valida!"
+                done
+            else
+                @service = clean_service_url(@request.params['service'] || @request.params['destination'])
+                $LOG.debug("\n\n Login with service #{@service} for user '#{@request.user}'")
+                if @request.user && !@request.params.key?('renew')
+                    if !@service || @service.empty? || cas_service_allowed?(@service, @request.user)
+                        return cas_user_authenticated(@request.user)
+                    else
+                        raise Forbidden
+                    end
+                end 
+                index
+            end
         end
 
         __.html

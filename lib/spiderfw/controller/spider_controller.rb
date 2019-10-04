@@ -1,7 +1,8 @@
+require 'spiderfw/controller/mixins/http_mixin'
 module Spider
     
     class SpiderController < Controller
-        include HTTPMixin
+        include ::Spider::ControllerMixins::HTTPMixin
         include StaticContent
         
         

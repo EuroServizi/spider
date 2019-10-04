@@ -61,11 +61,13 @@
 })();
 
 // TODO: move somewhere else
-Function.prototype.bind = function(scope) {
-  var proxied = this;
-  return function() { 
-      var args = Array.prototype.slice.call(arguments);
-      args.push(this);
-      return proxied.apply(scope, args); 
+if (typeof(window.appType) == 'undefined' || window.appType != "external") {
+  Function.prototype.bind = function(scope) {
+    var proxied = this;
+    return function() { 
+        var args = Array.prototype.slice.call(arguments);
+        args.push(this);
+        return proxied.apply(scope, args); 
+    };
   };
-};
+}
