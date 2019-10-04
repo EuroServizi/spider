@@ -32,6 +32,9 @@ module Spider; module Components
         end
         
         def prepare_widgets
+            #widget di base della parte admin, faccio sanitize dei parametri
+            @request.params = @request.params.sanitize_object
+                            
             @models.each do |model|
                 if @user_checks && user_check = @user_checks[model]
                     next unless @request.user

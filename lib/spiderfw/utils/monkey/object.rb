@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+require 'sanitize'
+
 major, minor, patch = RUBY_VERSION.split('.').map{ |v| v.to_i }
 if major <= 1 && minor <= 8
 
@@ -100,5 +102,29 @@ class Object
         end
     end
 
+    def sanitize_object(encoding='UTF-8')
+        if self.respond_to?(:each_pair)
+            self.each_pair{ |chiave, valore|
+                valore.sanitize_object
+            }
+        elsif self.respond_to?(:each) && !self.is_a?(String)
+            #controllo se sto ciclando su un modello
+            if self.class < Spider::Model::BaseModel
+                #ritorna le chiavi degli elementi
+                self.class.elements.each_pair{ |chiave_hash_modello, valore_hash_modello|
+                    self[chiave_hash_modello].sanitize_object unless self[chiave_hash_modello].respond_to?(:model)
+                }
+            else
+                #converto i singoli valori
+                self.each{ |valore_array|
+                    valore_array.sanitize_object
+                }
+            end
+        elsif self.is_a?(String)
+            self_dup = self.dup
+            self_dup = self_dup.gsub('alert','')
+            self.replace(Sanitize.fragment(self_dup)) unless self.frozen?
+        end
+    end
 
 end
