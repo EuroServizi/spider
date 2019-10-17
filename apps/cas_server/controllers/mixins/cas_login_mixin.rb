@@ -164,7 +164,7 @@ module Spider; module CASServer
         __.html
         def login
             #controllo su query string della pagina portal/autenticazione/login con attacco sql injection
-            unless (@request.env['QUERY_STRING'] =~ /(and)|(or).*[1].*[1]/i).nil? #trova un attacco
+            unless (@request.env['QUERY_STRING'] =~ /((and)|(or)).*[1]+.+[1]+/i).nil? #trova un attacco
                 @response.status=401
                 @response.headers['Content-Type'] = 'text/html'
                 @response.body=["Query string non valida!"]
