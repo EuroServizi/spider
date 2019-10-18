@@ -164,7 +164,8 @@ module Spider; module CASServer
         __.html
         def login
             #controllo su query string della pagina portal/autenticazione/login con attacco sql injection
-            unless (@request.env['QUERY_STRING'] =~ /((and)|(or)).*[1]+.+[1]+/i).nil? #trova un attacco
+            unless (CGI::unescape(@request.env['QUERY_STRING']) =~ /((and)|(or)).*[1]{1}.*[=]{1}.*[1]{1}/i).nil? #trova un attacco
+                $LOG.error("\n\n Login CAS problem per #{@service} for user '#{@request.user}' per destination #{@request.params['destination']}")
                 @response.status=401
                 @response.headers['Content-Type'] = 'text/html'
                 @response.body=["Query string non valida!"]
