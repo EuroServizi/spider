@@ -78,7 +78,7 @@ module Spider; module Model; module Storage; module Db
             conn.autocommit(true)
             conn.options(::Mysql::SET_CHARSET_NAME, 'utf8')
             conn.options(::Mysql::INIT_COMMAND, "SET NAMES 'utf8'")
-            conn.reconnect = true
+            #conn.reconnect = true
             conn.query("SET NAMES 'utf8'")
             return conn
         end
@@ -218,6 +218,11 @@ module Spider; module Model; module Storage; module Db
                 release if !in_transaction?
                 if (exc.message =~ /Duplicate entry/)
                     raise Spider::Model::Storage::DuplicateKey
+                elsif ([1068,1075].include?(exc.errno))
+                    #1068 => Mysql::ServerError::WrongAutoKey: Incorrect table definition; there can be only one auto column and it must be defined as a key
+                    #1075 => Mysql::ServerError::MultiplePriKey: Multiple primary key defined 
+                    #Non interrompere processo di sync, in quanto possibile PARTITION attiva
+                    Spider.logger.error("Db query not done, probably PARTITION active")
                 else
                     raise exc
                 end
