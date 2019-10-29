@@ -214,13 +214,17 @@ module Spider; module Model; module Storage; module Db
                 else
                     return res
                 end
-            rescue ::Mysql::ServerError::WrongAutoKey, ::Mysql::ServerError::MultiplePriKey => exc
-                #Non interrompere processo di sync, in quanto possibile PARTITION attiva
-                Spider.logger.error("Db query not done, probably PARTITION active")
             rescue => exc
                 release if !in_transaction?
                 if (exc.message =~ /Duplicate entry/)
                     raise Spider::Model::Storage::DuplicateKey
+                elsif ([1068,1075,1503].include?(exc.errno))
+                    #1068 => Mysql::ServerError::WrongAutoKey: Incorrect table definition; there can be only one auto column and it must be defined as a key
+                    #1075 => Mysql::ServerError::MultiplePriKey: Multiple primary key defined 
+                    #1503 => Mysql::ServerError::UniqueKeyNeedAllFieldsInPf: A PRIMARY KEY must include all columns in the table's partitioning function
+                    #Non interrompere processo di sync, in quanto possibile PARTITION attiva
+                    Spider.logger.error("Db query not done, probably PARTITION active")
+
                 else
                     raise exc
                 end
