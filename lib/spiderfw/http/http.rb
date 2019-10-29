@@ -425,8 +425,9 @@ module Spider
     
     class UploadedFile < ::Tempfile
         #aggiunto encoding per problemi con upload file "\xFF" from ASCII-8BIT to UTF-8 (Encoding::UndefinedConversionError)
-        attr_reader :filename, :content_type, :encoding
-        
+        attr_reader :content_type, :encoding
+        attr_accessor :filename
+
         def initialize(filename, content_type, encoding)
             @filename = filename
             @content_type = content_type

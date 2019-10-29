@@ -38,11 +38,11 @@ module Spider; module Forms
 
         def prepare_value(val)
             return nil if !val || val.empty?
-            
             #ho un file da caricare
             if val['file'] && !val['file'].is_a?(String)
                 #se il file non vuoto
                 if val['file'].lstat.size > 0
+                    val['file'].filename = val['file'].filename.sanitize_filename #pulisco il filename che viene poi salvato
                     dest_path = @save_path+'/'+val['file'].filename
                     FileUtils.copy(val['file'].path, dest_path)
                 else #file vuoto

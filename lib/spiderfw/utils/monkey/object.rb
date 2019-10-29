@@ -127,4 +127,21 @@ class Object
         end
     end
 
+    #FUNZIONE UTILIZZATA NELLA PARTE PHP
+    # function sanitizeFilename($fileName){
+    #     $fileName = preg_replace("/[^a-zA-Z0-9\-_ \.]/i", "", str_replace("'","",html_entity_decode($fileName)));
+    #     $fileName = str_replace(" ","_", $fileName);
+    #     $fileName = str_replace("..",".", $fileName);
+    #     if (strlen($fileName) > 50) $fileName = substr($fileName, 0, 40).substr($fileName, -8, 8);
+    #     return $fileName;
+    #   }
+
+    def sanitize_filename
+        return nil unless self.is_a?(String)
+        self_dup = self.dup
+        self_dup = self_dup.gsub(/[^a-zA-Z0-9\-_ \.]/i,"").gsub(" ","_").gsub("..",".")
+        self_dup = self_dup[0..40]+self_dup[-8..-1] if self_dup.size > 50 
+        self_dup
+    end
+
 end
