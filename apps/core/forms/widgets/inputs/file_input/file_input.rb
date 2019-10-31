@@ -1,6 +1,7 @@
 begin
-    require 'ftools'
+    require 'rmagick'
 rescue LoadError
+    Spider.logger.error "Errore require rmagick"
 end
 
 module Spider; module Forms
@@ -45,6 +46,15 @@ module Spider; module Forms
                     val['file'].filename = val['file'].filename.sanitize_filename #pulisco il filename che viene poi salvato
                     dest_path = @save_path+'/'+val['file'].filename
                     FileUtils.copy(val['file'].path, dest_path)
+                    if !File.extname(val['file'].filename).blank? && ['.PNG','.JPG','.JPEG','.GIF','.TIFF','.HEIC','HEIF','.WEBP','.BMP'].include?(File.extname(val['file'].filename).upcase)
+                        index_resize = 5
+                        #tolgo un 2.5 di dimensioni in pixel e riduco la qualita' ogni volta del 5%
+                        while (img = ::Magick::Image::read(dest_path).first).filesize > 200000 && ((val_resize = 100-index_resize) > 40)
+                            img.resize_to_fit(img.columns-((img.columns/100)*2.5),img.rows-((img.rows/100)*2.5) ).write(dest_path){ self.quality = val_resize }
+                            index_resize += 5
+                        end
+
+                    end 
                 else #file vuoto
                     self.value = nil
                     return 'file_caricato_vuoto' if val['clear'].blank?
